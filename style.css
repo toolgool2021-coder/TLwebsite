@@ -13,11 +13,13 @@ html, body {
     overflow-x: hidden;
 }
 
+/* Центрирование всего */
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    flex-direction: column;
 }
 
 .profile-section {
@@ -25,6 +27,7 @@ html, body {
 }
 
 /* ================= AVATAR ================= */
+
 .avatar-container {
     margin-bottom: 25px;
 }
@@ -37,6 +40,7 @@ html, body {
     overflow: hidden;
 }
 
+/* Обводка ПОВЕРХ */
 .avatar-wrapper::after {
     content: "";
     position: absolute;
@@ -45,41 +49,36 @@ html, body {
     border: 4px solid #a855f7;
     box-shadow:
         0 0 20px rgba(168,85,247,0.7),
-        0 0 40px rgba(168,85,247,0.4),
-        0 0 60px rgba(168,85,247,0.3);
+        0 0 40px rgba(168,85,247,0.4);
     pointer-events: none;
     z-index: 2;
 }
 
 .avatar {
-    width: 150%;
-    height: 150%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    transform: translate(-25%, -25%);
+    object-position: center;
     border-radius: 50%;
-    transition: transform 0.3s ease;
-}
-
-.avatar-wrapper:hover .avatar {
-    transform: translate(-25%, -25%) scale(1.05);
 }
 
 /* ================= USERNAME ================= */
+
 .username {
     font-size: 32px;
     margin-bottom: 25px;
-    color: white;
     text-shadow:
         0 0 10px rgba(168,85,247,0.6),
         0 0 20px rgba(168,85,247,0.4);
 }
 
 /* ================= SOCIALS ================= */
+
 .social-links {
     display: flex;
-    gap: 15px;
     justify-content: center;
-    flex-wrap: wrap;
+    gap: 15px;
+    flex-wrap: nowrap; /* одна строка */
 }
 
 .social-link {
@@ -88,26 +87,25 @@ html, body {
     height: 70px;
     border-radius: 50%;
     overflow: hidden;
-    background: rgba(168,85,247,0.1);
 }
 
+/* Обводка ПОВЕРХ */
 .social-link::after {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: 50%;
     border: 3px solid #a855f7;
-    box-shadow: 0 0 15px rgba(168,85,247,0.7),
-                0 0 30px rgba(168,85,247,0.5);
+    box-shadow: 0 0 15px rgba(168,85,247,0.7);
     pointer-events: none;
     z-index: 2;
 }
 
 .social-link img {
-    width: 160%;
-    height: 160%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    transform: translate(-30%, -30%);
+    object-position: center;
     border-radius: 50%;
 }
 
@@ -117,6 +115,7 @@ html, body {
 }
 
 /* ================= SNOW ================= */
+
 #snowCanvas {
     position: fixed;
     top: 0;
