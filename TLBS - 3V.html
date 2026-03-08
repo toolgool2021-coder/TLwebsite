@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TL BS</title>
+    <style>
+        body { margin: 0; background: #004dc0; font-family: 'Arial Black', sans-serif; overflow: hidden; color: white; touch-action: none; }
+        .screen { position: absolute; width: 100vw; height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 20; }
+        #menu { display: flex; background: radial-gradient(circle, #0066ff, #003399); }
+        .btn { background: #ffcc00; border: 4px solid #000; padding: 10px 20px; border-radius: 12px; color: #000; cursor: pointer; text-transform: uppercase; font-size: 14px; margin: 5px; box-shadow: 0 4px #b38f00; z-index: 50; }
+        .play-btn { padding: 20px 80px; font-size: 30px; background: #00ff00; margin-top: 20px; }
+        .scroll-container { width: 90%; height: 60%; overflow-y: auto; display: flex; flex-wrap: wrap; justify-content: center; padding: 10px; border: 2px solid #555; border-radius: 15px; background: #222; }
+        .card { width: 110px; height: 140px; background: #333; border: 3px solid #fff; border-radius: 15px; margin: 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; overflow: hidden; }
+        canvas { display: none; background: #2e7d32; }
+        #hud { position: absolute; top: 10px; width: 100%; display: none; flex-direction: column; align-items: center; z-index: 30; pointer-events: none; }
+        .exit-btn { position: absolute; top: 10px; left: 10px; z-index: 40; background: #ff4444; color: white; border: 3px solid black; padding: 8px 15px; border-radius: 8px; pointer-events: auto; }
+        .ult-container { width: 150px; height: 16px; background: #333; border: 2px solid #fff; border-radius: 8px; overflow: hidden; }
+        #ult-bar { width: 0%; height: 100%; background: #ffff00; }
+        .ammo-wrap { display: flex; gap: 4px; margin-top: 5px; }
+        .ammo-cell { width: 35px; height: 8px; background: #555; border: 1px solid #fff; border-radius: 4px; }
+        .ammo-fill { width: 100%; height: 100%; background: #ffaa00; }
+        .pin-system { position: absolute; right: 25px; top: 400%; display: flex; align-items: center; z-index: 100; pointer-events: auto; }
+        .pin-btn { background: rgba(0, 0, 0, 0.7); border: 3px solid white; border-radius: 12px; width: 50px; height: 50px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px #000; }
+        .pin-menu { position: absolute; right: 65px; display: none; gap: 8px; background: rgba(0,0,0,0.7); padding: 8px; border-radius: 15px; border: 2px solid rgba(255,255,255,0.2); flex-direction: column; }
+        .pin-option { background: white; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid #333; cursor: pointer; }
+        .ai-btn { background: #ff4444 !important; color: white !important; margin-top: 10px; border-width: 3px; }
+    </style>
+</head>
+<body>
+
+<div id="menu" class="screen active" style="display: flex;">
+    <h1>BRAWL STARS</h1>
+    <h2 id="active-name">ШЕЛЛИ</h2>
+    <div id="char-preview" style="width:100px; height:100px; border-radius:50%; border:5px solid white; background:#bc42f5;"></div>
+    <button class="play-btn btn" onclick="changeScreen('game')">ИГРАТЬ</button>
+    <button id="ai-toggle" class="btn ai-btn" onclick="toggleAI()">БОТ: ВЫКЛ</button>
+    <button class="btn" style="margin-top:20px;" onclick="changeScreen('brawlers')">БОЙЦЫ</button>
+</div>
+
+<div id="brawlers-screen" class="screen">
+    <h2>ВЫБЕРИ БОЙЦА</h2>
+    <div class="scroll-container" id="list"></div>
+    <button class="btn" style="margin-top: 20px;" onclick="changeScreen('menu')">ВЫБРАТЬ</button>
+</div>
+
+<div id="hud">
+    <button class="exit-btn" onclick="exitToMenu()">ВЫЙТИ</button>
+    <div class="ult-container"><div id="ult-bar"></div></div>
+    <div id="ammo-container" class="ammo-wrap"></div>
+
+    <div class="pin-system">
+        <div id="pin-menu" class="pin-menu">
+            <div class="pin-option" onclick="sendPin('👎')">👎</div>
+            <div class="pin-option" onclick="sendPin('💎')">💎</div>
+            <div class="pin-option" onclick="sendPin('🤬')">🤬</div>
+            <div class="pin-option" onclick="sendPin('🤡')">🤡</div>
+            <div class="pin-option" onclick="sendPin('☠️')">☠️</div>
+        </div>
+        <div class="pin-btn" onclick="togglePinMenu()">💬</div>
+    </div>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<script>
+    // --- ЗВУКОВАЯ СИСТЕМА ---
+    const sounds = {
+        menuMusic: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3'),
+        battleMusic: new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'),
+        click: new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73484.mp3'),
+        shoot: new Audio('https://cdn.pixabay.com/audio/2022/02/11/audio_f687989389.mp3'),
+        ult: new Audio('https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c7443c.mp3'),
+        hit: new Audio('https://cdn.pixabay.com/audio/2021/08/09/audio_8849646b14.mp3')
+    };
+    sounds.menuMusic.loop = true;
+    sounds.battleMusic.loop = true;
+    sounds.menuMusic.volume = 0.4;
+    sounds.battleMusic.volume = 0.3;
+
+    const BRAWLERS = {
+        Shelly: { color: '#bc42f5', speed: 4, reload: 1500, type: 'spread', ultType: 'spread_wide', ultChargeRate: 15, maxAmmo: 3 },
+        Colt: { color: '#f54242', speed: 4.5, reload: 1300, type: 'line', ultType: 'line_long', ultChargeRate: 10, maxAmmo: 3 },
+        El_Primo: { color: '#3498db', speed: 3.5, reload: 1000, type: 'short_punches', ultType: 'jump_attack', ultChargeRate: 12, maxAmmo: 3 },
+        Barley: { color: '#95a5a6', speed: 3.8, reload: 1800, type: 'throw', ultType: 'throw_wide', ultChargeRate: 9, maxAmmo: 3 },
+        Brock: { color: '#34495e', speed: 4, reload: 2000, type: 'line', ultType: 'throw_wide', ultChargeRate: 18, maxAmmo: 3 },
+        Dynamike: { color: '#e67e22', speed: 3.8, reload: 1800, type: 'throw', ultType: 'throw_big', ultChargeRate: 12, maxAmmo: 3 },
+        Mortis: { color: '#8e44ad', speed: 4.8, reload: 2400, type: 'dash', ultType: 'line_wide', ultChargeRate: 20, maxAmmo: 3 },
+        Stu: { color: '#e74c3c', speed: 4.5, reload: 1400, type: 'line', ultType: 'dash_short', ultChargeRate: 50, maxAmmo: 2 },
+        Darryl: { color: '#7f8c8d', speed: 4, reload: 1300, type: 'spread', ultType: 'roll', ultChargeRate: 10, maxAmmo: 3 },
+        Nani: { color: '#f1c40f', speed: 3.9, reload: 2100, type: 'nani_aim', ultType: 'pip', ultChargeRate: 25, maxAmmo: 3 },
+        Max: { color: '#ffeb3b', speed: 5.5, reload: 1100, type: 'line_fast', ultType: 'speed_boost', ultChargeRate: 8, maxAmmo: 4 },
+        Crow: { color: '#2ecc71', speed: 5.2, reload: 1400, type: 'spread_thin', ultType: 'jump_attack', ultChargeRate: 12, maxAmmo: 3 },
+        Tara: { color: '#e91e63', speed: 4, reload: 2000, type: 'spread_thin', ultType: 'gravity', ultChargeRate: 14, maxAmmo: 3 },
+        Gene: { color: '#9c27b0', speed: 4, reload: 1800, type: 'gene_shot', ultType: 'pull', ultChargeRate: 20, maxAmmo: 3 },
+        Bibi: { color: '#3f51b5', speed: 4.5, reload: 1200, type: 'spread', ultType: 'bubble', ultChargeRate: 18, maxAmmo: 3 },
+        Bull: { color: '#5d4037', speed: 4, reload: 1400, type: 'spread', ultType: 'roll', ultChargeRate: 15, maxAmmo: 3 },
+        Jessie: { color: '#ff5722', speed: 4, reload: 1800, type: 'line', ultType: 'throw', ultChargeRate: 12, maxAmmo: 3 },
+        Bo: { color: '#2e7d32', speed: 4, reload: 1700, type: 'line_triple', ultType: 'mines', ultChargeRate: 15, maxAmmo: 3 },
+        Tick: { color: '#455a64', speed: 3.5, reload: 2200, type: 'throw_triple', ultType: 'pip', ultChargeRate: 15, maxAmmo: 3 },
+        Rosa: { color: '#4caf50', speed: 4, reload: 1000, type: 'short_punches', ultType: 'shield', ultChargeRate: 12, maxAmmo: 3 },
+        Rico: { color: '#7986cb', speed: 4, reload: 1200, type: 'line_bounce', ultType: 'line_bounce_long', ultChargeRate: 10, maxAmmo: 3 },
+        Frank: { color: '#9575cd', speed: 3.2, reload: 1400, type: 'spread_heavy', ultType: 'stun_wave', ultChargeRate: 25, maxAmmo: 3 }
+    };
+
+    let enemyAI = false;
+    let activePin = { type: '', timer: 0, scale: 0 };
+    let enemyPin = { type: '', timer: 0, scale: 0 };
+    let current = 'Shelly', ultCharge = 0, isUltReady = false, gameActive = false;
+    let ammo = 3, p = { x: 0, y: 0, scale: 1, isFlying: false, speedMult: 1, boostTimer: 0, shield: 0 }; 
+    let pip = { active: false, x: 0, y: 0, angle: 0, life: 0 };
+    let enemy = { x: 200, y: 150, hp: 30000, maxHp: 30000 };
+    let bullets = [], zones = [];
+    let joyL = { active: false, x: 100, y: 0, cx: 100, cy: 0, id: null };
+    let joyR = { active: false, x: 0, y: 0, cx: 0, cy: 0, id: null };
+    let joyU = { active: false, x: 0, y: 0, cx: 0, cy: 0, id: null }; 
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function toggleAI() {
+        enemyAI = !enemyAI;
+        const btn = document.getElementById('ai-toggle');
+        if(btn) {
+            btn.innerText = enemyAI ? "БОТ: ВКЛ" : "БОТ: ВЫКЛ";
+            btn.style.background = enemyAI ? "#00ff00" : "#ff4444";
+        }
+        sounds.click.play();
+    }
+
+    function togglePinMenu() { 
+        const m = document.getElementById('pin-menu');
+        if(m) m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; 
+    }
+
+    function sendPin(emoji) { 
+        activePin.type = emoji; activePin.timer = 150; activePin.scale = 0; 
+        togglePinMenu();
+        sounds.click.play();
+    }
+
+    function drawPin(x, y, pin) {
+        if (pin.timer <= 0) return;
+        ctx.save(); 
+        ctx.translate(x, y - 75 + Math.sin(pin.timer * 0.1) * 5); 
+        ctx.scale(pin.scale, pin.scale);
+        ctx.fillStyle = "white"; ctx.strokeStyle = "black"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(0, 0, 26, 0, 7); ctx.fill(); ctx.stroke();
+        ctx.font = "28px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(pin.type, 0, 2); ctx.restore();
+    }
+
+    function changeScreen(id) {
+        sounds.click.play();
+        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+        if(id === 'game') {
+            canvas.style.display = 'block';
+            document.getElementById('hud').style.display = 'flex';
+            sounds.menuMusic.pause();
+            sounds.battleMusic.play();
+            initGame();
+        } else {
+            canvas.style.display = 'none';
+            document.getElementById('hud').style.display = 'none';
+            document.getElementById(id === 'menu' ? 'menu' : 'brawlers-screen').style.display = 'flex';
+            sounds.battleMusic.pause();
+            sounds.menuMusic.play();
+            if(id === 'brawlers') renderList();
+        }
+    }
+
+    function exitToMenu() { 
+        gameActive = false; pip.active = false; 
+        changeScreen('menu'); 
+    }
+
+    function renderList() {
+        const list = document.getElementById('list'); list.innerHTML = '';
+        Object.keys(BRAWLERS).forEach(key => {
+            const b = BRAWLERS[key];
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `<div style="flex:1; background:${b.color}"></div><div style="padding:5px; font-size:10px;">${key.replace('_',' ')}</div>`;
+            div.onclick = () => { 
+                current = key; 
+                document.getElementById('active-name').innerText = key.replace('_',' '); 
+                document.getElementById('char-preview').style.background = b.color; 
+                sounds.click.play();
+            };
+            list.appendChild(div);
+        });
+    }
+
+    function initGame() {
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        p.x = canvas.width/2; p.y = canvas.height - 150; 
+        p.isFlying = false; p.speedMult = 1; p.boostTimer = 0; p.shield = 0;
+        pip.active = false; 
+        enemy.x = canvas.width / 2; enemy.y = 150; enemy.hp = 30000;
+        joyL.y = canvas.height - 120;
+        joyR.x = canvas.width - 100; joyR.y = canvas.height - 130;
+        joyU.x = canvas.width - 120; joyU.y = canvas.height / 2; 
+        ultCharge = 0; bullets = []; zones = [];
+        ammo = BRAWLERS[current].maxAmmo;
+        const ammoCont = document.getElementById('ammo-container');
+        ammoCont.innerHTML = '';
+        for(let i=0; i<BRAWLERS[current].maxAmmo; i++) ammoCont.innerHTML += `<div class="ammo-cell"><div id="ammo-${i}" class="ammo-fill"></div></div>`;
+        gameActive = true; requestAnimationFrame(update);
+    }
+
+    function updateUI() {
+        isUltReady = (ultCharge >= 100);
+        document.getElementById('ult-bar').style.width = Math.min(ultCharge, 100) + '%';
+        document.getElementById('ult-bar').style.background = isUltReady ? '#ff00ff' : '#ffff00';
+        for(let i=0; i<BRAWLERS[current].maxAmmo; i++) {
+            let fill = document.getElementById('ammo-' + i);
+            if(fill) fill.style.width = (ammo > i) ? (Math.min(1, ammo - i) * 100) + "%" : "0%";
+        }
+    }
+
+    function attack(angle, isUltAction) {
+        if (p.isFlying || pip.active) return;
+        if (isUltAction && isUltReady) {
+            ultCharge = 0;
+            sounds.ult.currentTime = 0;
+            sounds.ult.play();
+            useUltimate(angle);
+        } else if (!isUltAction && ammo >= 1) {
+            ammo -= 1;
+            sounds.shoot.currentTime = 0;
+            sounds.shoot.play();
+            const b = BRAWLERS[current];
+            switch(current) {
+                case 'Shelly': for(let i=-1; i<=1; i++) spawnBullet(angle+i*0.2, 12, 35); break;
+                case 'Bull': for(let i=-2; i<=2; i++) spawnBullet(angle+i*0.15, 13, 25); break;
+                case 'Colt': for(let i=0; i<5; i++) setTimeout(()=>spawnBullet(angle, 15, 45), i*80); break;
+                case 'El_Primo': 
+                case 'Rosa': for(let i=0; i<3; i++) setTimeout(()=>spawnBullet(angle, 10, 8), i*80); break;
+                case 'Barley': spawnBarleyBottle(angle, 200, 'fire'); break;
+                case 'Brock': spawnBullet(angle, 14, 60); break;
+                case 'Dynamike': spawnBarleyBottle(angle, 250, 'boom'); break;
+                case 'Tick': for(let i=-1; i<=1; i++) spawnBarleyBottle(angle+i*0.2, 220, 'mine'); break;
+                case 'Bo': for(let i=-1; i<=1; i++) setTimeout(()=>spawnBullet(angle+i*0.1, 13, 45), i*100+100); break;
+                case 'Jessie': spawnBullet(angle, 12, 55, false, 8, 'energy'); break;
+                case 'Rico': spawnBullet(angle, 14, 60, false, 5, 'bounce'); break;
+                case 'Frank': spawnBullet(angle, 10, 20, false, 15, 'heavy'); break;
+                case 'Nani': spawnNaniProjectiles(angle); break;
+                case 'Max': for(let i=0; i<4; i++) setTimeout(()=>spawnBullet(angle, 18, 35), i*50); break;
+                case 'Crow': for(let i=-1; i<=1; i++) spawnBullet(angle+i*0.3, 14, 40, false, 4, 'poison'); break;
+                case 'Tara': for(let i=-1; i<=1; i++) spawnBullet(angle+i*0.15, 13, 40); break;
+                case 'Gene': spawnBullet(angle, 11, 25, false, 10, 'gene_main'); break; 
+                case 'Bibi': if(Math.hypot(p.x-enemy.x, p.y-enemy.y)<130) { 
+                    let diff = Math.atan2(enemy.y-p.y, enemy.x-p.x) - angle;
+                    while(diff > Math.PI) diff -= Math.PI*2; while(diff < -Math.PI) diff += Math.PI*2;
+                    if(Math.abs(diff) < 0.6) { hitEnemy(1300, true); enemy.x += Math.cos(angle)*80; enemy.y += Math.sin(angle)*80; }
+                } break;
+                case 'Mortis': p.x += Math.cos(angle)*130; p.y += Math.sin(angle)*130; if(Math.hypot(p.x-enemy.x, p.y-enemy.y)<60) hitEnemy(900, true); break;
+                case 'Stu': spawnBullet(angle, 16, 30); setTimeout(()=>spawnBullet(angle, 16, 30), 100); break;
+                case 'Darryl': for(let i=-2; i<=2; i++) spawnBullet(angle+i*0.15, 13, 25); break;
+            }
+        }
+        updateUI();
+    }
+
+    function useUltimate(angle) {
+        switch(current) {
+            case 'Shelly': for(let i=-4; i<=4; i++) spawnBullet(angle+i*0.15, 16, 40, true); break;
+            case 'Colt': for(let i=0; i<12; i++) setTimeout(()=>spawnBullet(angle, 20, 60, true), i*50); break;
+            case 'Max': p.speedMult = 1.6; p.boostTimer = 240; break;
+            case 'Rosa': p.shield = 180; break; 
+            case 'Jessie': zones.push({x: p.x+Math.cos(angle)*150, y: p.y+Math.sin(angle)*150, r:60, life:300, type:'turret'}); break;
+            case 'Bo': for(let i=-1; i<=1; i++) { let tx=p.x+Math.cos(angle+i*0.4)*200, ty=p.y+Math.sin(angle+i*0.4)*200; zones.push({x:tx, y:ty, r:50, life:500, type:'mine'}); } break;
+            case 'Frank': zones.push({x: p.x+Math.cos(angle)*180, y: p.y+Math.sin(angle)*180, r:150, life:30, type:'stun'}); break;
+            case 'Nani': pip.active = true; pip.x = p.x; pip.y = p.y; pip.angle = angle; pip.life = 600; break;
+            case 'Tick': pip.active = true; pip.x = p.x; pip.y = p.y; pip.angle = angle; pip.life = 400; break;
+            case 'Tara': zones.push({ x: p.x+Math.cos(angle)*250, y: p.y+Math.sin(angle)*250, r: 100, life: 60, type: 'gravity' }); break;
+            case 'Gene': spawnBullet(angle, 18, 40, true, 12, 'pull'); break;
+            case 'Bibi': bullets.push({ x:p.x, y:p.y, vx:Math.cos(angle)*10, vy:Math.sin(angle)*10, life:300, type:'bubble', size:15 }); break;
+            case 'Stu': p.x += Math.cos(angle)*200; p.y += Math.sin(angle)*200; break;
+            case 'Bull':
+            case 'Darryl': p.isFlying=true; let step=0; let f=setInterval(()=>{p.x += Math.cos(angle)*12; p.y += Math.sin(angle)*12; if(Math.hypot(p.x-enemy.x,p.y-enemy.y)<50) hitEnemy(1000,false); if(++step>25){clearInterval(f); p.isFlying=false;}}, 20); break;
+            case 'El_Primo': p.isFlying=true; p.scale=2.2; 
+                let jx=p.x+Math.cos(angle)*250, jy=p.y+Math.sin(angle)*250;
+                let c=0; let fly=setInterval(()=>{p.x+=(jx-p.x)/5; p.y+=(jy-p.y)/5; if(++c>=20){clearInterval(fly); p.isFlying=false; p.scale=1; if(Math.hypot(p.x-enemy.x, p.y-enemy.y)<120) hitEnemy(1800, false);}}, 25); break;
+            case 'Barley': for(let i=0; i<5; i++) spawnBarleyBottle(angle+(i-2)*0.3, 250, 'fire', true); break;
+            case 'Dynamike': zones.push({x: p.x+Math.cos(angle)*250, y: p.y+Math.sin(angle)*250, r:140, life:60, type:'boom', isBig:true, isUlt:true}); break;
+        }
+    }
+
+    function spawnBullet(angle, speed, life, isUlt, size=5, special='') { 
+        bullets.push({ x: p.x, y: p.y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, life, isUlt, size, type: 'normal', special, angle: angle }); 
+    }
+
+    function spawnBarleyBottle(angle, dist, type, isUlt) { 
+        let tx=p.x+Math.cos(angle)*dist, ty=p.y+Math.sin(angle)*dist; 
+        setTimeout(()=>zones.push({x:tx,y:ty,r:type==='fire'?55:80,life:type==='fire'?120:40,type,isUlt}), 500); 
+    }
+    
+    function hitEnemy(dmg, canCharge) {
+        enemy.hp -= dmg;
+        sounds.hit.currentTime = 0;
+        sounds.hit.play();
+        if(enemy.hp <= 0) {
+            enemy.hp = enemy.maxHp;
+            enemy.x = canvas.width / 2;
+            enemy.y = 150;
+        }
+        if(canCharge && ultCharge < 100) { ultCharge += BRAWLERS[current].ultChargeRate; }
+    }
+
+    function spawnNaniProjectiles(angle) {
+        const dist = 320;
+        const tx = p.x + Math.cos(angle) * dist;
+        const ty = p.y + Math.sin(angle) * dist;
+        [0, 45, -45].forEach(c => bullets.push({ x: p.x, y: p.y, tx, ty, progress: 0, curve: c, type: 'nani' }));
+    }
+
+    window.addEventListener('touchstart', e => {
+        for(let t of e.changedTouches) {
+            let tx = t.clientX, ty = t.clientY;
+            if(tx > canvas.width - 100 && ty < canvas.height * 0.6) return;
+            if(tx < canvas.width/2) { joyL.id=t.identifier; joyL.active=true; joyL.cx=tx; joyL.cy=ty; }
+            else if(isUltReady && Math.hypot(tx - joyU.x, ty - joyU.y) < 60) { joyU.id=t.identifier; joyU.active=true; joyU.cx=tx; joyU.cy=ty; }
+            else { joyR.id=t.identifier; joyR.active=true; joyR.cx=tx; joyR.cy=ty; }
+        }
+    });
+
+    window.addEventListener('touchmove', e => {
+        for(let t of e.touches) {
+            if(t.identifier===joyL.id){ joyL.cx=t.clientX; joyL.cy=t.clientY; }
+            if(t.identifier===joyR.id){ joyR.cx=t.clientX; joyR.cy=t.clientY; }
+            if(t.identifier===joyU.id){ joyU.cx=t.clientX; joyU.cy=t.clientY; }
+        }
+    });
+
+    window.addEventListener('touchend', e => {
+        for(let t of e.changedTouches) {
+            if(t.identifier===joyL.id) joyL.active=false;
+            if(t.identifier===joyR.id) { let dx=joyR.cx-joyR.x, dy=joyR.cy-joyR.y; if(Math.hypot(dx,dy)>10) attack(Math.atan2(dy,dx), false); joyR.active=false; }
+            if(t.identifier===joyU.id) { let dx=joyU.cx-joyU.x, dy=joyU.cy-joyU.y; attack(Math.atan2(dy,dx), true); joyU.active=false; }
+        }
+    });
+
+    function update() {
+        if(!gameActive) return;
+        if (ammo < BRAWLERS[current].maxAmmo) ammo += 1 / (BRAWLERS[current].reload / 16.6);
+        if(p.boostTimer > 0) { p.boostTimer--; if(p.boostTimer <= 0) p.speedMult = 1; }
+        if(p.shield > 0) p.shield--;
+        [activePin, enemyPin].forEach(p => { if(p.timer > 0) { p.timer--; p.scale += (p.timer > 300 ? 1.2 : 1.0 - p.scale) * 0.2; } else p.scale = 0; });
+        if(enemyAI) {
+            let d = Math.hypot(p.x - enemy.x, p.y - enemy.y);
+            if(d > 160) { let a = Math.atan2(p.y-enemy.y, p.x-enemy.x); enemy.x += Math.cos(a)*1.5; enemy.y += Math.sin(a)*1.5; }
+        }
+        if(pip.active) {
+            if(joyL.active) { let dx=joyL.cx-joyL.x, dy=joyL.cy-joyL.y; pip.angle = Math.atan2(dy, dx); }
+            pip.x += Math.cos(pip.angle) * 7; pip.y += Math.sin(pip.angle) * 7; pip.life--;
+            if(Math.hypot(pip.x-enemy.x, pip.y-enemy.y) < 40 || pip.life <= 0) {
+                if(pip.life > 0) hitEnemy(3000, false);
+                zones.push({x: pip.x, y: pip.y, r: 120, life: 20, type: 'boom'});
+                pip.active = false;
+            }
+        } else if(joyL.active && !p.isFlying) { 
+            let dx=joyL.cx-joyL.x, dy=joyL.cy-joyL.y, dist=Math.hypot(dx,dy); 
+            if(dist>5){ p.x+=(dx/dist)*BRAWLERS[current].speed*p.speedMult; p.y+=(dy/dist)*BRAWLERS[current].speed*p.speedMult; } 
+        }
+        bullets.forEach((b,i)=>{ 
+            if(b.type === 'nani') {
+                b.progress += 0.035;
+                let ang = Math.atan2(b.ty - b.y, b.tx - b.x);
+                let offX = Math.cos(ang + 1.57) * Math.sin(b.progress * Math.PI) * b.curve;
+                let offY = Math.sin(ang + 1.57) * Math.sin(b.progress * Math.PI) * b.curve;
+                b.x = p.x + (b.tx - p.x) * b.progress + offX; b.y = p.y + (b.ty - p.y) * b.progress + offY;
+                if(b.progress >= 1) bullets.splice(i, 1);
+            } else {
+                b.x+=b.vx; b.y+=b.vy; if(--b.life<=0) {
+                    if(b.special === 'gene_main') {
+                        for(let j=-1; j<=1; j++) {
+                            spawnBullet(b.angle + j*0.25, 12, 25, false, 5, 'gene_split');
+                            bullets[bullets.length-1].x = b.x; bullets[bullets.length-1].y = b.y;
+                        }
+                    }
+                    bullets.splice(i,1);
+                }
+                if(b.special==='bounce') { if(b.x<0 || b.x>canvas.width) b.vx *= -1; if(b.y<0 || b.y>canvas.height) b.vy *= -1; }
+                if(b.special==='bubble') { if(b.x<0 || b.x>canvas.width) b.vx *= -1; if(b.y<0 || b.y>canvas.height) b.vy *= -1; }
+            }
+            if(Math.hypot(b.x-enemy.x, b.y-enemy.y)<30){ 
+                if(b.special === 'pull') { enemy.x = p.x; enemy.y = p.y; }
+                if(b.special === 'poison') { let c=0; let poi=setInterval(()=>{hitEnemy(150, false); if(++c>5)clearInterval(poi)}, 500); }
+                if(b.special === 'energy') { hitEnemy(800, true); }
+                hitEnemy(b.special === 'gene_split' ? 150 : 400, !b.isUlt); if(b.special !== 'bubble' && b.special !== 'bounce') bullets.splice(i,1); 
+            } 
+        });
+        zones.forEach((z,i)=>{ 
+            if(z.type === 'gravity') { enemy.x += (z.x - enemy.x) * 0.1; enemy.y += (z.y - enemy.y) * 0.1; if(z.life === 1) hitEnemy(2000, false); }
+            if(z.type === 'stun' && Math.hypot(enemy.x-z.x, enemy.y-z.y)<z.r) hitEnemy(10, false);
+            if(z.type === 'mine' && Math.hypot(enemy.x-z.x, enemy.y-z.y)<z.r) { hitEnemy(2000, true); zones.splice(i,1); }
+            if(z.type === 'turret') { if(z.life % 30 === 0) spawnBullet(Math.atan2(enemy.y-z.y, enemy.x-z.x), 10, 40); }
+            if(Math.hypot(enemy.x-z.x, enemy.y-z.y)<z.r) hitEnemy(5, false); 
+            if(--z.life<=0) zones.splice(i,1); 
+        });
+        updateUI();
+        draw();
+        requestAnimationFrame(update);
+    }
+
+    function draw() {
+        ctx.fillStyle = "#2e7d32"; ctx.fillRect(0,0,canvas.width,canvas.height);
+        if((joyR.active || joyU.active) && !pip.active) {
+            let j = joyU.active ? joyU : joyR;
+            let angle = Math.atan2(j.cy - j.y, j.cx - j.x);
+            let ind = joyU.active ? BRAWLERS[current].ultType : BRAWLERS[current].type;
+            ctx.fillStyle = joyU.active ? "rgba(255, 255, 0, 0.3)" : "rgba(255, 255, 255, 0.2)";
+            if(ind === 'nani_aim' || ind === 'pip') { ctx.beginPath(); ctx.arc(p.x + Math.cos(angle)*320, p.y + Math.sin(angle)*320, 40, 0, 7); ctx.fill(); }
+            else if(ind === 'gravity' || ind === 'throw' || ind === 'throw_triple') { ctx.beginPath(); ctx.arc(p.x + Math.cos(angle)*250, p.y + Math.sin(angle)*250, 100, 0, 7); ctx.fill(); }
+            else if(ind === 'spread' || ind === 'spread_heavy') { 
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.arc(p.x, p.y, 220, angle - 0.5, angle + 0.5); ctx.lineTo(p.x, p.y); ctx.fill();
+            } else { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(angle); ctx.fillRect(0, -20, 350, 40); ctx.restore(); }
+        }
+        ctx.fillStyle="red"; ctx.beginPath(); ctx.arc(enemy.x, enemy.y, 30, 0, 7); ctx.fill();
+        ctx.fillStyle="lime"; ctx.fillRect(enemy.x-40, enemy.y-50, (enemy.hp/30000)*80, 8);
+        if(pip.active) { ctx.fillStyle = "yellow"; ctx.beginPath(); ctx.arc(pip.x, pip.y, 15, 0, 7); ctx.fill(); }
+        ctx.save(); ctx.translate(p.x,p.y); ctx.scale(p.scale, p.scale);
+        if(p.shield > 0) { ctx.strokeStyle = "#4caf50"; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(0,0,30,0,7); ctx.stroke(); }
+        if(p.boostTimer > 0) { ctx.shadowBlur = 15; ctx.shadowColor = "yellow"; ctx.strokeStyle = "yellow"; ctx.strokeRect(-22,-22,44,44); }
+        ctx.fillStyle=BRAWLERS[current].color; ctx.beginPath(); ctx.arc(0,0,22,0,7); ctx.fill();
+        ctx.restore();
+        drawPin(p.x, p.y, activePin);
+        drawPin(enemy.x, enemy.y, enemyPin);
+        bullets.forEach(b => { ctx.fillStyle=b.special==='poison'?"#2ecc71":b.isUlt?"#ff00ff":"white"; ctx.beginPath(); ctx.arc(b.x,b.y,b.size||5,0,7); ctx.fill(); });
+        zones.forEach(z => { 
+            if(z.type==='gravity') ctx.fillStyle="rgba(0,0,0,0.6)";
+            else if(z.type==='mine') ctx.fillStyle="rgba(255,0,0,0.5)";
+            else if(z.type==='turret') ctx.fillStyle="rgba(255,87,34,0.6)";
+            else ctx.fillStyle="rgba(255,255,0,0.4)";
+            ctx.beginPath(); ctx.arc(z.x,z.y,z.r,0,7); ctx.fill(); 
+        });
+        ctx.globalAlpha = 0.2; ctx.fillStyle = "white";
+        ctx.beginPath(); ctx.arc(joyL.x, joyL.y, 60, 0, 7); ctx.fill();
+        ctx.beginPath(); ctx.arc(joyR.x, joyR.y, 60, 0, 7); ctx.fill();
+        if(isUltReady) { ctx.globalAlpha = 0.6; ctx.fillStyle = "yellow"; ctx.beginPath(); ctx.arc(joyU.x, joyU.y, 50, 0, 7); ctx.fill(); }
+        ctx.globalAlpha = 1;
+    }
+</script>
+</body>
+</html>
