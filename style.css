@@ -68,30 +68,29 @@ html, body {
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;           /* РАЗРЕШАЕМ 2 РЯДА */
-    padding: 5px 10px;
-    max-width: 100px;         /* ОГРАНИЧИВАЕМ ШИРИНУ, чтобы влезло только 2 иконки (40+40+10 gap) */
-    margin: 0 auto;           /* Центрируем сам блок */
+    gap: 6px;              /* Маленький зазор для маленьких иконок */
+    flex-wrap: wrap;           
+    padding: 5px;
+    max-width: 50px;       /* Узкий блок, чтобы в ряд лезло только две (20+20+6) */
+    margin: 0 auto;           
 }
 
 .social-link {
     display: block; 
-    width: 10px;
-    height: 10px;
+    width: 20px;           /* Тот самый "мини" размер */
+    height: 20px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
-    border: 2px solid #a855f7;
+    border: 1px solid #a855f7; 
+    box-sizing: border-box; /* Чтобы рамка не раздувала иконку */
 }
 
 .social-link img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
 }
-
 
 /* ===== SNOW ===== */
 
