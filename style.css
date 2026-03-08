@@ -86,7 +86,7 @@ html, body {
 .social-link img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: wrap;
     object-position: center;
 }
 
