@@ -1,0 +1,1059 @@
+exteraGram Plugins
+Our plugins system is powered by Chaquopy v16 and Aliucord hook.
+
+Developers may write plugins in Python and use Xposed method hooking to change app behaviour.
+
+Chaquopy
+Chaquopy is a Java library that provides interop between Java and Python, allowing you to write plugins in Python 3.11.
+
+Aliucord hook
+Aliucord itself is a modification for the Discord Android app. We use their hook to provide Xposed functionality for plugins.
+
+Download exteraGram
+Make sure you're using the latest version of exteraGram or derivative client.
+
+You may download latest version from the beta channel.
+
+Enable plugins engine
+After logging into your account, go to the exteraGram Preferences > Plugins and enable plugins engine. Tap info button and enable developer mode.
+
+Bootstrap project
+Create a folder on your PC and create a Python file, e.g. first_plugin.py.
+
+Create virtual environment and install exteragram-utils for typings and hot-reload client.
+
+Connecting to the phone
+Connect your phone to your PC using cable. Also make sure ADB is on your PATH.
+
+
+# replace first_plugin.py with your actual filename
+extera first_plugin.py
+ 
+# for debugging support
+extera first_plugin.py --debug
+VS Code remote debugging example:
+
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Remote Attach exteraGram",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "/Users/alexeyzavar/Projects/extera-plugins/first_plugin.py",
+                    "remoteRoot": "/data/user/0/com.exteragram.messenger/files/plugins/first_plugin.py"
+                }
+            ]
+        }
+    ]
+}
+Note that remoteRoot should end with PLUGIN_ID.py.
+
+API Request Hooks
+These hooks allow you to inspect or modify outgoing requests and incoming responses.
+
+Here is a practical example of a "Ghost Mode" plugin that blocks the "typing" status and forces the user to appear offline.
+
+
+from base_plugin import BasePlugin, HookResult, HookStrategy
+from ui.settings import Switch
+from typing import Any
+ 
+# A list of request names that indicate the user is typing.
+TYPING_REQUESTS = ["TL_messages_setTyping", "TL_messages_setEncryptedTyping"]
+ 
+class GhostModePlugin(BasePlugin):
+    def on_plugin_load(self):
+        # Hook all typing-related requests
+        for req_name in TYPING_REQUESTS:
+            self.add_hook(req_name)
+        
+        # Hook the request that updates the user's online status
+        self.add_hook("TL_account_updateStatus")
+ 
+    def pre_request_hook(self, request_name: str, account: int, request: Any) -> HookResult:
+        # This method is called for every request we've hooked.
+ 
+        # 1. Block "typing..." status
+        if request_name in TYPING_REQUESTS:
+            if self.get_setting("dont_send_typing", True):
+                self.log(f"Blocking request: {request_name}")
+                # By returning CANCEL, we prevent the request from being sent.
+                return HookResult(strategy=HookStrategy.CANCEL)
+ 
+        # 2. Force offline status
+        if request_name == "TL_account_updateStatus":
+            if self.get_setting("force_offline", True):
+                self.log("Forcing offline status in TL_account_updateStatus request.")
+                # Modify the request object directly
+                request.offline = True
+                # Return MODIFY with the modified request object.
+                return HookResult(strategy=HookStrategy.MODIFY, request=request)
+ 
+        # For any other hooked requests we don't handle, do nothing.
+        return HookResult(strategy=HookStrategy.DEFAULT)
+    
+    def post_request_hook(self, request_name: str, account: int, response: Any, error: Any) -> HookResult:
+        # You can also intercept responses from the server.
+        # For example, you could log when a message is successfully sent.
+        if request_name == "TL_messages_sendMessage":
+            if not error:
+                self.log("Successfully sent a message!")
+        return HookResult(strategy=HookStrategy.DEFAULT)
+ 
+    def create_settings(self) -> list:
+        return [
+            Switch(key="dont_send_typing", text="Don't send typing status", default=True),
+            Switch(key="force_offline", text="Always appear offline", default=True)
+        ]
+Hook results determine the action to take:
+
+HookStrategy.DEFAULT: No changes to the flow; proceed as normal.
+HookStrategy.CANCEL: Cancel the request (for pre_request_hook and on_send_message_hook) or suppress further processing of the response/update.
+HookStrategy.MODIFY: Modify the request (in pre_request_hook), response (in post_request_hook), update (in on_update_hook), updates (in on_updates_hook), or params (in on_send_message_hook). The modified object must be assigned to the corresponding field in the HookResult (e.g., result.request = modified_request).
+HookStrategy.MODIFY_FINAL: Same as MODIFY, but no other plugins hooks for this event will be called after this one.
+Update Hooks
+These hooks are called when the application processes updates received from Telegram.
+
+
+def on_update_hook(self, update_name: str, account: int, update: Any) -> HookResult:
+    # Called when the app receives an individual update (e.g., TL_updateNewMessage)
+    result = HookResult()
+ 
+    if update_name == "TL_updateNewMessage":
+        self.log(f"Intercepted on_update_hook for {update_name}")
+        # Example: Process or modify the update
+        # if hasattr(update, 'message') and hasattr(update.message, 'message'):
+        #     if "secret" in update.message.message:
+        #         update.message.message = "[REDACTED]"
+        #         result.strategy = HookStrategy.MODIFY
+        #         result.update = update # Assign the modified update back
+        pass
+ 
+    return result
+ 
+def on_updates_hook(self, container_name: str, account: int, updates: Any) -> HookResult:
+    # Called when the app receives a container of updates (e.g., TL_updates, TL_updatesCombined)
+    result = HookResult()
+ 
+    if container_name == "TL_updates" and hasattr(updates, 'updates'):
+        self.log(f"Intercepted on_updates_hook for {container_name} with {len(updates.updates)} inner updates.")
+        # Example: Filter updates
+        # filtered_inner_updates = [upd for upd in updates.updates if not isinstance(upd, TLRPC.TL_updateUserStatus)]
+        # if len(filtered_inner_updates) < len(updates.updates):
+        #    updates.updates = ArrayList(filtered_inner_updates) # Assuming ArrayList is needed
+        #    result.strategy = HookStrategy.MODIFY
+        #    result.updates = updates # Assign the modified container back
+        pass
+ 
+    return result
+Message Sending Hook
+This hook is specifically for intercepting messages being sent by the user.
+
+
+def on_send_message_hook(self, account: int, params: Any) -> HookResult:
+    # Called when a message is about to be sent by the client
+    # `params` is an object (SendMessagesHelper.SendMessageParams) containing message details
+    result = HookResult()
+ 
+    if hasattr(params, 'message') and isinstance(params.message, str):
+        self.log(f"Intercepted on_send_message_hook for message: {params.message[:30]}")
+        # Example: Modify message parameters
+        # if params.message.startswith(".shrug"):
+        #     params.message = params.message.replace(".shrug", "¯\\_(ツ)_/¯")
+        #     result.strategy = HookStrategy.MODIFY
+        #     result.params = params # Assign the modified params object back
+        pass
+ 
+    return result
+    
+File Utils
+Что такое File Utils
+File Utils — это набор функций, который позволяет плагинам работать с файлами: сохранять данные, читать файлы, удалять их и управлять директориями.
+Это удобно для хранения конфигураций, кеша, логов или любых данных плагина.
+Получение директории плагина
+Каждый плагин имеет свою папку для хранения данных.
+Python
+Копировать код
+path = self.get_plugin_dir()
+Эта функция возвращает путь к директории плагина.
+Создание файла
+Чтобы создать файл и записать данные:
+Python
+Копировать код
+file_path = self.get_plugin_dir() + "/data.txt"
+
+with open(file_path, "w") as f:
+    f.write("Hello world")
+Чтение файла
+Чтобы прочитать содержимое файла:
+Python
+Копировать код
+file_path = self.get_plugin_dir() + "/data.txt"
+
+with open(file_path, "r") as f:
+    data = f.read()
+Проверка существования файла
+Python
+Копировать код
+import os
+
+file_path = self.get_plugin_dir() + "/data.txt"
+
+if os.path.exists(file_path):
+    print("Файл существует")
+Удаление файла
+Python
+Копировать код
+import os
+
+os.remove(file_path)
+Создание папки
+Python
+Копировать код
+import os
+
+folder = self.get_plugin_dir() + "/cache"
+
+os.makedirs(folder, exist_ok=True)
+Пример использования
+Python
+Копировать код
+import os
+
+class MyPlugin(BasePlugin):
+
+    def save_data(self, text):
+        path = self.get_plugin_dir() + "/data.txt"
+
+        with open(path, "w") as f:
+            f.write(text)
+
+    def load_data(self):
+        path = self.get_plugin_dir() + "/data.txt"
+
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                return f.read()
+
+        return None
+Client Utils
+Что такое Client Utils
+Client Utils — это набор функций для взаимодействия с Telegram-клиентом.
+Они позволяют получать информацию о пользователе, чатах и выполнять действия внутри клиента.
+Получение текущего пользователя
+Python
+Копировать код
+user = self.get_current_user()
+Можно получить:
+id пользователя
+имя
+username
+Получение текущего чата
+Python
+Копировать код
+chat = self.get_current_chat()
+Можно узнать:
+id чата
+тип чата
+название
+Отправка сообщения
+Python
+Копировать код
+self.send_message(chat_id, "Привет!")
+Получение сообщений
+Python
+Копировать код
+messages = self.get_messages(chat_id)
+Это возвращает список сообщений из чата.
+Редактирование сообщения
+Python
+Копировать код
+self.edit_message(chat_id, message_id, "Новый текст")
+Удаление сообщения
+Python
+Копировать код
+self.delete_message(chat_id, message_id)
+Пример использования
+Python
+Копировать код
+class MyPlugin(BasePlugin):
+
+    def send_hello(self):
+
+        user = self.get_current_user()
+        chat = self.get_current_chat()
+
+        text = f"Привет, {user.first_name}!"
+
+        self.send_message(chat.id, text)
+        
+Plugin Base
+Что такое Plugin Base
+Plugin Base — это основной класс, от которого наследуются все плагины.
+Он предоставляет доступ к основным функциям системы плагинов: логирование, настройки, работа с клиентом, файлами и событиями.
+Чтобы создать плагин, нужно создать класс, который наследуется от BasePlugin.
+Пример базового плагина
+Python
+Копировать код
+from exteragram import BasePlugin
+
+class MyPlugin(BasePlugin):
+
+    def on_load(self):
+        self.log("Плагин загружен")
+
+    def on_unload(self):
+        self.log("Плагин выгружен")
+Основные методы
+on_load()
+Вызывается при загрузке плагина.
+Можно использовать для:
+инициализации
+загрузки данных
+регистрации событий
+Python
+Копировать код
+def on_load(self):
+    self.log("Plugin loaded")
+on_unload()
+Вызывается при отключении плагина.
+Используется для очистки ресурсов.
+Python
+Копировать код
+def on_unload(self):
+    self.log("Plugin unloaded")
+log()
+Выводит сообщение в лог плагина.
+Python
+Копировать код
+self.log("Сообщение в лог")
+get_setting()
+Получает значение настройки.
+Python
+Копировать код
+value = self.get_setting("key", default_value)
+set_setting()
+Изменяет значение настройки.
+Python
+Копировать код
+self.set_setting("key", value)
+Структура простого плагина
+Python
+Копировать код
+from exteragram import BasePlugin
+
+class MyPlugin(BasePlugin):
+
+    def on_load(self):
+        self.log("Plugin started")
+
+    def create_settings(self):
+        return []
+Hooks
+Что такое Hooks
+Hooks — это система перехвата событий Telegram клиента.
+Она позволяет плагину реагировать на различные действия:
+отправку сообщений
+получение сообщений
+изменение чатов
+действия пользователя
+Регистрация hook
+Для использования hook нужно определить функцию с декоратором.
+Пример:
+Python
+Копировать код
+@hook("message_send")
+def on_message_send(self, message):
+    self.log("Сообщение отправлено")
+Перехват входящих сообщений
+Python
+Копировать код
+@hook("message_receive")
+def on_message_receive(self, message):
+
+    text = message.text
+
+    if text == "hello":
+        self.log("Пользователь написал hello")
+Изменение сообщения
+Можно изменить сообщение перед отправкой.
+Python
+Копировать код
+@hook("message_send")
+def modify_message(self, message):
+
+    message.text = message.text + " 🙂"
+
+    return message
+Events
+Что такое Events
+Events — это события клиента, которые можно отслеживать.
+Они позволяют реагировать на изменения состояния клиента.
+Пример события
+Python
+Копировать код
+def on_event(self, event):
+
+    self.log(f"Event received: {event}")
+Типы событий
+Примеры событий:
+новое сообщение
+удаление сообщения
+изменение чата
+изменение профиля
+Пример обработки события
+Python
+Копировать код
+def on_event(self, event):
+
+    if event.type == "message":
+
+        self.log("Новое сообщение")
+Пример полноценного плагина
+Python
+Копировать код
+from exteragram import BasePlugin
+
+class ExamplePlugin(BasePlugin):
+
+    def on_load(self):
+        self.log("Plugin loaded")
+
+    def on_unload(self):
+        self.log("Plugin unloaded")
+
+    def create_settings(self):
+        return []
+
+    def on_event(self, event):
+        self.log(f"Event: {event}")
+        
+UI Utils
+Что такое UI Utils
+UI Utils — это инструменты для создания интерфейса внутри Telegram-клиента.
+Они позволяют показывать пользователю:
+всплывающие уведомления
+диалоги
+сообщения об ошибках
+информационные окна
+Это удобно, когда плагину нужно взаимодействовать с пользователем.
+Показ уведомления (Toast)
+Python
+Копировать код
+self.show_toast("Сообщение")
+Появляется небольшое всплывающее уведомление.
+Показ диалогового окна
+Python
+Копировать код
+self.show_dialog(
+    title="Заголовок",
+    message="Текст сообщения"
+)
+Показывает окно с текстом.
+Диалог подтверждения
+Python
+Копировать код
+self.show_confirm_dialog(
+    title="Подтверждение",
+    message="Вы уверены?"
+)
+Можно использовать для подтверждения действий.
+Показ ошибки
+Python
+Копировать код
+self.show_error("Произошла ошибка")
+Выводит сообщение об ошибке.
+Пример использования
+Python
+Копировать код
+class MyPlugin(BasePlugin):
+
+    def on_load(self):
+
+        self.show_toast("Плагин загружен")
+Network Utils
+Что такое Network Utils
+Network Utils — это инструменты для отправки сетевых запросов.
+С их помощью можно:
+получать данные с сайтов
+работать с API
+скачивать файлы
+отправлять запросы на сервер
+GET запрос
+Python
+Копировать код
+response = self.http_get("https://example.com")
+
+print(response.text)
+Получает данные с сайта.
+POST запрос
+Python
+Копировать код
+response = self.http_post(
+    "https://example.com/api",
+    data={"name": "test"}
+)
+Отправляет данные на сервер.
+Работа с JSON
+Python
+Копировать код
+response = self.http_get("https://api.example.com/data")
+
+data = response.json()
+Позволяет получать данные в формате JSON.
+Скачивание файла
+Python
+Копировать код
+response = self.http_get("https://example.com/file.png")
+
+with open("file.png", "wb") as f:
+    f.write(response.content)
+Пример использования API
+Python
+Копировать код
+class MyPlugin(BasePlugin):
+
+    def get_data(self):
+
+        response = self.http_get("https://api.example.com")
+
+        data = response.json()
+
+        self.log(data)
+Message Objects
+Что такое Message Objects
+Message Object — это объект сообщения Telegram, который используется в плагинах.
+Он содержит всю информацию о сообщении.
+Основные поля сообщения
+Пример:
+Python
+Копировать код
+message.text
+message.id
+message.chat_id
+message.sender_id
+Описание:
+text — текст сообщения
+id — ID сообщения
+chat_id — ID чата
+sender_id — ID отправителя
+Проверка текста сообщения
+Python
+Копировать код
+if message.text == "ping":
+    self.send_message(message.chat_id, "pong")
+Проверка типа сообщения
+Python
+Копировать код
+if message.text:
+    print("Текстовое сообщение")
+Ответ на сообщение
+Python
+Копировать код
+self.send_message(message.chat_id, "Ответ")
+Пример использования
+Python
+Копировать код
+@hook("message_receive")
+def on_message(self, message):
+
+    if message.text == "ping":
+
+        self.send_message(message.chat_id, "pong")
+        
+```markdown name=GUIDE_INSTANT_SETTINGS.md
+# Руководство: Мгновенное обновление настроек без перезагрузки
+
+## Введение
+
+В этом руководстве вы узнаете, как сделать настройки плагина, которые обновляются мгновенно без необходимости перезагружать экран настроек. Это похоже на то, как работают встроенные настройки Telegram.
+
+## Что нужно использовать
+
+### 1. Импорты для системы обновления
+
+```python
+from android.os import Handler, Looper
+from hook_utils import get_private_field
+from com.exteragram.messenger.plugins import PluginsController
+from android.view.animation import AccelerateDecelerateInterpolator, DecelerateInterpolator
+from android_utils import run_on_ui_thread
+```
+
+### 2. Основная структура плагина
+
+```python
+from base_plugin import BasePlugin
+from ui.settings import Header, Switch, Input, Divider, Text
+
+class MyPlugin(BasePlugin):
+    
+    def on_plugin_load(self):
+        pass
+    
+    def create_settings(self):
+        return [
+            Header("Мои настройки"),
+            Switch(
+                key="my_switch",
+                text="Включить опцию",
+                default=True,
+                on_change=self.refresh_settings  # ВАЖНО!
+            ),
+            Input(
+                key="my_input",
+                text="Введите текст",
+                default="Текст",
+                on_change=self._on_input_changed  # Обработчик
+            ),
+            Divider(),
+            Text(
+                text="Нажми меня",
+                accent=True,
+                on_click=self._on_button_click
+            ),
+        ]
+    
+    def _on_input_changed(self, value):
+        """Сохраняет значение и обновляет настройки"""
+        self.set_setting("my_input", value)
+        self.refresh_settings()
+    
+    def _on_button_click(self, view=None):
+        """Обработчик кнопки"""
+        # Ваша логика
+        self.refresh_settings()
+```
+
+## Как работает система обновления
+
+### Шаг 1: Функция refresh_settings()
+
+Это главная функция, которая обновляет экран настроек:
+
+```python
+def refresh_settings(self, *args):
+    """Обновляет экран настроек с плавной анимацией"""
+    def refresher():
+        try:
+            from android_utils import R as RunnableArg 
+            fragment = get_last_fragment()
+            listView = None
+            
+            # Получаем список настроек
+            if fragment:
+                cls_name = str(fragment.getClass().getName())
+                if "PluginSettingsActivity" in cls_name:
+                    listView = get_private_field(fragment, "listView")
+
+            if not listView:
+                # Если список не найден, перезагружаем все
+                PluginsController.getInstance().loadPluginSettings(self.id)
+                return
+
+            # Плавное исчезновение
+            listView.animate()\
+                .alpha(0.0)\
+                .setDuration(80)\
+                .setInterpolator(AccelerateDecelerateInterpolator())\
+                .withEndAction(RunnableArg(lambda: self._on_fade_out_complete(listView)))\
+                .start()
+
+        except Exception:
+            PluginsController.getInstance().loadPluginSettings(self.id)
+
+    run_on_ui_thread(refresher)
+```
+
+### Шаг 2: Функция _on_fade_out_complete()
+
+Загружает новые настройки и показывает их с анимацией:
+
+```python
+def _on_fade_out_complete(self, listView):
+    """Вызывается когда список исчез, перезагружает и показывает заново"""
+    try:
+        from android_utils import R as RunnableArg
+        
+        # Перезагружаем настройки
+        PluginsController.getInstance().loadPluginSettings(self.id)
+        
+        def start_fade_in():
+            try:
+                listView.setAlpha(0.0)
+                listView.setTranslationY(20.0)
+                
+                # Плавное появление
+                listView.animate()\
+                    .alpha(1.0)\
+                    .translationY(0.0)\
+                    .setDuration(180)\
+                    .setInterpolator(DecelerateInterpolator())\
+                    .start()
+            except: 
+                pass
+
+        # Задержка в 50ms перед появлением
+        Handler(Looper.getMainLooper()).postDelayed(RunnableArg(start_fade_in), 50)
+
+    except Exception: 
+        pass
+```
+
+## Примеры использования
+
+### Пример 1: Простой переключатель
+
+```python
+def create_settings(self):
+    return [
+        Switch(
+            key="dark_mode",
+            text="Темная тема",
+            default=False,
+            icon="msg_theme",
+            on_change=self.refresh_settings  # Прямой вызов refresh_settings
+        ),
+    ]
+```
+
+**Как это работает:**
+1. Пользователь нажимает на переключатель
+2. Значение сохраняется (`self.set_setting()` вызывается автоматически)
+3. Вызывается `refresh_settings()`
+4. Список настроек исчезает на 80ms
+5. Загружаются новые настройки
+6. Список появляется с анимацией
+
+### Пример 2: Поле ввода с обработчиком
+
+```python
+def create_settings(self):
+    return [
+        Input(
+            key="username",
+            text="Ваше имя",
+            default="",
+            icon="msg_contacts",
+            on_change=self._on_username_changed
+        ),
+    ]
+
+def _on_username_changed(self, value):
+    """Вызывается когда пользователь меняет текст"""
+    # Валидация (опционально)
+    if len(value) < 3:
+        BulletinHelper.show_error("Имя должно быть минимум 3 символа")
+        return
+    
+    # Сохраняем значение
+    self.set_setting("username", value)
+    
+    # Обновляем настройки
+    self.refresh_settings()
+```
+
+### Пример 3: Кнопка с логикой
+
+```python
+def create_settings(self):
+    count = self.get_setting("click_count", 0)
+    
+    return [
+        Text(
+            text=f"Нажато {count} раз",
+            icon="msg_stats"
+        ),
+        Text(
+            text="Нажми меня!",
+            accent=True,
+            icon="msg_favorite",
+            on_click=self._on_click
+        ),
+    ]
+
+def _on_click(self, view=None):
+    """Вызывается при нажатии на кнопку"""
+    count = self.get_setting("click_count", 0)
+    count += 1
+    self.set_setting("click_count", count)
+    
+    # Обновляем экран
+    self.refresh_settings()
+```
+
+### Пример 4: Динамические настройки
+
+```python
+def create_settings(self):
+    is_enabled = self.get_setting("enable_feature", False)
+    
+    settings = [
+        Header("Основные"),
+        Switch(
+            key="enable_feature",
+            text="Включить фичу",
+            default=False,
+            on_change=self.refresh_settings
+        ),
+    ]
+    
+    # Показываем доп. настройки только если включено
+    if is_enabled:
+        settings.extend([
+            Input(
+                key="feature_param",
+                text="Параметр фичи",
+                default="",
+                on_change=self._on_param_changed
+            ),
+            Switch(
+                key="feature_advanced",
+                text="Расширенный режим",
+                default=False,
+                on_change=self.refresh_settings
+            ),
+        ])
+    
+    return settings
+
+def _on_param_changed(self, value):
+    self.set_setting("feature_param", value)
+    self.refresh_settings()
+```
+
+## Технические детали
+
+### Как это работает внутри
+
+1. **Нажатие на настройку** → `on_change` вызывает функцию
+2. **Сохранение** → `self.set_setting()` сохраняет значение
+3. **Запуск refresh** → `refresh_settings()` получает список настроек
+4. **Анимация исчезновения** → список прозрачнеет (80ms)
+5. **Перезагрузка** → `PluginsController.getInstance().loadPluginSettings()` загружает новые настройки
+6. **Анимация появления** → список появляется (180ms)
+
+### Время анимаций
+
+```python
+.setDuration(80)    # Исчезновение - 80 миллисекунд
+.postDelayed(50)    # Задержка между исчезновением и появлением - 50ms
+.setDuration(180)   # Появление - 180 миллисекунд
+```
+
+Итого: 80 + 50 + 180 = 310 миллисекунд (примерно 0.3 секунды)
+
+## Лучшие практики
+
+### ✅ Правильно
+
+```python
+# 1. Используйте on_change для простых настроек
+Switch(
+    key="option",
+    text="Опция",
+    default=True,
+    on_change=self.refresh_settings
+)
+
+# 2. Для сложной логики используйте обработчик
+Input(
+    key="text",
+    text="Текст",
+    default="",
+    on_change=self._on_text_changed
+)
+
+def _on_text_changed(self, value):
+    # Валидация
+    if not validate(value):
+        BulletinHelper.show_error("Неверное значение")
+        return
+    # Сохраняем
+    self.set_setting("text", value)
+    # Обновляем
+    self.refresh_settings()
+
+# 3. Вызывайте refresh_settings() после any изменения
+self.set_setting("key", value)
+self.refresh_settings()
+```
+
+### ❌ Неправильно
+
+```python
+# НЕ забывайте вызывать refresh_settings()
+def _on_click(self, view=None):
+    self.set_setting("value", 123)
+    # ОШИБКА: refresh_settings() не вызван!
+
+# НЕ используйте сложную логику в on_change напрямую
+Switch(
+    key="option",
+    text="Опция",
+    on_change=lambda v: (
+        self.set_setting("option", v),
+        self.complex_logic(),  # ПЛОХО!
+        self.refresh_settings()
+    )
+)
+```
+
+## Полный пример плагина
+
+```python
+from base_plugin import BasePlugin
+from ui.settings import Header, Input, Switch, Divider, Text
+from ui.bulletin import BulletinHelper
+from android.os import Handler, Looper
+from hook_utils import get_private_field
+from com.exteragram.messenger.plugins import PluginsController
+from android.view.animation import AccelerateDecelerateInterpolator, DecelerateInterpolator
+from android_utils import run_on_ui_thread
+from client_utils import get_last_fragment
+
+class MyAwesomePlugin(BasePlugin):
+    
+    def on_plugin_load(self):
+        self.log("Плагин загружен!")
+    
+    def create_settings(self):
+        username = self.get_setting("username", "")
+        is_premium = self.get_setting("is_premium", False)
+        
+        settings = [
+            Header("👤 Профиль"),
+            Input(
+                key="username",
+                text="Ваше имя",
+                default="",
+                icon="msg_contacts",
+                on_change=self._on_username_changed
+            ),
+            Switch(
+                key="is_premium",
+                text="Premium режим",
+                default=False,
+                icon="msg_premium",
+                on_change=self.refresh_settings
+            ),
+        ]
+        
+        if is_premium:
+            settings.extend([
+                Input(
+                    key="premium_key",
+                    text="Ключ Premium",
+                    default="",
+                    icon="msg_permissions",
+                    on_change=self._on_key_changed
+                ),
+            ])
+        
+        settings.extend([
+            Divider(),
+            Header("⚙️ Действия"),
+            Text(
+                text="Сброс настроек",
+                icon="msg_delete",
+                red=True,
+                on_click=self._on_reset_click
+            ),
+        ])
+        
+        return settings
+    
+    def _on_username_changed(self, value):
+        if len(value) < 2:
+            BulletinHelper.show_error("Имя должно быть минимум 2 символа")
+            return
+        self.set_setting("username", value)
+        self.refresh_settings()
+    
+    def _on_key_changed(self, value):
+        self.set_setting("premium_key", value)
+        self.refresh_settings()
+    
+    def _on_reset_click(self, view=None):
+        self.set_setting("username", "")
+        self.set_setting("is_premium", False)
+        self.set_setting("premium_key", "")
+        BulletinHelper.show_success("Настройки сброшены")
+        self.refresh_settings()
+    
+    def refresh_settings(self, *args):
+        def refresher():
+            try:
+                from android_utils import R as RunnableArg 
+                fragment = get_last_fragment()
+                listView = None
+                
+                if fragment:
+                    cls_name = str(fragment.getClass().getName())
+                    if "PluginSettingsActivity" in cls_name:
+                        listView = get_private_field(fragment, "listView")
+
+                if not listView:
+                    PluginsController.getInstance().loadPluginSettings(self.id)
+                    return
+
+                listView.animate()\
+                    .alpha(0.0)\
+                    .setDuration(80)\
+                    .setInterpolator(AccelerateDecelerateInterpolator())\
+                    .withEndAction(RunnableArg(lambda: self._on_fade_out_complete(listView)))\
+                    .start()
+
+            except Exception:
+                PluginsController.getInstance().loadPluginSettings(self.id)
+
+        run_on_ui_thread(refresher)
+
+    def _on_fade_out_complete(self, listView):
+        try:
+            from android_utils import R as RunnableArg
+            
+            PluginsController.getInstance().loadPluginSettings(self.id)
+            
+            def start_fade_in():
+                try:
+                    listView.setAlpha(0.0)
+                    listView.setTranslationY(20.0)
+                    listView.animate()\
+                        .alpha(1.0)\
+                        .translationY(0.0)\
+                        .setDuration(180)\
+                        .setInterpolator(DecelerateInterpolator())\
+                        .start()
+                except: 
+                    pass
+
+            Handler(Looper.getMainLooper()).postDelayed(RunnableArg(start_fade_in), 50)
+
+        except Exception: 
+            pass
+```
+
+## Заключение
+
+Теперь у вас есть система мгновенного обновления настроек! 🎉
+
+**Основные шаги:**
+1. Импортируйте нужные классы
+2. Добавьте `on_change` в ваши элементы настроек
+3. Создайте методы обработчики
+4. Добавьте функции `refresh_settings()` и `_on_fade_out_complete()`
+5. Вызывайте `refresh_settings()` после изменений
+
+Готово! Теперь ваши настройки обновляются мгновенно с красивой анимацией! ✨
+```
+
+Этот гайд полностью описывает как сделать мгновенное обновление настроек. Вы можете использовать его как справку или добавить в документацию exteraGram! 📝
