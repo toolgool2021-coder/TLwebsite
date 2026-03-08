@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Neon Dark Webpage</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #E0E0E0;
+            font-family: Arial, sans-serif;
+        }
+        h1, h2, h3 {
+            color: #00FFAB;
+        }
+        input[type='file'] {
+            display: none;
+        }
+        .upload-container {
+            margin: 20px;
+            text-align: center;
+        }
+        .upload-btn {
+            background-color: #00FFAB;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-btn:hover {
+            background-color: #009b84;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Modern Neon Dark Webpage</h1>
+    </header>
+    <div class="upload-container">
+        <input type="file" id="avatarUpload" accept="image/*">
+        <label for="avatarUpload" class="upload-btn">Upload Avatar</label>
+    </div>
+    <script>
+        const uploadInput = document.getElementById('avatarUpload');
+        uploadInput.addEventListener('change', (event) => {
+            console.log('Avatar uploaded:', event.target.files[0]);
+            // Additional code for handling the uploaded file can be added here.
+        });
+    </script>
+</body>
+</html>
