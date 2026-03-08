@@ -69,7 +69,6 @@ html, body {
     display: flex;
     justify-content: center;
     gap: 10px;
-    flex-wrap: nowrap;        /* одна строка */
     overflow-x: auto;         /* чтобы на телефоне не пропадали */
     padding: 5px 10px;
 }
