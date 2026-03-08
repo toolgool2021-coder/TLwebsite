@@ -13,7 +13,7 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Центрирование */
+/* Цен��рирование */
 .container {
     display: flex;
     justify-content: center;
@@ -66,11 +66,12 @@ html, body {
 /* ===== SOCIALS ===== */
 
 .social-links {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-    flex-wrap: nowrap;        /* одна строка */
-    overflow-x: auto;         /* чтобы на телефоне не пропадали */
+    justify-items: center;
+    max-width: 300px;
+    margin: 0 auto;
     padding: 5px 10px;
 }
 
@@ -79,7 +80,7 @@ html, body {
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    flex-shrink: 0;           /* не сжимать */
+    flex-shrink: 0;
     border: 2px solid #a855f7;
 }
 
