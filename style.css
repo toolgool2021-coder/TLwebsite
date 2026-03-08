@@ -7,41 +7,28 @@
 html, body {
     width: 100%;
     height: 100%;
-    font-family: Arial, sans-serif;
     background: #0a0a0a;
-    color: #ffffff;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow-x: hidden;
 }
 
-#snowCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-}
-
+/* Центрирование */
 .container {
-    position: relative;
-    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
 }
 
 .profile-section {
     text-align: center;
-    max-width: 600px;
-    width: 100%;
 }
 
+/* ===== AVATAR ===== */
+
 .avatar-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .avatar-wrapper {
@@ -49,8 +36,17 @@ html, body {
     height: 160px;
     border-radius: 50%;
     overflow: hidden;
+    margin: 0 auto;
+    position: relative;
+}
+
+.avatar-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
     border: 3px solid #a855f7;
-    box-shadow: 0 0 20px rgba(168,85,247,0.6);
+    pointer-events: none;
 }
 
 .avatar {
@@ -58,29 +54,33 @@ html, body {
     height: 100%;
     object-fit: cover;
     object-position: center;
-    display: block;
 }
+
+/* ===== USERNAME ===== */
 
 .username {
-    font-size: 2.2rem;
-    margin-bottom: 25px;
+    font-size: 26px;
+    margin-bottom: 15px;
 }
 
+/* ===== SOCIALS ===== */
+
 .social-links {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
-    justify-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: nowrap;        /* одна строка */
+    overflow-x: auto;         /* чтобы на телефоне не пропадали */
+    padding: 5px 10px;
 }
 
 .social-link {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-shrink: 0;           /* не сжимать */
+    border: 2px solid #a855f7;
 }
 
 .social-link img {
@@ -90,30 +90,14 @@ html, body {
     object-position: center;
 }
 
-.social-links a:nth-last-child(-n+3) {
-    grid-column: span 2;
-}
+/* ===== SNOW ===== */
 
-@media (max-width: 768px) {
-    .avatar-wrapper {
-        width: 140px;
-        height: 140px;
-    }
-
-    .social-link {
-        width: 40px;
-        height: 40px;
-    }
-}
-
-@media (max-width: 480px) {
-    .avatar-wrapper {
-        width: 120px;
-        height: 120px;
-    }
-
-    .social-link {
-        width: 36px;
-        height: 36px;
-    }
+#snowCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
