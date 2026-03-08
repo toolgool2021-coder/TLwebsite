@@ -1,90 +1,15 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    width: 100%;
-    height: 100%;
-    background: #0a0a0a;
-    font-family: Arial, sans-serif;
-    color: white;
-    overflow-x: hidden;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
-.profile-section {
-    text-align: center;
-}
-
-/* ===== АВАТАР ===== */
-
-.avatar-wrapper {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 auto 15px auto;
-    border: 3px solid #a855f7;
-    box-shadow: 0 0 20px rgba(168,85,247,0.7);
-}
-
-.avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-}
-
-/* ===== НИК ===== */
-
-.username {
-    font-size: 26px;
-    margin-bottom: 15px;
-}
-
-/* ===== СОЦСЕТИ ===== */
-
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.social-link {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #a855f7;
-    flex-shrink: 0;
-}
-
-.social-link img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-}
-
-/* ===== СНЕГ ===== */
-
-#snowCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0a0a0a;font-family:Arial,sans-serif;color:white;overflow-x:hidden}
+.container{display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column}
+.profile-section{text-align:center}
+.avatar-wrapper{width:160px;height:160px;border-radius:50%;overflow:hidden;margin:0 auto 15px auto;border:3px solid #a855f7;box-shadow:0 0 20px rgba(168,85,247,0.7)}
+.avatar{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.username{font-size:26px;margin-bottom:15px}
+.social-links-wrapper{overflow-x:auto;padding-bottom:10px}
+.social-links{display:flex;gap:12px;flex-wrap:nowrap;justify-content:flex-start}
+.social-link{flex:0 0 auto;width:45px;height:45px;border-radius:50%;overflow:hidden;border:2px solid #a855f7}
+.social-link img{width:100%;height:100%;object-fit:cover;object-position:center}
+.social-links-wrapper::-webkit-scrollbar{height:6px}
+.social-links-wrapper::-webkit-scrollbar-thumb{background:#a855f7;border-radius:3px}
+.social-links-wrapper::-webkit-scrollbar-track{background:rgba(255,255,255,0.05)}
+#snowCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
