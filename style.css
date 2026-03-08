@@ -13,14 +13,13 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Контейнер */
 .container {
     display: flex;
     justify-content: center;
     align-items: flex-start; /* аватар сверху */
     min-height: 100vh;
     flex-direction: column;
-    padding-top: 40px; /* немного отступ сверху */
+    padding-top: 40px;
 }
 
 .profile-section {
@@ -74,7 +73,7 @@ html, body {
     display: flex;
     justify-content: center;
     gap: 10px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap; /* чтобы на телефоне переносились и все были видны */
     margin-bottom: 30px;
 }
 
@@ -84,6 +83,7 @@ html, body {
     border-radius: 50%;
     overflow: hidden;
     position: relative;
+    flex-shrink: 0;
 }
 
 .social-link::after {
@@ -117,8 +117,14 @@ html, body {
 }
 
 /* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .avatar-wrapper { width: 140px; height: 140px; }
+    .social-link { width: 40px; height: 40px; }
+    .username { font-size: 24px; }
+}
+
 @media (max-width: 480px) {
     .avatar-wrapper { width: 120px; height: 120px; }
     .social-link { width: 35px; height: 35px; }
-    .username { font-size: 22px; }
+    .username { font-size: 20px; }
 }
