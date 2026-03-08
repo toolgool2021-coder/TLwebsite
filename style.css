@@ -69,13 +69,14 @@ html, body {
     display: flex;
     justify-content: center;
     gap: 10px;
+    flex-wrap: nowrap;        /* одна строка */
     overflow-x: auto;         /* чтобы на телефоне не пропадали */
     padding: 5px 10px;
 }
 
 .social-link {
-    width: 100px;
-    height: 100px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;           /* не сжимать */
