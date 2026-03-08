@@ -10,14 +10,14 @@ window.addEventListener('resize', () => {
 });
 
 const snowflakes = [];
-const maxFlakes = 100;
+const maxFlakes = 120;
 
 for (let i = 0; i < maxFlakes; i++) {
     snowflakes.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        r: Math.random() * 4 + 1,
-        d: Math.random() * maxFlakes
+        r: Math.random() * 3 + 1,
+        speed: Math.random() * 1 + 0.5
     });
 }
 
@@ -25,27 +25,34 @@ function drawSnow() {
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "rgba(255,255,255,0.3)";
     ctx.beginPath();
-    for (let i = 0; i < snowflakes.length; i++) {
-        const f = snowflakes[i];
+
+    for (let f of snowflakes) {
         ctx.moveTo(f.x, f.y);
-        ctx.arc(f.x, f.y, f.r, 0, Math.PI*2, true);
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
     }
+
     ctx.fill();
-    moveSnow();
+    updateSnow();
 }
 
 let angle = 0;
-function moveSnow() {
-    angle += 0.01;
-    for (let i = 0; i < snowflakes.length; i++) {
-        const f = snowflakes[i];
-        f.y += Math.cos(angle + f.d) + 1 + f.r/2;
-        f.x += Math.sin(angle) * 2;
 
-        if(f.y > height) {
-            snowflakes[i] = {x: Math.random()*width, y:0, r:f.r, d:f.d};
+function updateSnow() {
+    angle += 0.002;
+
+    for (let f of snowflakes) {
+        f.y += f.speed;
+        f.x += Math.sin(angle) * 0.3; // лёгкое движение без пустоты
+
+        if (f.y > height) {
+            f.y = 0;
+            f.x = Math.random() * width;
         }
+
+        if (f.x > width) f.x = 0;
+        if (f.x < 0) f.x = width;
     }
+
     requestAnimationFrame(drawSnow);
 }
 
