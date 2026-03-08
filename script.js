@@ -10,7 +10,7 @@ window.addEventListener('resize', () => {
 });
 
 const snowflakes = [];
-const maxFlakes = 120;
+const maxFlakes = 150;
 
 for (let i = 0; i < maxFlakes; i++) {
     snowflakes.push({
@@ -35,20 +35,13 @@ function drawSnow() {
     updateSnow();
 }
 
-let angle = 0;
-
 function updateSnow() {
-    angle += 0.002;
-
     for (let f of snowflakes) {
         f.y += f.speed;
-        f.x += Math.sin(angle) * 0.3; // лёгкое движение без пустоты
+        f.x += Math.sin(f.y / height * Math.PI * 2) * 0.5; // лёгкое колебание
 
-        if (f.y > height) {
-            f.y = 0;
-            f.x = Math.random() * width;
-        }
-
+        // переносим снежинку на противоположный край
+        if (f.y > height) f.y = 0;
         if (f.x > width) f.x = 0;
         if (f.x < 0) f.x = width;
     }
