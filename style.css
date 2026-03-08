@@ -13,7 +13,7 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Цен��рирование */
+/* Центрирование */
 .container {
     display: flex;
     justify-content: center;
@@ -26,7 +26,6 @@ html, body {
 }
 
 /* ===== AVATAR ===== */
-
 .avatar-container {
     margin-bottom: 15px;
 }
@@ -57,31 +56,34 @@ html, body {
 }
 
 /* ===== USERNAME ===== */
-
 .username {
     font-size: 26px;
     margin-bottom: 15px;
 }
 
 /* ===== SOCIALS ===== */
-
 .social-links {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    justify-items: center;
-    max-width: 300px;
-    margin: 0 auto;
-    padding: 5px 10px;
+    grid-template-columns: repeat(5, 50px);
+    gap: 15px;
+    justify-content: center;
+    padding: 10px;
 }
 
 .social-link {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     overflow: hidden;
-    flex-shrink: 0;
     border: 2px solid #a855f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.social-link:hover {
+    transform: scale(1.1);
 }
 
 .social-link img {
@@ -92,7 +94,6 @@ html, body {
 }
 
 /* ===== SNOW ===== */
-
 #snowCanvas {
     position: fixed;
     top: 0;
