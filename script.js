@@ -1,59 +1,52 @@
-// Falling Snow Animation
-function createSnowflakes() {
-    const snowflakeCount = 100;
-    const snowContainer = document.createElement("div");
-    document.body.appendChild(snowContainer);
+const canvas = document.getElementById('snowCanvas');
+const ctx = canvas.getContext('2d');
 
-    for (let i = 0; i < snowflakeCount; i++) {
-        const snowflake = document.createElement("div");
-        snowflake.className = "snowflake";
-        snowflake.style.position = "absolute";
-        snowflake.style.top = `${Math.random() * 100}vh`;
-        snowflake.style.left = `${Math.random() * 100}vw`;
-        snowflake.style.opacity = Math.random();
-        snowContainer.appendChild(snowflake);
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
 
-        // Animate snowflakes
-        snowflake.animate([
-            { transform: 'translateY(0)' },
-            { transform: `translateY(${window.innerHeight}px)` }
-        ], {
-            duration: (Math.random() * 5 + 5) * 1000,
-            easing: 'linear',
-            iterations: Infinity
-        });
-    }
-}
-createSnowflakes();
-
-// Avatar Upload Functionality
-document.getElementById('avatarUpload').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('avatarPreview').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
+window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
 });
 
-// Social Links Data
-const socialLinks = [
-    { platform: 'Facebook', url: 'https://www.facebook.com/' },
-    { platform: 'Twitter', url: 'https://www.twitter.com/' },
-    { platform: 'Instagram', url: 'https://www.instagram.com/' },
-];
+const snowflakes = [];
+const maxFlakes = 100;
 
-// Function to render social links
-function renderSocialLinks() {
-    const socialContainer = document.getElementById('socialLinks');
-    socialLinks.forEach(link => {
-        const anchor = document.createElement('a');
-        anchor.href = link.url;
-        anchor.textContent = link.platform;
-        anchor.target = '_blank';
-        socialContainer.appendChild(anchor);
+for (let i = 0; i < maxFlakes; i++) {
+    snowflakes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 4 + 1,
+        d: Math.random() * maxFlakes
     });
 }
-renderSocialLinks();
+
+function drawSnow() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "rgba(255,255,255,0.3)";
+    ctx.beginPath();
+    for (let i = 0; i < snowflakes.length; i++) {
+        const f = snowflakes[i];
+        ctx.moveTo(f.x, f.y);
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI*2, true);
+    }
+    ctx.fill();
+    moveSnow();
+}
+
+let angle = 0;
+function moveSnow() {
+    angle += 0.01;
+    for (let i = 0; i < snowflakes.length; i++) {
+        const f = snowflakes[i];
+        f.y += Math.cos(angle + f.d) + 1 + f.r/2;
+        f.x += Math.sin(angle) * 2;
+
+        if(f.y > height) {
+            snowflakes[i] = {x: Math.random()*width, y:0, r:f.r, d:f.d};
+        }
+    }
+    requestAnimationFrame(drawSnow);
+}
+
+drawSnow();
