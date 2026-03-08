@@ -13,7 +13,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Центрирование */
 .container {
     display: flex;
     justify-content: center;
@@ -25,28 +24,16 @@ html, body {
     text-align: center;
 }
 
-/* ===== AVATAR ===== */
-
-.avatar-container {
-    margin-bottom: 15px;
-}
+/* ===== АВАТАР ===== */
 
 .avatar-wrapper {
     width: 160px;
     height: 160px;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0 auto;
-    position: relative;
-}
-
-.avatar-wrapper::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
+    margin: 0 auto 15px auto;
     border: 3px solid #a855f7;
-    pointer-events: none;
+    box-shadow: 0 0 20px rgba(168,85,247,0.7);
 }
 
 .avatar {
@@ -54,33 +41,32 @@ html, body {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    display: block;
 }
 
-/* ===== USERNAME ===== */
+/* ===== НИК ===== */
 
 .username {
     font-size: 26px;
     margin-bottom: 15px;
 }
 
-/* ===== SOCIALS ===== */
+/* ===== СОЦСЕТИ ===== */
 
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    flex-wrap: nowrap;        /* одна строка */
-    overflow-x: auto;         /* чтобы на телефоне не пропадали */
-    padding: 5px 10px;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .social-link {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     overflow: hidden;
-    flex-shrink: 0;           /* не сжимать */
     border: 2px solid #a855f7;
+    flex-shrink: 0;
 }
 
 .social-link img {
@@ -88,9 +74,10 @@ html, body {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    display: block;
 }
 
-/* ===== SNOW ===== */
+/* ===== СНЕГ ===== */
 
 #snowCanvas {
     position: fixed;
