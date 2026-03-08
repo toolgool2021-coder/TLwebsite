@@ -119,16 +119,15 @@ html, body {
    SOCIAL LINKS
    ============================================ */
 .social-links-wrapper {
-    overflow-x: auto;
-    padding: 0 10px 10px 10px;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden; /* больше не горизонтальный скролл */
+    padding: 0 5px 10px 5px;
 }
 
 .social-links {
     display: flex;
     gap: 12px;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
+    flex-wrap: wrap; /* теперь переносятся вниз */
+    justify-content: center; /* по центру */
 }
 
 .social-link {
@@ -157,18 +156,6 @@ html, body {
 
 .social-link:hover img {
     filter: brightness(1.2) drop-shadow(0 0 6px rgba(168, 85, 247, 0.8));
-}
-
-/* Скрытый скроллбар */
-.social-links-wrapper::-webkit-scrollbar {
-    height: 6px;
-}
-.social-links-wrapper::-webkit-scrollbar-thumb {
-    background: #a855f7;
-    border-radius: 3px;
-}
-.social-links-wrapper::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.05);
 }
 
 /* ============================================
