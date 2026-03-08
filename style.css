@@ -1,6 +1,3 @@
-/* ============================================
-   GLOBAL STYLES
-   ============================================ */
 * {
     margin: 0;
     padding: 0;
@@ -16,9 +13,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* ============================================
-   CANVAS - FALLING SNOW
-   ============================================ */
 #snowCanvas {
     position: fixed;
     top: 0;
@@ -29,9 +23,6 @@ html, body {
     z-index: 1;
 }
 
-/* ============================================
-   CONTAINER
-   ============================================ */
 .container {
     position: relative;
     z-index: 10;
@@ -40,21 +31,14 @@ html, body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    flex-direction: column;
 }
 
-/* ============================================
-   PROFILE SECTION
-   ============================================ */
 .profile-section {
     text-align: center;
     max-width: 500px;
     width: 100%;
 }
 
-/* ============================================
-   AVATAR
-   ============================================ */
 .avatar-container {
     display: flex;
     justify-content: center;
@@ -62,25 +46,23 @@ html, body {
 }
 
 .avatar-wrapper {
-    position: relative;
     width: 160px;
     height: 160px;
     border-radius: 50%;
     overflow: hidden;
     margin: 0 auto;
-    border: 3px solid #a855f7;
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6),
-                0 0 40px rgba(168, 85, 247, 0.3),
-                inset 0 0 20px rgba(168, 85, 247, 0.2);
 }
 
 .avatar {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-    cursor: pointer;
+    border: 3px solid #a855f7;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6),
+                0 0 40px rgba(168, 85, 247, 0.3),
+                inset 0 0 20px rgba(168, 85, 247, 0.2);
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .avatar:hover {
@@ -90,13 +72,10 @@ html, body {
                 inset 0 0 20px rgba(168, 85, 247, 0.3);
 }
 
-/* ============================================
-   USERNAME
-   ============================================ */
 .username {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     color: #ffffff;
     text-shadow: 0 0 20px rgba(168, 85, 247, 0.5),
                  0 0 40px rgba(168, 85, 247, 0.2);
@@ -115,62 +94,109 @@ html, body {
     }
 }
 
-/* ============================================
-   SOCIAL LINKS
-   ============================================ */
-.social-links-wrapper {
-    overflow-x: hidden; /* больше не горизонтальный скролл */
-    padding: 0 5px 10px 5px;
-}
-
 .social-links {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 12px;
-    flex-wrap: wrap; /* теперь переносятся вниз */
-    justify-content: center; /* по центру */
+    margin-top: 20px;
+}
+
+.social-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .social-link {
-    flex: 0 0 auto;
-    width: 45px;
-    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #a855f7;
     transition: all 0.3s ease;
 }
 
 .social-link img {
-    width: 100%;
-    height: 100%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     object-fit: cover;
-    object-position: center;
     transition: all 0.3s ease;
 }
 
 .social-link:hover {
-    transform: scale(1.15) translateY(-3px);
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6),
-                0 0 40px rgba(168, 85, 247, 0.3);
+    transform: scale(1.15) translateY(-5px);
 }
 
-.social-link:hover img {
-    filter: brightness(1.2) drop-shadow(0 0 6px rgba(168, 85, 247, 0.8));
-}
-
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
 @media (max-width: 768px) {
-    .avatar-wrapper { width: 140px; height: 140px; }
-    .avatar { width: 100%; height: 100%; }
-    .username { font-size: 2rem; margin-bottom: 18px; }
-    .social-link { width: 40px; height: 40px; }
+    .avatar-wrapper {
+        width: 140px;
+        height: 140px;
+    }
+
+    .avatar {
+        border: 2.5px solid #a855f7;
+    }
+
+    .username {
+        font-size: 2rem;
+        margin-bottom: 25px;
+    }
+
+    .social-link {
+        width: 45px;
+        height: 45px;
+    }
+
+    .social-link img {
+        width: 35px;
+        height: 35px;
+    }
 }
 
 @media (max-width: 480px) {
-    .avatar-wrapper { width: 120px; height: 120px; }
-    .avatar { width: 100%; height: 100%; }
-    .username { font-size: 1.6rem; margin-bottom: 15px; }
-    .social-link { width: 35px; height: 35px; }
+    .avatar-wrapper {
+        width: 120px;
+        height: 120px;
+    }
+
+    .avatar {
+        border: 2px solid #a855f7;
+    }
+
+    .username {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+    }
+
+    .social-link img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #a855f7;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9333ea;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
 }
