@@ -120,15 +120,6 @@ body::before {
     pointer-events: none;
 }
 
-@keyframes wave {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(600px);
-    }
-}
-
 /* ===== ФУТЕР ===== */
 footer {
     background: rgba(10, 10, 10, 0.9);
