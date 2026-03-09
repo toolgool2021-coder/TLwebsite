@@ -104,9 +104,7 @@ html, body {
     z-index: 1;
 }
 
-/* ===== FOOTER STYLES ===== */
-
-/* Анимированный фон с волнами */
+/* ===== АНИМИРОВАННЫЙ ФОН С ВОЛНАМИ (ТОЛЬКО ОДНА) ===== */
 body::before {
     content: '';
     position: fixed;
@@ -115,43 +113,23 @@ body::before {
     width: 100%;
     height: 200px;
     background: 
-        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,50 Q300,0 600,50 T1200,50 L1200,120 L0,120 Z" fill="rgba(168,85,247,0.1)"/></svg>');
-    background-size: 1200px 120px;
-    animation: wave 15s linear infinite;
-    z-index: 0;
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgba(168,85,247,0.3);stop-opacity:1" /><stop offset="50%" style="stop-color:rgba(0,255,200,0.3);stop-opacity:1" /><stop offset="100%" style="stop-color:rgba(168,85,247,0.3);stop-opacity:1" /></linearGradient></defs><path d="M0,60 Q300,30 600,60 T1200,60 L1200,120 L0,120 Z" fill="url(%23grad1)"/><path d="M0,70 Q300,40 600,70 T1200,70 L1200,120 L0,120 Z" fill="rgba(0,255,200,0.15)"/></svg>');
+    background-size: 600px 120px;
+    animation: wave 8s linear infinite;
+    z-index: 2;
     pointer-events: none;
 }
 
 @keyframes wave {
-    0% { background-position: 0 0; }
-    100% { background-position: 1200px 0; }
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(600px);
+    }
 }
 
-/* Плавающие светящиеся частицы */
-body::after {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    background-image: 
-        radial-gradient(2px 2px at 10% 20%, #00ffff, rgba(0,255,255,0)),
-        radial-gradient(2px 2px at 60% 70%, #a855f7, rgba(168,85,247,0)),
-        radial-gradient(1px 1px at 50% 50%, #00ff88, rgba(0,255,136,0));
-    background-size: 200% 200%;
-    animation: particles 20s ease infinite;
-    z-index: 0;
-    pointer-events: none;
-}
-
-@keyframes particles {
-    0% { background-position: 0% 0%; }
-    50% { background-position: 100% 100%; }
-    100% { background-position: 0% 0%; }
-}
-
-/* ФУТЕР */
+/* ===== ФУТЕР ===== */
 footer {
     background: rgba(10, 10, 10, 0.9);
     backdrop-filter: blur(10px);
@@ -318,4 +296,4 @@ footer {
     footer {
         padding: 30px 15px;
     }
-    }
+}
