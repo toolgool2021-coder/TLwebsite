@@ -1,10 +1,8 @@
-// ===== TOAST NOTIFICATION SYSTEM =====
-class ToastManager {
-    constructor() {
-        this.container = document.getElementById('toastContainer');
-    }
-
-    show(message, type = 'info', duration = 3000) {
+// ===== TOAST MANAGER =====
+const toastManager = (() => {
+    const container = document.getElementById('toastContainer');
+    
+    function showToast(message, type = 'info') {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         
@@ -19,91 +17,43 @@ class ToastManager {
             <span class="toast-message">${message}</span>
         `;
         
-        this.container.appendChild(toast);
+        container.appendChild(toast);
         
         setTimeout(() => {
             toast.classList.add('removing');
             setTimeout(() => toast.remove(), 300);
-        }, duration);
+        }, 3000);
     }
+    
+    return {
+        success: (msg) => showToast(msg, 'success'),
+        error: (msg) => showToast(msg, 'error'),
+        info: (msg) => showToast(msg, 'info')
+    };
+})();
 
-    success(message) {
-        this.show(message, 'success');
+// ===== LOGIN MODAL =====
+const loginModal = (() => {
+    const modal = document.getElementById('loginModal');
+    const closeBtn = document.querySelector('.modal-close');
+    
+    closeBtn.addEventListener('click', close);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) close();
+    });
+    
+    function open() {
+        modal.classList.add('active');
     }
-
-    error(message) {
-        this.show(message, 'error', 4000);
+    
+    function close() {
+        modal.classList.remove('active');
     }
+    
+    return { open, close };
+})();
 
-    info(message) {
-        this.show(message, 'info');
-    }
-}
-
-const toastManager = new ToastManager();
-
-// ===== MODAL MANAGER =====
-class ModalManager {
-    constructor(modalId) {
-        this.modal = document.getElementById(modalId);
-        this.closeBtn = this.modal.querySelector('.modal-close');
-        this.setup();
-    }
-
-    setup() {
-        this.closeBtn.addEventListener('click', () => this.close());
-        window.addEventListener('click', (e) => {
-            if (e.target === this.modal) this.close();
-        });
-    }
-
-    open() {
-        this.modal.classList.add('active');
-    }
-
-    close() {
-        this.modal.classList.remove('active');
-    }
-
-    toggle() {
-        this.modal.classList.toggle('active');
-    }
-}
-
-const loginModal = new ModalManager('loginModal');
-
-// ===== USER SESSION ===== 
-class UserSession {
-    constructor() {
-        this.currentUser = null;
-        this.loadFromStorage();
-    }
-
-    login(account) {
-        this.currentUser = account;
-        localStorage.setItem('currentUser', JSON.stringify(account));
-    }
-
-    logout() {
-        this.currentUser = null;
-        localStorage.removeItem('currentUser');
-    }
-
-    loadFromStorage() {
-        const stored = localStorage.getItem('currentUser');
-        if (stored) {
-            this.currentUser = JSON.parse(stored);
-        }
-    }
-
-    isLoggedIn() {
-        return this.currentUser !== null;
-    }
-}
-
-const userSession = new UserSession();
-
-// ===== UPDATE UI BASED ON SESSION =====
+// ===== AUTH UI =====
 function updateAuthUI() {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
@@ -117,4 +67,5 @@ function updateAuthUI() {
     }
 }
 
+// Initialize auth UI
 updateAuthUI();
