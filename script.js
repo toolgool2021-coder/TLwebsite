@@ -1,6 +1,7 @@
 // ===== INITIALIZATION =====
-
 let currentIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
 
 // ===== DOM ELEMENTS =====
 const loginBtn = document.getElementById('loginBtn');
@@ -12,7 +13,7 @@ const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const rankOverlay = document.getElementById('rankOverlay');
 
-// ===== RENDER CARDS =====
+// ===== RENDER CARDS (With Better Design) =====
 function renderCards() {
     cardsTrack.innerHTML = '';
     const users = userManager.getAll();
@@ -31,8 +32,8 @@ function renderCards() {
         `).join('');
 
         card.innerHTML = `
-            <div class="card-avatar">
-                <img src="${user.avatar}" alt="${user.name}">
+            <div class="card-avatar-container">
+                <img src="${user.avatar}" alt="${user.name}" class="card-avatar">
             </div>
             <h2 class="card-name">${user.name}</h2>
             <div class="card-username ${user.username.includes('@') ? 'data-link' : ''}" 
@@ -43,7 +44,7 @@ function renderCards() {
             <div class="card-badges">${badgesHTML}</div>
         `;
 
-        // Click на карточку = burst effect
+        // Click effect
         card.addEventListener('click', (e) => {
             if (!e.target.closest('.badge') && !e.target.closest('.card-username')) {
                 const rect = card.getBoundingClientRect();
@@ -61,7 +62,7 @@ function renderCards() {
 
 // ===== UPDATE CAROUSEL POSITION =====
 function updateCarouselPosition() {
-    const offset = -currentIndex * (320 + 32); // 320px card + 32px gap
+    const offset = -currentIndex * (300 + 32); // 300px card + 32px gap
     cardsTrack.style.transform = `translateX(calc(50vw - 150px + ${offset}px))`;
     
     document.querySelectorAll('.card').forEach((card, index) => {
@@ -74,7 +75,6 @@ prevBtn.addEventListener('click', () => {
     const user = userManager.prev();
     currentIndex = userManager.currentIndex;
     
-    // Trail effect
     const card = document.querySelector('.card.active');
     if (card) {
         const rect = card.getBoundingClientRect();
@@ -88,7 +88,6 @@ nextBtn.addEventListener('click', () => {
     const user = userManager.next();
     currentIndex = userManager.currentIndex;
     
-    // Trail effect
     const card = document.querySelector('.card.active');
     if (card) {
         const rect = card.getBoundingClientRect();
@@ -97,6 +96,29 @@ nextBtn.addEventListener('click', () => {
     
     renderCards();
 });
+
+// ===== TOUCH SWIPE =====
+cardsTrack.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+cardsTrack.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            nextBtn.click(); // Свайп влево = следующий
+        } else {
+            prevBtn.click(); // Свайп вправо = предыдущий
+        }
+    }
+}
 
 // ===== LOGIN LOGIC =====
 loginBtn.addEventListener('click', () => {
@@ -135,7 +157,6 @@ function showRankAnimation(account) {
     
     avatarImg.src = account.avatar;
     
-    // Animate через все уровни
     let currentRank = 1;
     const targetRank = account.rankLevel;
     const totalFrames = 30;
@@ -145,7 +166,6 @@ function showRankAnimation(account) {
         frame++;
         const progress = frame / totalFrames;
         
-        // Acceleration
         const acceleratedProgress = Math.pow(progress, 1.5);
         currentRank = Math.floor(1 + (targetRank - 1) * acceleratedProgress);
         
@@ -155,7 +175,6 @@ function showRankAnimation(account) {
         if (frame >= totalFrames) {
             clearInterval(animationInterval);
             
-            // Final impact
             rankNumber.style.animation = 'none';
             setTimeout(() => {
                 rankNumber.style.animation = 'rankFinalImpact 0.5s ease';
@@ -166,14 +185,12 @@ function showRankAnimation(account) {
         }
     }, 30);
     
-    // Close after animation
     setTimeout(() => {
         rankOverlay.classList.remove('active');
         setTimeout(() => rankOverlay.classList.add('hidden'), 300);
     }, 4000);
 }
 
-// Add final impact animation
 const finalImpactStyle = document.createElement('style');
 finalImpactStyle.textContent = `
     @keyframes rankFinalImpact {
