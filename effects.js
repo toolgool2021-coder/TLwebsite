@@ -1,189 +1,132 @@
-// ===== IMPROVED EFFECTS SYSTEM =====
-
-class EffectsManager {
-    constructor() {
-        this.activeEffects = [];
-        this.effectsLayer = document.getElementById('effectsLayer');
+// ===== EFFECTS MANAGER =====
+const effectsManager = (() => {
+    const effectsLayer = document.getElementById('effectsLayer');
+    
+    const effectTypes = {
+        fire: {
+            color: '#ff6b35',
+            glow: 'rgba(255, 107, 53, 0.6)',
+            particles: 12
+        },
+        lightning: {
+            color: '#00d4ff',
+            glow: 'rgba(0, 212, 255, 0.6)',
+            particles: 8
+        },
+        wind: {
+            color: '#a0e7e5',
+            glow: 'rgba(160, 231, 229, 0.6)',
+            particles: 15
+        },
+        earth: {
+            color: '#8b7355',
+            glow: 'rgba(139, 115, 85, 0.6)',
+            particles: 10
+        },
+        water: {
+            color: '#00b4db',
+            glow: 'rgba(0, 180, 219, 0.6)',
+            particles: 11
+        },
+        frost: {
+            color: '#4dd0e1',
+            glow: 'rgba(77, 208, 225, 0.6)',
+            particles: 9
+        }
+    };
+    
+    function getEffect(effectName) {
+        return effectTypes[effectName] || effectTypes.fire;
     }
-
-    createParticle(x, y, options = {}) {
-        const particle = document.createElement('div');
-        particle.style.position = 'fixed';
-        particle.style.left = x + 'px';
-        particle.style.top = y + 'px';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '51';
+    
+    function createBurst(effectName, x, y) {
+        const effect = getEffect(effectName);
+        const burstCount = 20;
         
-        const size = options.size || Math.random() * 6 + 3;
-        const color = options.color || '#6366f1';
-        const duration = options.duration || 1;
-
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        particle.style.borderRadius = '50%';
-        particle.style.background = color;
-        particle.style.boxShadow = `0 0 ${size * 3}px ${color}`;
-
-        const angle = options.angle || Math.random() * Math.PI * 2;
-        const velocity = options.velocity || Math.random() * 4 + 2;
-        const vx = Math.cos(angle) * velocity;
-        const vy = Math.sin(angle) * velocity;
-
-        const keyframes = `
-            @keyframes particle_${Date.now()}_${Math.random().toString(36).substr(2, 9)} {
-                0% {
-                    opacity: 1;
-                    transform: translate(0, 0) scale(1);
-                }
-                100% {
-                    opacity: 0;
-                    transform: translate(${vx * 100}px, ${vy * 100}px) scale(0);
-                }
-            }
-        `;
-
-        const style = document.createElement('style');
-        const animName = `particle_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        style.textContent = keyframes.replace(/particle_\d+_\w+/g, animName);
-        document.head.appendChild(style);
-
-        particle.style.animation = `${animName} ${duration}s ease-out forwards`;
-        this.effectsLayer.appendChild(particle);
-
-        setTimeout(() => {
-            particle.remove();
-            style.remove();
-        }, duration * 1000);
+        for (let i = 0; i < burstCount; i++) {
+            const angle = (i / burstCount) * Math.PI * 2;
+            const velocity = 200 + Math.random() * 300;
+            const endX = x + Math.cos(angle) * velocity;
+            const endY = y + Math.sin(angle) * velocity;
+            
+            const burst = document.createElement('div');
+            burst.className = 'burst';
+            burst.style.left = x + 'px';
+            burst.style.top = y + 'px';
+            burst.style.width = '12px';
+            burst.style.height = '12px';
+            burst.style.background = effect.color;
+            burst.style.boxShadow = `0 0 15px ${effect.glow}`;
+            burst.style.setProperty('--angle', angle);
+            burst.style.setProperty('--distance', velocity);
+            
+            effectsLayer.appendChild(burst);
+            
+            setTimeout(() => burst.remove(), 600);
+        }
     }
-
-    // ===== FIRE EFFECT =====
-    createFireBurst(x, y) {
-        for (let i = 0; i < 12; i++) {
+    
+    function createTrail(effectName, x, y) {
+        const effect = getEffect(effectName);
+        const trailCount = 5;
+        
+        for (let i = 0; i < trailCount; i++) {
             setTimeout(() => {
-                this.createParticle(x, y, {
-                    color: ['#f97316', '#fb923c', '#fbbf24'][Math.floor(Math.random() * 3)],
-                    size: Math.random() * 6 + 3,
-                    duration: 1,
-                    velocity: Math.random() * 6 + 3
-                });
-            }, i * 20);
+                const trail = document.createElement('div');
+                trail.className = 'trail';
+                trail.style.left = x + 'px';
+                trail.style.top = y + 'px';
+                trail.style.width = '20px';
+                trail.style.height = '20px';
+                trail.style.background = effect.color;
+                trail.style.boxShadow = `0 0 20px ${effect.glow}`;
+                trail.style.opacity = `${0.8 - i * 0.15}`;
+                
+                effectsLayer.appendChild(trail);
+                
+                setTimeout(() => trail.remove(), 800);
+            }, i * 50);
         }
     }
-
-    createFireTrail(x, y) {
-        for (let i = 0; i < 4; i++) {
-            this.createParticle(x + Math.random() * 30 - 15, y, {
-                color: '#f97316',
-                size: Math.random() * 5 + 2,
-                duration: 0.6,
-                angle: -Math.PI / 2 + (Math.random() * Math.PI / 3)
-            });
+    
+    function createParticles(effectName, x, y) {
+        const effect = getEffect(effectName);
+        const particleCount = effect.particles;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const angle = (Math.random() * Math.PI * 2);
+            const distance = 50 + Math.random() * 150;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+            
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.width = (4 + Math.random() * 4) + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = effect.color;
+            particle.style.boxShadow = `0 0 10px ${effect.glow}`;
+            particle.style.setProperty('--tx', tx + 'px');
+            particle.style.setProperty('--ty', ty + 'px');
+            particle.style.animation = `particleFloat ${0.8 + Math.random() * 0.4}s ease-out forwards`;
+            
+            effectsLayer.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1200);
         }
     }
-
-    // ===== LIGHTNING EFFECT =====
-    createLightningBurst(x, y) {
-        for (let i = 0; i < 10; i++) {
-            this.createParticle(x, y, {
-                color: '#6366f1',
-                size: Math.random() * 5 + 2,
-                duration: 0.5,
-                velocity: Math.random() * 8 + 4
-            });
-        }
+    
+    function createGlow(effectName, element) {
+        const effect = getEffect(effectName);
+        element.style.boxShadow = `0 0 40px ${effect.glow}, inset 0 0 30px ${effect.glow}`;
     }
-
-    createLightningTrail(x, y) {
-        for (let i = 0; i < 3; i++) {
-            this.createParticle(x + Math.random() * 20 - 10, y, {
-                color: '#6366f1',
-                size: Math.random() * 4 + 1,
-                duration: 0.4,
-                angle: -Math.PI / 2
-            });
-        }
-    }
-
-    // ===== AIR EFFECT =====
-    createAirBurst(x, y) {
-        for (let i = 0; i < 8; i++) {
-            this.createParticle(x, y, {
-                color: 'rgba(6, 182, 212, 0.8)',
-                size: Math.random() * 4 + 2,
-                duration: 0.8,
-                velocity: Math.random() * 6 + 3
-            });
-        }
-    }
-
-    createAirTrail(x, y) {
-        for (let i = 0; i < 3; i++) {
-            this.createParticle(x + Math.random() * 25 - 12, y, {
-                color: 'rgba(6, 182, 212, 0.7)',
-                size: Math.random() * 3 + 1,
-                duration: 0.5,
-                angle: Math.random() * Math.PI * 2
-            });
-        }
-    }
-
-    // ===== EARTH EFFECT =====
-    createEarthBurst(x, y) {
-        for (let i = 0; i < 14; i++) {
-            this.createParticle(x, y, {
-                color: ['#84cc16', '#a3e635'][Math.floor(Math.random() * 2)],
-                size: Math.random() * 6 + 2,
-                duration: 1.2,
-                velocity: Math.random() * 5 + 2
-            });
-        }
-    }
-
-    createEarthTrail(x, y) {
-        for (let i = 0; i < 3; i++) {
-            this.createParticle(x + Math.random() * 20 - 10, y, {
-                color: '#84cc16',
-                size: Math.random() * 4 + 1,
-                duration: 0.7,
-                angle: -Math.PI / 2 + (Math.random() * Math.PI / 4)
-            });
-        }
-    }
-
-    // ===== GENERAL METHODS =====
-    createTrail(effectType, x, y) {
-        switch (effectType) {
-            case 'fire':
-                this.createFireTrail(x, y);
-                break;
-            case 'lightning':
-                this.createLightningTrail(x, y);
-                break;
-            case 'air':
-                this.createAirTrail(x, y);
-                break;
-            case 'earth':
-                this.createEarthTrail(x, y);
-                break;
-        }
-    }
-
-    createBurst(effectType, x, y) {
-        switch (effectType) {
-            case 'fire':
-                this.createFireBurst(x, y);
-                break;
-            case 'lightning':
-                this.createLightningBurst(x, y);
-                break;
-            case 'air':
-                this.createAirBurst(x, y);
-                break;
-            case 'earth':
-                this.createEarthBurst(x, y);
-                break;
-        }
-    }
-}
-
-const effectsManager = new EffectsManager();
+    
+    return {
+        createBurst,
+        createTrail,
+        createParticles,
+        createGlow,
+        getEffect
+    };
+})();
