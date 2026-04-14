@@ -1,456 +1,80 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toolgool - Developer Portfolio</title>
-    
-    <!-- Font Awesome для иконок -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts - Inter и Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+// ===== USER DATA =====
+const USERS = [
+    {
+        id: "toolgool",
+        name: "Toolgool",
+        username: "@Toolgool",
+        avatar: "./images/avatars/toolgool.jpg",
+        description: "Developer | Creator | Maker of Cool Projects",
+        effect: "lightning",
+        color: "#6366f1"
+    },
+    {
+        id: "user2",
+        name: "Code Wizard",
+        username: "@CodeWizard",
+        avatar: "./images/avatars/user2.jpg",
+        description: "JavaScript Specialist",
+        effect: "fire",
+        color: "#f97316"
+    },
+    {
+        id: "user3",
+        name: "Design Master",
+        username: "@DesignMaster",
+        avatar: "./images/avatars/user3.jpg",
+        description: "UI/UX Designer",
+        effect: "air",
+        color: "#06b6d4"
+    },
+    {
+        id: "user4",
+        name: "Web Warrior",
+        username: "no-link",
+        avatar: "./images/avatars/user4.jpg",
+        description: "Full Stack Developer",
+        effect: "earth",
+        color: "#84cc16"
+    },
+    {
+        id: "user5",
+        name: "Backend Pro",
+        username: "@BackendPro",
+        avatar: "./images/avatars/user5.jpg",
+        description: "Node.js Expert",
+        effect: "lightning",
+        color: "#8b5cf6"
+    }
+];
 
-    <!-- ===== BACKGROUND ANIMATION ===== -->
-    <div class="background-animation">
-        <div class="gradient-orb orb-1"></div>
-        <div class="gradient-orb orb-2"></div>
-        <div class="gradient-orb orb-3"></div>
-    </div>
+// ===== USER MANAGER =====
+class UserManager {
+    constructor() {
+        this.users = USERS;
+        this.currentIndex = 0;
+    }
 
-    <!-- ===== NAVIGATION ===== -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="#home">
-                    <span class="logo-icon">⚡</span> Toolgool
-                </a>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Главная</a></li>
-                <li><a href="#about" class="nav-link">Обо мне</a></li>
-                <li><a href="#projects" class="nav-link">Проекты</a></li>
-                <li><a href="#contact" class="nav-link">Контакты</a></li>
-            </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </nav>
+    getCurrentUser() {
+        return this.users[this.currentIndex];
+    }
 
-    <!-- ===== HERO SECTION ===== -->
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <!-- Аватар -->
-            <div class="avatar-container fade-in">
-                <div class="avatar-wrapper">
-                    <div class="avatar-glow"></div>
-                    <img src="./images/icon.jpg" alt="Toolgool Avatar" class="avatar">
-                </div>
-            </div>
+    getUser(id) {
+        return this.users.find(u => u.id === id);
+    }
 
-            <!-- Заголовок и описание -->
-            <div class="hero-text fade-in" style="animation-delay: 0.2s;">
-                <h1 class="hero-title">
-                    Привет, я <span class="gradient-text">Toolgool</span>
-                </h1>
-                <p class="hero-subtitle">
-                    Developer | Creator | Maker of Cool Projects
-                </p>
-                <p class="hero-description">
-                    Создаю современные веб-приложения, боты и инструменты. 
-                    Специализируюсь на JavaScript, Web Technologies и автоматизации.
-                </p>
-            </div>
+    next() {
+        this.currentIndex = (this.currentIndex + 1) % this.users.length;
+        return this.getCurrentUser();
+    }
 
-            <!-- Кнопки действия -->
-            <div class="hero-buttons fade-in" style="animation-delay: 0.4s;">
-                <a href="#projects" class="btn btn-primary">
-                    Посмотреть проекты
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-                <a href="#contact" class="btn btn-secondary">
-                    Свяжитесь со мной
-                    <i class="fas fa-envelope"></i>
-                </a>
-            </div>
+    prev() {
+        this.currentIndex = (this.currentIndex - 1 + this.users.length) % this.users.length;
+        return this.getCurrentUser();
+    }
 
-            <!-- Социальные иконки -->
-            <div class="social-icons fade-in" style="animation-delay: 0.6s;">
-                <a href="https://github.com/toolgool2021-coder" target="_blank" class="social-icon" title="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://t.me/Toolgool" target="_blank" class="social-icon" title="Telegram">
-                    <i class="fab fa-telegram"></i>
-                </a>
-                <a href="https://www.youtube.com/@Toolgool2023" target="_blank" class="social-icon" title="YouTube">
-                    <i class="fab fa-youtube"></i>
-                </a>
-                <a href="https://www.tiktok.com/@Toolgool2023" target="_blank" class="social-icon" title="TikTok">
-                    <i class="fab fa-tiktok"></i>
-                </a>
-                <a href="https://www.instagram.com/Toolgool2023" target="_blank" class="social-icon" title="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://discord.com/users/Toolgool2023" target="_blank" class="social-icon" title="Discord">
-                    <i class="fab fa-discord"></i>
-                </a>
-            </div>
+    getAll() {
+        return this.users;
+    }
+}
 
-            <!-- Scroll indicator -->
-            <div class="scroll-indicator">
-                <span>Scroll</span>
-                <div class="mouse">
-                    <div class="wheel"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== ABOUT SECTION ===== -->
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title">Обо мне</h2>
-            
-            <div class="about-content">
-                <!-- Левая часть - информация -->
-                <div class="about-text">
-                    <p class="about-paragraph">
-                        Я — разработчик и создатель контента с опытом в разработке веб-приложений, 
-                        ботов и различных инструментов. Люблю создавать проекты, которые не только 
-                        функциональны, но и красиво выглядят.
-                    </p>
-                    <p class="about-paragraph">
-                        Мой путь в IT начался с увлечения программированием и постепенно перерос 
-                        в профессиональный опыт. Я работаю с современными технологиями и всегда 
-                        готов к новым вызовам.
-                    </p>
-                </div>
-
-                <!-- Правая часть - скиллы -->
-                <div class="skills-grid">
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fab fa-html5"></i>
-                        </div>
-                        <h3>Frontend</h3>
-                        <p>HTML, CSS, JavaScript, Responsive Design</p>
-                    </div>
-
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fab fa-js"></i>
-                        </div>
-                        <h3>JavaScript</h3>
-                        <p>Vanilla JS, DOM Manipulation, Animations</p>
-                    </div>
-
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fab fa-node-js"></i>
-                        </div>
-                        <h3>Backend</h3>
-                        <p>Node.js, Express, Automation</p>
-                    </div>
-
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <h3>Bots</h3>
-                        <p>Telegram Bots, Discord Bots</p>
-                    </div>
-
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-tools"></i>
-                        </div>
-                        <h3>Tools</h3>
-                        <p>Git, GitHub, DevTools</p>
-                    </div>
-
-                    <div class="skill-card">
-                        <div class="skill-icon">
-                            <i class="fas fa-paint-brush"></i>
-                        </div>
-                        <h3>Design</h3>
-                        <p>UI/UX, Modern Design, Animations</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== PROJECTS SECTION ===== -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title">Проекты</h2>
-            <p class="section-subtitle">Некоторые из моих работ и проектов</p>
-
-            <div class="projects-grid">
-                <!-- Проект 1 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">TL Website</div>
-                        <div class="project-overlay">
-                            <a href="https://toolgool2021-coder.github.io/TLwebsite/" target="_blank" class="project-link">
-                                Посмотреть
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3 class="project-title">TL Website</h3>
-                        <p class="project-description">
-                            Современный портал с интерактивными эффектами, снежной анимацией 
-                            и социальными ссылками.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">HTML</span>
-                            <span class="tag">CSS</span>
-                            <span class="tag">JavaScript</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Проект 2 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">Telegram Bot</div>
-                        <div class="project-overlay">
-                            <a href="https://t.me/Toolgool" target="_blank" class="project-link">
-                                Посмотреть
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3 class="project-title">Telegram Bot</h3>
-                        <p class="project-description">
-                            Полнофункциональный Telegram бот с различными командами и 
-                            интерактивными возможностями.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">Node.js</span>
-                            <span class="tag">Telegram API</span>
-                            <span class="tag">Bot</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Проект 3 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">Tools & Utils</div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/toolgool2021-coder" target="_blank" class="project-link">
-                                Посмотреть
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3 class="project-title">Tools & Utilities</h3>
-                        <p class="project-description">
-                            Набор полезных инструментов и утилит для автоматизации 
-                            различных задач.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">Python</span>
-                            <span class="tag">JavaScript</span>
-                            <span class="tag">Automation</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Проект 4 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">Web Apps</div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/toolgool2021-coder" target="_blank" class="project-link">
-                                Посмотреть
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3 class="project-title">Web Applications</h3>
-                        <p class="project-description">
-                            Современные веб-приложения с красивым интерфейсом и 
-                            плавными анимациями.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">HTML</span>
-                            <span class="tag">CSS</span>
-                            <span class="tag">JavaScript</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Проект 5 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">Discord Bot</div>
-                        <div class="project-overlay">
-                            <a href="https://discord.com/users/Toolgool2023" target="_blank" class="project-link">
-                                Посмотреть
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3 class="project-title">Discord Bot</h3>
-                        <p class="project-description">
-                            Мощный Discord бот с командами, модерацией и развлечениями 
-                            для сообщества.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">Discord.js</span>
-                            <span class="tag">Node.js</span>
-                            <span class="tag">Bot</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Проект 6 -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">Open Source</div>
-                        <div class="project-overlay">
-                            <a href="https://github.com/toolgool2021-coder" target="_blank" class="project-link">
-                                Посмотреть
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3 class="project-title">Open Source Projects</h3>
-                        <p class="project-description">
-                            Отрытые проекты и библиотеки, которыми пользуется сообщество 
-                            разработчиков.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">GitHub</span>
-                            <span class="tag">Open Source</span>
-                            <span class="tag">Community</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== CONTACT SECTION ===== -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Свяжитесь со мной</h2>
-            <p class="section-subtitle">Давайте создадим что-то удивительное вместе</p>
-
-            <div class="contact-content">
-                <!-- Контактная информация -->
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div>
-                            <h4>Email</h4>
-                            <a href="mailto:Toolgool2021@gmail.com">Toolgool2021@gmail.com</a>
-                        </div>
-                    </div>
-
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-telegram"></i>
-                        </div>
-                        <div>
-                            <h4>Telegram</h4>
-                            <a href="https://t.me/Toolgool" target="_blank">@Toolgool</a>
-                        </div>
-                    </div>
-
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-github"></i>
-                        </div>
-                        <div>
-                            <h4>GitHub</h4>
-                            <a href="https://github.com/toolgool2021-coder" target="_blank">toolgool2021-coder</a>
-                        </div>
-                    </div>
-
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-discord"></i>
-                        </div>
-                        <div>
-                            <h4>Discord</h4>
-                            <a href="https://discord.com/users/Toolgool2023" target="_blank">Toolgool2023</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Форма контакта -->
-                <div class="contact-form-container">
-                    <form class="contact-form">
-                        <div class="form-group">
-                            <input type="text" placeholder="Ваше имя" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" placeholder="Ваш email" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea placeholder="Сообщение" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            Отправить сообщение
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Социальные ссылки в подвале -->
-            <div class="social-grid">
-                <a href="https://t.me/Toolgool" target="_blank" class="social-badge">
-                    <i class="fab fa-telegram"></i> Telegram
-                </a>
-                <a href="https://www.tiktok.com/@Toolgool2023" target="_blank" class="social-badge">
-                    <i class="fab fa-tiktok"></i> TikTok
-                </a>
-                <a href="https://www.instagram.com/Toolgool2023" target="_blank" class="social-badge">
-                    <i class="fab fa-instagram"></i> Instagram
-                </a>
-                <a href="https://www.youtube.com/@Toolgool2023" target="_blank" class="social-badge">
-                    <i class="fab fa-youtube"></i> YouTube
-                </a>
-                <a href="https://vk.com/Toolgool" target="_blank" class="social-badge">
-                    <i class="fab fa-vk"></i> VK
-                </a>
-                <a href="https://www.twitch.tv/Toolgool2023" target="_blank" class="social-badge">
-                    <i class="fab fa-twitch"></i> Twitch
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== FOOTER ===== -->
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2024-2026 Toolgool. All rights reserved.</p>
-            <p class="footer-designed">Designed & Built with <span class="heart">❤️</span> by Toolgool</p>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+const userManager = new UserManager();
