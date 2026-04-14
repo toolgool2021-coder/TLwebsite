@@ -9,6 +9,7 @@ const USERS = [
         effect: "lightning",
         color: "#6366f1"
     }
+    
 // ===== USER MANAGER =====
 class UserManager {
     constructor() {
