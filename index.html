@@ -18,37 +18,54 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">⚡ Toolgool</div>
-            <button id="loginBtn" class="btn-login">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
+            <div class="header-actions">
+                <button id="loginBtn" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button id="logoutBtn" class="btn-logout hidden">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </div>
     </header>
 
+    <!-- ===== TOAST NOTIFICATIONS ===== -->
+    <div id="toastContainer" class="toast-container"></div>
+
     <!-- ===== LOGIN MODAL ===== -->
-    <div id="loginModal" class="login-modal">
-        <div class="login-content">
-            <button class="login-close">&times;</button>
-            <h2>Login</h2>
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2>Welcome Back</h2>
             <form id="loginForm">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
                 <button type="submit" class="btn btn-primary">Enter</button>
             </form>
+            <div class="login-hint">
+                <p>Demo: <strong>toolgool / 12345</strong></p>
+            </div>
         </div>
     </div>
 
     <!-- ===== RANK OVERLAY ===== -->
     <div id="rankOverlay" class="rank-overlay hidden">
         <div class="rank-container">
-            <div class="rank-avatar">
-                <img id="rankAvatarImg" src="" alt="Avatar">
-            </div>
-            <div class="rank-display">
-                <div id="rankNumber" class="rank-number">1</div>
-                <div id="rankType" class="rank-type">NOVICE</div>
-            </div>
-            <div class="rank-bar">
-                <div id="rankBar" class="rank-bar-fill"></div>
+            <div class="rank-content">
+                <div class="rank-avatar">
+                    <img id="rankAvatarImg" src="" alt="Avatar">
+                </div>
+                <div class="rank-info">
+                    <div id="rankNumber" class="rank-number">1</div>
+                    <div id="rankType" class="rank-type">NOVICE</div>
+                </div>
+                <div class="rank-progress">
+                    <div id="rankBar" class="rank-bar-fill"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -56,37 +73,44 @@
     <!-- ===== MAIN SECTION ===== -->
     <main class="main-container">
         
-        <!-- PROFILES CAROUSEL -->
-        <section class="profiles-section">
-            <div class="profiles-wrapper">
+        <!-- CAROUSEL SECTION -->
+        <section class="carousel-section">
+            <div class="carousel-wrapper">
                 
                 <!-- LEFT ARROW -->
-                <button class="arrow arrow-left" id="prevBtn">
+                <button class="carousel-arrow carousel-prev" id="prevBtn" aria-label="Previous profile">
                     <i class="fas fa-chevron-left"></i>
                 </button>
 
-                <!-- CAROUSEL -->
-                <div class="carousel-container">
-                    <div class="cards-track" id="cardsTrack">
-                        <!-- Cards будут добавлены JS -->
+                <!-- CARDS CONTAINER -->
+                <div class="carousel-track-wrapper">
+                    <div class="carousel-track" id="cardsTrack">
+                        <!-- Cards rendered here -->
                     </div>
                 </div>
 
                 <!-- RIGHT ARROW -->
-                <button class="arrow arrow-right" id="nextBtn">
+                <button class="carousel-arrow carousel-next" id="nextBtn" aria-label="Next profile">
                     <i class="fas fa-chevron-right"></i>
                 </button>
 
             </div>
+
+            <!-- CAROUSEL INDICATORS -->
+            <div class="carousel-indicators" id="indicators"></div>
         </section>
 
     </main>
+
+    <!-- ===== EFFECT LAYERS ===== -->
+    <div id="effectsLayer" class="effects-layer"></div>
 
     <!-- ===== SCRIPTS ===== -->
     <script src="users.js"></script>
     <script src="badges.js"></script>
     <script src="accounts.js"></script>
     <script src="effects.js"></script>
+    <script src="ui.js"></script>
     <script src="script.js"></script>
 
 </body>
