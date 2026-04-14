@@ -1,80 +1,100 @@
-// ===== USER DATA =====
-const USERS = [
-    {
-        id: "toolgool",
-        name: "Toolgool",
-        username: "@Toolgool",
-        avatar: "./images/avatars/toolgool.jpg",
-        description: "Developer | Creator | Maker of Cool Projects",
-        effect: "lightning",
-        color: "#6366f1"
-    },
-    {
-        id: "user2",
-        name: "Code Wizard",
-        username: "@CodeWizard",
-        avatar: "./images/avatars/user2.jpg",
-        description: "JavaScript Specialist",
-        effect: "fire",
-        color: "#f97316"
-    },
-    {
-        id: "user3",
-        name: "Design Master",
-        username: "@DesignMaster",
-        avatar: "./images/avatars/user3.jpg",
-        description: "UI/UX Designer",
-        effect: "air",
-        color: "#06b6d4"
-    },
-    {
-        id: "user4",
-        name: "Web Warrior",
-        username: "no-link",
-        avatar: "./images/avatars/user4.jpg",
-        description: "Full Stack Developer",
-        effect: "earth",
-        color: "#84cc16"
-    },
-    {
-        id: "user5",
-        name: "Backend Pro",
-        username: "@BackendPro",
-        avatar: "./images/avatars/user5.jpg",
-        description: "Node.js Expert",
-        effect: "lightning",
-        color: "#8b5cf6"
-    }
-];
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolgool - Interactive Bio Profile</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-// ===== USER MANAGER =====
-class UserManager {
-    constructor() {
-        this.users = USERS;
-        this.currentIndex = 0;
-    }
+    <!-- ===== BACKGROUND ===== -->
+    <div class="background-animation">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
 
-    getCurrentUser() {
-        return this.users[this.currentIndex];
-    }
+    <!-- ===== LOGIN MODAL ===== -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <button class="login-close">&times;</button>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Enter</button>
+            </form>
+        </div>
+    </div>
 
-    getUser(id) {
-        return this.users.find(u => u.id === id);
-    }
+    <!-- ===== RANK ANIMATION OVERLAY ===== -->
+    <div id="rankOverlay" class="rank-overlay hidden">
+        <div class="rank-container">
+            <div class="rank-avatar">
+                <img id="rankAvatarImg" src="" alt="Avatar">
+            </div>
+            <div class="rank-display">
+                <div id="rankNumber" class="rank-number">1</div>
+                <div id="rankType" class="rank-type">NOVICE</div>
+            </div>
+            <div class="rank-bar">
+                <div id="rankBar" class="rank-bar-fill"></div>
+            </div>
+        </div>
+    </div>
 
-    next() {
-        this.currentIndex = (this.currentIndex + 1) % this.users.length;
-        return this.getCurrentUser();
-    }
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">⚡ Toolgool</div>
+            <button id="loginBtn" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </div>
+    </header>
 
-    prev() {
-        this.currentIndex = (this.currentIndex - 1 + this.users.length) % this.users.length;
-        return this.getCurrentUser();
-    }
+    <!-- ===== MAIN SECTION ===== -->
+    <main class="main-container">
+        
+        <!-- PROFILES SECTION -->
+        <section class="profiles-section">
+            <div class="profiles-wrapper">
+                
+                <!-- LEFT ARROW -->
+                <button class="arrow arrow-left" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
 
-    getAll() {
-        return this.users;
-    }
-}
+                <!-- CARDS CAROUSEL -->
+                <div class="carousel-container">
+                    <div class="cards-track" id="cardsTrack">
+                        <!-- Cards будут добавлены JS -->
+                    </div>
+                </div>
 
-const userManager = new UserManager();
+                <!-- RIGHT ARROW -->
+                <button class="arrow arrow-right" id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="users.js"></script>
+    <script src="badges.js"></script>
+    <script src="accounts.js"></script>
+    <script src="effects.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
