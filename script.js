@@ -34,14 +34,13 @@ function renderCards() {
 
         const badges = badgeManager.getBadgesByUserId(user.id);
         const badgesHTML = badges.map(badge => `
-            <div class="badge" onclick="window.open('${badge.link}', '_blank')" title="Open link">
+            <div class="badge" onclick="window.open('${badge.link}', '_blank')" title="${badge.name || 'Badge'}" style="pointer-events: auto;">
                 <img src="${badge.image}" alt="badge">
             </div>
         `).join('');
 
         const isClickableUsername = user.username.includes('@');
         const usernameClass = isClickableUsername ? 'clickable' : '';
-        const usernameDisplay = isClickableUsername ? user.username : user.username;
 
         card.innerHTML = `
             <div class="card-content">
@@ -50,7 +49,7 @@ function renderCards() {
                 </div>
                 <div class="card-header">
                     <h2 class="card-name">${user.name}</h2>
-                    <p class="card-username ${usernameClass}">${usernameDisplay}</p>
+                    <p class="card-username ${usernameClass}">${user.username}</p>
                 </div>
                 <p class="card-description">${user.description}</p>
                 ${badgesHTML ? `<div class="card-badges">${badgesHTML}</div>` : ''}
@@ -88,8 +87,10 @@ function renderCards() {
 function updateCarouselPosition() {
     if (isAnimating) return;
     
-    const offset = -currentIndex * (getCardWidth() + 32);
-    cardsTrack.style.transform = `translateX(calc(50vw - 190px + ${offset}px))`;
+    const cardWidth = getCardWidth();
+    const gap = 32;
+    const offset = -currentIndex * (cardWidth + gap);
+    cardsTrack.style.transform = `translateX(calc(50vw - ${cardWidth / 2}px + ${offset}px))`;
     
     document.querySelectorAll('.card').forEach((card, index) => {
         card.classList.toggle('active', index === currentIndex);
@@ -224,13 +225,13 @@ function showRankAnimation(account) {
     
     let currentRank = 1;
     const targetRank = account.rankLevel;
-    const totalFrames = 30;
+    const totalFrames = 40;
     let frame = 0;
     
     const animationInterval = setInterval(() => {
         frame++;
         const progress = frame / totalFrames;
-        const acceleratedProgress = Math.pow(progress, 1.5);
+        const acceleratedProgress = Math.pow(progress, 1.2);
         currentRank = Math.floor(1 + (targetRank - 1) * acceleratedProgress);
         
         rankNumber.textContent = currentRank;
@@ -240,7 +241,7 @@ function showRankAnimation(account) {
             clearInterval(animationInterval);
             rankNumber.style.animation = 'none';
             setTimeout(() => {
-                rankNumber.style.animation = 'rankFinalImpact 0.5s ease';
+                rankNumber.style.animation = 'rankFlip 0.5s ease';
             }, 10);
             rankType.textContent = account.rankType;
             rankBar.style.width = '100%';
@@ -272,4 +273,9 @@ window.addEventListener('load', () => {
         updateAuthUI();
         toastManager.info('Welcome back, ' + userSession.currentUser.username);
     }
+});
+
+// ===== HANDLE WINDOW RESIZE =====
+window.addEventListener('resize', () => {
+    updateCarouselPosition();
 });
