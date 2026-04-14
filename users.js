@@ -4,7 +4,7 @@ const USERS = [
         id: "toolgool",
         name: "Toolgool",
         username: "@Toolgool",
-        avatar: "./images/avatars/toolgool.jpg",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=toolgool",
         description: "Developer | Creator | Maker of Cool Projects",
         effect: "lightning",
         color: "#6366f1"
@@ -13,7 +13,7 @@ const USERS = [
         id: "user2",
         name: "Code Wizard",
         username: "@CodeWizard",
-        avatar: "./images/avatars/user2.jpg",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=wizard",
         description: "JavaScript Specialist",
         effect: "fire",
         color: "#f97316"
@@ -22,7 +22,7 @@ const USERS = [
         id: "user3",
         name: "Design Master",
         username: "@DesignMaster",
-        avatar: "./images/avatars/user3.jpg",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=designer",
         description: "UI/UX Designer",
         effect: "air",
         color: "#06b6d4"
@@ -31,7 +31,7 @@ const USERS = [
         id: "user4",
         name: "Web Warrior",
         username: "no-link",
-        avatar: "./images/avatars/user4.jpg",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=warrior",
         description: "Full Stack Developer",
         effect: "earth",
         color: "#84cc16"
@@ -40,7 +40,7 @@ const USERS = [
         id: "user5",
         name: "Backend Pro",
         username: "@BackendPro",
-        avatar: "./images/avatars/user5.jpg",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=backend",
         description: "Node.js Expert",
         effect: "lightning",
         color: "#8b5cf6"
