@@ -1,280 +1,194 @@
-const canvas = document.getElementById('snowCanvas');
-const ctx = canvas.getContext('2d');
+// ===== INITIALIZATION =====
 
-let width = canvas.width = window.innerWidth;
-let height = canvas.height = window.innerHeight;
+let currentIndex = 0;
 
-window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-});
+// ===== DOM ELEMENTS =====
+const loginBtn = document.getElementById('loginBtn');
+const loginModal = document.getElementById('loginModal');
+const loginForm = document.getElementById('loginForm');
+const loginClose = document.querySelector('.login-close');
+const cardsTrack = document.getElementById('cardsTrack');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rankOverlay = document.getElementById('rankOverlay');
 
-const snowflakes = [];
-const maxFlakes = 150;
+// ===== RENDER CARDS =====
+function renderCards() {
+    cardsTrack.innerHTML = '';
+    const users = userManager.getAll();
+    
+    users.forEach((user, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        if (user.id === 'toolgool') card.classList.add('toolgool-card');
+        if (index === currentIndex) card.classList.add('active');
 
-for (let i = 0; i < maxFlakes; i++) {
-    snowflakes.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        r: Math.random() * 3 + 1,
-        speed: Math.random() * 1 + 0.5,
-        opacity: Math.random() * 0.5 + 0.3
+        const badges = badgeManager.getBadgesByUserId(user.id);
+        const badgesHTML = badges.map(badge => `
+            <div class="badge" onclick="window.open('${badge.link}', '_blank')">
+                <img src="${badge.image}" alt="badge">
+            </div>
+        `).join('');
+
+        card.innerHTML = `
+            <div class="card-avatar">
+                <img src="${user.avatar}" alt="${user.name}">
+            </div>
+            <h2 class="card-name">${user.name}</h2>
+            <div class="card-username ${user.username.includes('@') ? 'data-link' : ''}" 
+                 onclick="user.username.includes('@') && window.open('https://t.me/${user.username.substring(1)}', '_blank')">
+                ${user.username}
+            </div>
+            <p class="card-description">${user.description}</p>
+            <div class="card-badges">${badgesHTML}</div>
+        `;
+
+        // Click на карточку = burst effect
+        card.addEventListener('click', (e) => {
+            if (!e.target.closest('.badge') && !e.target.closest('.card-username')) {
+                const rect = card.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                effectsManager.createBurst(user.effect, x, y);
+            }
+        });
+
+        cardsTrack.appendChild(card);
+    });
+
+    updateCarouselPosition();
+}
+
+// ===== UPDATE CAROUSEL POSITION =====
+function updateCarouselPosition() {
+    const offset = -currentIndex * (320 + 32); // 320px card + 32px gap
+    cardsTrack.style.transform = `translateX(calc(50vw - 150px + ${offset}px))`;
+    
+    document.querySelectorAll('.card').forEach((card, index) => {
+        card.classList.toggle('active', index === currentIndex);
     });
 }
 
-function drawSnow() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "rgba(255,255,255,0.3)";
-    ctx.beginPath();
-
-    for (let f of snowflakes) {
-        ctx.moveTo(f.x, f.y);
-        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+// ===== NAVIGATION =====
+prevBtn.addEventListener('click', () => {
+    const user = userManager.prev();
+    currentIndex = userManager.currentIndex;
+    
+    // Trail effect
+    const card = document.querySelector('.card.active');
+    if (card) {
+        const rect = card.getBoundingClientRect();
+        effectsManager.createTrail(user.effect, rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
-
-    ctx.fill();
-    updateSnow();
-}
-
-function updateSnow() {
-    for (let f of snowflakes) {
-        f.y += f.speed;
-        f.x += Math.sin(f.y / height * Math.PI * 2) * 0.5;
-
-        if (f.y > height) f.y = 0;
-        if (f.x > width) f.x = 0;
-        if (f.x < 0) f.x = width;
-    }
-
-    requestAnimationFrame(drawSnow);
-}
-
-drawSnow();
-
-// ===== ДОПОЛНИТЕЛЬНЫЕ СПЕЦЭФФЕКТЫ =====
-
-// Частицы при движении мыши
-document.addEventListener('mousemove', (e) => {
-    createMouseParticles(e.clientX, e.clientY);
+    
+    renderCards();
 });
 
-function createMouseParticles(x, y) {
-    if (Math.random() > 0.8) {
-        const particle = document.createElement('div');
-        particle.style.position = 'fixed';
-        particle.style.left = x + 'px';
-        particle.style.top = y + 'px';
-        particle.style.width = '5px';
-        particle.style.height = '5px';
-        particle.style.borderRadius = '50%';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '3';
-        particle.style.boxShadow = '0 0 10px #a855f7';
-        particle.style.animation = 'particleFloat 1s ease-out forwards';
-        
-        document.body.appendChild(particle);
-        
-        setTimeout(() => particle.remove(), 1000);
+nextBtn.addEventListener('click', () => {
+    const user = userManager.next();
+    currentIndex = userManager.currentIndex;
+    
+    // Trail effect
+    const card = document.querySelector('.card.active');
+    if (card) {
+        const rect = card.getBoundingClientRect();
+        effectsManager.createTrail(user.effect, rect.left + rect.width / 2, rect.top + rect.height / 2);
     }
+    
+    renderCards();
+});
+
+// ===== LOGIN LOGIC =====
+loginBtn.addEventListener('click', () => {
+    loginModal.classList.add('active');
+});
+
+loginClose.addEventListener('click', () => {
+    loginModal.classList.remove('active');
+});
+
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    const account = accountManager.login(username, password);
+    
+    if (account) {
+        loginModal.classList.remove('active');
+        showRankAnimation(account);
+    } else {
+        alert('Invalid credentials');
+    }
+});
+
+// ===== RANK ANIMATION =====
+function showRankAnimation(account) {
+    rankOverlay.classList.remove('hidden');
+    rankOverlay.classList.add('active');
+    
+    const avatarImg = document.getElementById('rankAvatarImg');
+    const rankNumber = document.getElementById('rankNumber');
+    const rankType = document.getElementById('rankType');
+    const rankBar = document.getElementById('rankBar');
+    
+    avatarImg.src = account.avatar;
+    
+    // Animate через все уровни
+    let currentRank = 1;
+    const targetRank = account.rankLevel;
+    const totalFrames = 30;
+    let frame = 0;
+    
+    const animationInterval = setInterval(() => {
+        frame++;
+        const progress = frame / totalFrames;
+        
+        // Acceleration
+        const acceleratedProgress = Math.pow(progress, 1.5);
+        currentRank = Math.floor(1 + (targetRank - 1) * acceleratedProgress);
+        
+        rankNumber.textContent = currentRank;
+        rankNumber.style.color = accountManager.getRankColor(currentRank);
+        
+        if (frame >= totalFrames) {
+            clearInterval(animationInterval);
+            
+            // Final impact
+            rankNumber.style.animation = 'none';
+            setTimeout(() => {
+                rankNumber.style.animation = 'rankFinalImpact 0.5s ease';
+            }, 10);
+            
+            rankType.textContent = account.rankType;
+            rankBar.style.width = '100%';
+        }
+    }, 30);
+    
+    // Close after animation
+    setTimeout(() => {
+        rankOverlay.classList.remove('active');
+        setTimeout(() => rankOverlay.classList.add('hidden'), 300);
+    }, 4000);
 }
 
-// CSS анимация для частиц
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes particleFloat {
-        0% {
-            opacity: 1;
-            transform: translate(0, 0) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(${Math.random() * 100 - 50}px, -50px) scale(0);
-        }
-    }
-
-    @keyframes floatingGradient {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
+// Add final impact animation
+const finalImpactStyle = document.createElement('style');
+finalImpactStyle.textContent = `
+    @keyframes rankFinalImpact {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(finalImpactStyle);
 
-// Звёзды мерцающие случайно
-function createStars() {
-    const starsContainer = document.createElement('div');
-    starsContainer.className = 'stars';
-    document.body.insertBefore(starsContainer, document.body.firstChild);
-    
-    for (let i = 0; i < 50; i++) {
-        const star = document.createElement('div');
-        star.style.position = 'fixed';
-        star.style.width = Math.random() * 2 + 'px';
-        star.style.height = star.style.width;
-        star.style.borderRadius = '50%';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 50 + '%';
-        star.style.backgroundColor = '#fff';
-        star.style.opacity = Math.random() * 0.5 + 0.3;
-        star.style.zIndex = '0';
-        star.style.animation = `twinkle ${Math.random() * 3 + 2}s infinite`;
-        star.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px rgba(168, 85, 247, 0.8)`;
-        
-        starsContainer.appendChild(star);
-    }
-}
+// ===== INITIAL RENDER =====
+renderCards();
 
-const twinkleStyle = document.createElement('style');
-twinkleStyle.textContent = `
-    @keyframes twinkle {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 1; }
-    }
-`;
-document.head.appendChild(twinkleStyle);
-
-createStars();
-
-// Светящиеся линии между элементами при наведении
-const socialLinks = document.querySelectorAll('.social-link');
-
-socialLinks.forEach((link, index) => {
-    link.addEventListener('mouseenter', () => {
-        link.style.filter = 'drop-shadow(0 0 20px rgba(168, 85, 247, 1))';
-    });
-
-    link.addEventListener('mouseleave', () => {
-        link.style.filter = 'none';
-    });
-});
-
-// Дополнительный эффект - волны от клика
-document.addEventListener('click', (e) => {
-    createClickWave(e.clientX, e.clientY);
-});
-
-function createClickWave(x, y) {
-    const wave = document.createElement('div');
-    wave.style.position = 'fixed';
-    wave.style.left = x + 'px';
-    wave.style.top = y + 'px';
-    wave.style.width = '10px';
-    wave.style.height = '10px';
-    wave.style.borderRadius = '50%';
-    wave.style.border = '2px solid #a855f7';
-    wave.style.pointerEvents = 'none';
-    wave.style.zIndex = '3';
-    wave.style.transform = 'translate(-50%, -50%)';
-    wave.style.animation = 'ripple 0.6s ease-out forwards';
-    
-    document.body.appendChild(wave);
-    
-    setTimeout(() => wave.remove(), 600);
-}
-
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        0% {
-            width: 10px;
-            height: 10px;
-            opacity: 1;
-        }
-        100% {
-            width: 100px;
-            height: 100px;
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(rippleStyle);
-
-// Плавающие огоньки вокруг курсора
-let mouseX = 0;
-let mouseY = 0;
-
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
-
-// Создание аура вокруг курсора
-function createCursorAura() {
-    const aura = document.createElement('div');
-    aura.style.position = 'fixed';
-    aura.style.pointerEvents = 'none';
-    aura.style.zIndex = '2';
-    aura.style.width = '100px';
-    aura.style.height = '100px';
-    aura.style.borderRadius = '50%';
-    aura.style.background = 'radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%)';
-    aura.style.filter = 'blur(20px)';
-    aura.style.left = (mouseX - 50) + 'px';
-    aura.style.top = (mouseY - 50) + 'px';
-    aura.style.opacity = '0.5';
-    
-    document.body.appendChild(aura);
-    
-    // Удаляем старую ауру если её больше 1
-    const auras = document.querySelectorAll('div[style*="radial-gradient"]');
-    if (auras.length > 1) {
-        auras[0].remove();
-    }
-}
-
-setInterval(createCursorAura, 50);
-
-// Эффект при скролле
-window.addEventListener('scroll', () => {
-    const scrollParticle = document.createElement('div');
-    scrollParticle.style.position = 'fixed';
-    scrollParticle.style.left = Math.random() * width + 'px';
-    scrollParticle.style.top = Math.random() * height + 'px';
-    scrollParticle.style.width = '3px';
-    scrollParticle.style.height = '3px';
-    scrollParticle.style.borderRadius = '50%';
-    scrollParticle.style.backgroundColor = '#00ffc8';
-    scrollParticle.style.pointerEvents = 'none';
-    scrollParticle.style.zIndex = '1';
-    scrollParticle.style.boxShadow = '0 0 10px #00ffc8';
-    scrollParticle.style.animation = 'scrollParticleFloat 2s ease-out forwards';
-    
-    document.body.appendChild(scrollParticle);
-    
-    setTimeout(() => scrollParticle.remove(), 2000);
-});
-
-const scrollParticleStyle = document.createElement('style');
-scrollParticleStyle.textContent = `
-    @keyframes scrollParticleFloat {
-        0% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        100% {
-            opacity: 0;
-            transform: translateY(-100px);
-        }
-    }
-`;
-document.head.appendChild(scrollParticleStyle);
-
-// Эффект для кнопок в футере
-const legalLinks = document.querySelectorAll('.legal-link');
-
-legalLinks.forEach((link) => {
-    link.addEventListener('mousemove', (e) => {
-        const rect = link.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        link.style.setProperty('--x', x + 'px');
-        link.style.setProperty('--y', y + 'px');
-    });
+// ===== KEYBOARD NAVIGATION =====
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prevBtn.click();
+    if (e.key === 'ArrowRight') nextBtn.click();
 });
