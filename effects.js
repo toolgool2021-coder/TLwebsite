@@ -31,7 +31,7 @@ class EffectsManager {
         const vy = Math.sin(angle) * velocity;
 
         const keyframes = `
-            @keyframes particleMove {
+            @keyframes particleMove_${Date.now()}_${Math.random()} {
                 0% {
                     opacity: 1;
                     transform: translate(0, 0) scale(1);
@@ -47,7 +47,8 @@ class EffectsManager {
         style.textContent = keyframes;
         document.head.appendChild(style);
 
-        particle.style.animation = `particleMove ${duration}s ease-out forwards`;
+        const animationName = `particleMove_${Date.now()}_${Math.random()}`;
+        particle.style.animation = `${animationName} ${duration}s ease-out forwards`;
         document.body.appendChild(particle);
 
         setTimeout(() => particle.remove(), duration * 1000);
@@ -77,7 +78,7 @@ class EffectsManager {
             });
         }
 
-        // Дополнительный glow эффект
+        // Glow effect
         const glow = document.createElement('div');
         glow.style.position = 'fixed';
         glow.style.left = x + 'px';
@@ -153,7 +154,7 @@ class EffectsManager {
             });
         }
 
-        // Flash эффект
+        // Flash effect
         const flash = document.createElement('div');
         flash.style.position = 'fixed';
         flash.style.left = x + 'px';
@@ -212,7 +213,7 @@ class EffectsManager {
             });
         }
 
-        // Wave эффект
+        // Wave effect
         const wave = document.createElement('div');
         wave.style.position = 'fixed';
         wave.style.left = x + 'px';
