@@ -6,22 +6,7 @@ const ACCOUNTS = [
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=toolgool",
         rankLevel: 5,
         rankType: "MASTER"
-    },
-    {
-        username: "admin",
-        password: "admin123",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=admin",
-        rankLevel: 4,
-        rankType: "EXPERT"
-    },
-    {
-        username: "user",
-        password: "user123",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=user",
-        rankLevel: 2,
-        rankType: "INTERMEDIATE"
     }
-];
 
 // ===== RANK COLORS =====
 const RANK_COLORS = {
