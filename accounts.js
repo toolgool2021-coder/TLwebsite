@@ -1,65 +1,93 @@
-// ===== ACCOUNT DATA =====
-const ACCOUNTS = [
-    {
-        username: "toolgool",
-        password: "12345",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=toolgool",
-        rankLevel: 5,
-        rankType: "MASTER"
-    }
-
-// ===== RANK COLORS =====
-const RANK_COLORS = {
-    1: "#94a3b8",
-    2: "#3b82f6",
-    3: "#8b5cf6",
-    4: "#ec4899",
-    5: "#f59e0b"
-};
-
-const RANK_NAMES = {
-    1: "NOVICE",
-    2: "INTERMEDIATE",
-    3: "ADVANCED",
-    4: "EXPERT",
-    5: "MASTER"
-};
-
 // ===== ACCOUNT MANAGER =====
-class AccountManager {
-    constructor() {
-        this.accounts = ACCOUNTS;
-        this.currentUser = null;
-    }
-
-    login(username, password) {
-        const account = this.accounts.find(a => a.username === username && a.password === password);
-        if (account) {
-            this.currentUser = account;
-            return account;
+const accountManager = (() => {
+    const accounts = [
+        {
+            id: 'acc1',
+            username: 'toolgool',
+            password: '12345',
+            avatar: 'https://avatars.githubusercontent.com/u/236378052?v=4',
+            rankLevel: 10,
+            rankType: 'LEGENDARY'
+        },
+        {
+            id: 'acc2',
+            username: 'admin',
+            password: 'admin123',
+            avatar: 'https://avatars.githubusercontent.com/u/1?v=4',
+            rankLevel: 9,
+            rankType: 'MASTER'
+        },
+        {
+            id: 'acc3',
+            username: 'test',
+            password: 'test123',
+            avatar: 'https://avatars.githubusercontent.com/u/2?v=4',
+            rankLevel: 5,
+            rankType: 'NOVICE'
         }
-        return null;
+    ];
+    
+    function login(username, password) {
+        const account = accounts.find(acc => acc.username === username && acc.password === password);
+        return account || null;
     }
-
-    logout() {
-        this.currentUser = null;
+    
+    function getRankColor(rankLevel) {
+        if (rankLevel >= 9) return '#ff6b35';      // Fire
+        if (rankLevel >= 7) return '#00d4ff';      // Lightning
+        if (rankLevel >= 5) return '#a0e7e5';      // Wind
+        return '#6366f1';                          // Default
     }
+    
+    return {
+        login,
+        getRankColor
+    };
+})();
 
-    getCurrentUser() {
-        return this.currentUser;
+// ===== USER SESSION =====
+const userSession = (() => {
+    let currentUser = null;
+    
+    // Check for saved session
+    function init() {
+        const saved = localStorage.getItem('userSession');
+        if (saved) {
+            try {
+                currentUser = JSON.parse(saved);
+            } catch (e) {
+                localStorage.removeItem('userSession');
+            }
+        }
     }
-
-    isLoggedIn() {
-        return this.currentUser !== null;
+    
+    function login(account) {
+        currentUser = {
+            id: account.id,
+            username: account.username,
+            avatar: account.avatar,
+            rankLevel: account.rankLevel,
+            rankType: account.rankType
+        };
+        localStorage.setItem('userSession', JSON.stringify(currentUser));
     }
-
-    getRankColor(level) {
-        return RANK_COLORS[level] || RANK_COLORS[1];
+    
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('userSession');
     }
-
-    getRankName(level) {
-        return RANK_NAMES[level] || RANK_NAMES[1];
+    
+    function isLoggedIn() {
+        return currentUser !== null;
     }
-}
-
-const accountManager = new AccountManager();
+    
+    // Initialize on load
+    init();
+    
+    return {
+        login,
+        logout,
+        isLoggedIn,
+        get currentUser() { return currentUser; }
+    };
+})();
