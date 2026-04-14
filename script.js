@@ -1,19 +1,27 @@
-// ===== INITIALIZATION =====
+// ===== CAROUSEL SYSTEM =====
 let currentIndex = 0;
 let touchStartX = 0;
 let touchEndX = 0;
+let isAnimating = false;
 
 // ===== DOM ELEMENTS =====
-const loginBtn = document.getElementById('loginBtn');
-const loginModal = document.getElementById('loginModal');
-const loginForm = document.getElementById('loginForm');
-const loginClose = document.querySelector('.login-close');
 const cardsTrack = document.getElementById('cardsTrack');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const loginForm = document.getElementById('loginForm');
 const rankOverlay = document.getElementById('rankOverlay');
+const effectsLayer = document.getElementById('effectsLayer');
+const indicatorsContainer = document.getElementById('indicators');
 
-// ===== RENDER CARDS (With Better Design) =====
+// ===== FIND TOOLGOOL USER =====
+function findToolGoolIndex() {
+    const users = userManager.getAll();
+    return users.findIndex(u => u.id === 'toolgool');
+}
+
+// ===== RENDER CARDS =====
 function renderCards() {
     cardsTrack.innerHTML = '';
     const users = userManager.getAll();
@@ -26,27 +34,32 @@ function renderCards() {
 
         const badges = badgeManager.getBadgesByUserId(user.id);
         const badgesHTML = badges.map(badge => `
-            <div class="badge" onclick="window.open('${badge.link}', '_blank')">
+            <div class="badge" onclick="window.open('${badge.link}', '_blank')" title="Open link">
                 <img src="${badge.image}" alt="badge">
             </div>
         `).join('');
 
+        const isClickableUsername = user.username.includes('@');
+        const usernameClass = isClickableUsername ? 'clickable' : '';
+        const usernameDisplay = isClickableUsername ? user.username : user.username;
+
         card.innerHTML = `
-            <div class="card-avatar-container">
-                <img src="${user.avatar}" alt="${user.name}" class="card-avatar">
+            <div class="card-content">
+                <div class="card-avatar-container">
+                    <img src="${user.avatar}" alt="${user.name}" class="card-avatar">
+                </div>
+                <div class="card-header">
+                    <h2 class="card-name">${user.name}</h2>
+                    <p class="card-username ${usernameClass}">${usernameDisplay}</p>
+                </div>
+                <p class="card-description">${user.description}</p>
+                ${badgesHTML ? `<div class="card-badges">${badgesHTML}</div>` : ''}
             </div>
-            <h2 class="card-name">${user.name}</h2>
-            <div class="card-username ${user.username.includes('@') ? 'data-link' : ''}" 
-                 onclick="user.username.includes('@') && window.open('https://t.me/${user.username.substring(1)}', '_blank')">
-                ${user.username}
-            </div>
-            <p class="card-description">${user.description}</p>
-            <div class="card-badges">${badgesHTML}</div>
         `;
 
-        // Click effect
+        // Click for effect burst
         card.addEventListener('click', (e) => {
-            if (!e.target.closest('.badge') && !e.target.closest('.card-username')) {
+            if (!e.target.closest('.badge')) {
                 const rect = card.getBoundingClientRect();
                 const x = rect.left + rect.width / 2;
                 const y = rect.top + rect.height / 2;
@@ -54,40 +67,56 @@ function renderCards() {
             }
         });
 
+        // Username click to Telegram
+        const usernameElement = card.querySelector('.card-username');
+        if (isClickableUsername) {
+            usernameElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const telegramHandle = user.username.replace('@', '');
+                window.open(`https://t.me/${telegramHandle}`, '_blank');
+            });
+        }
+
         cardsTrack.appendChild(card);
     });
 
     updateCarouselPosition();
+    renderIndicators();
 }
 
 // ===== UPDATE CAROUSEL POSITION =====
 function updateCarouselPosition() {
-    const offset = -currentIndex * (300 + 32); // 300px card + 32px gap
-    cardsTrack.style.transform = `translateX(calc(50vw - 150px + ${offset}px))`;
+    if (isAnimating) return;
+    
+    const offset = -currentIndex * (getCardWidth() + 32);
+    cardsTrack.style.transform = `translateX(calc(50vw - 190px + ${offset}px))`;
     
     document.querySelectorAll('.card').forEach((card, index) => {
         card.classList.toggle('active', index === currentIndex);
     });
 }
 
-// ===== NAVIGATION =====
-prevBtn.addEventListener('click', () => {
-    const user = userManager.prev();
-    currentIndex = userManager.currentIndex;
-    
-    const card = document.querySelector('.card.active');
-    if (card) {
-        const rect = card.getBoundingClientRect();
-        effectsManager.createTrail(user.effect, rect.left + rect.width / 2, rect.top + rect.height / 2);
-    }
-    
-    renderCards();
-});
+function getCardWidth() {
+    return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--card-width'));
+}
 
-nextBtn.addEventListener('click', () => {
-    const user = userManager.next();
+// ===== NAVIGATION =====
+function navigateTo(direction) {
+    if (isAnimating) return;
+    isAnimating = true;
+    
+    const users = userManager.getAll();
+    let user;
+    
+    if (direction === 'next') {
+        user = userManager.next();
+    } else {
+        user = userManager.prev();
+    }
+    
     currentIndex = userManager.currentIndex;
     
+    // Create trail effect
     const card = document.querySelector('.card.active');
     if (card) {
         const rect = card.getBoundingClientRect();
@@ -95,7 +124,14 @@ nextBtn.addEventListener('click', () => {
     }
     
     renderCards();
-});
+    
+    setTimeout(() => {
+        isAnimating = false;
+    }, 600);
+}
+
+prevBtn.addEventListener('click', () => navigateTo('prev'));
+nextBtn.addEventListener('click', () => navigateTo('next'));
 
 // ===== TOUCH SWIPE =====
 cardsTrack.addEventListener('touchstart', (e) => {
@@ -113,20 +149,46 @@ function handleSwipe() {
     
     if (Math.abs(diff) > swipeThreshold) {
         if (diff > 0) {
-            nextBtn.click(); // Свайп влево = следующий
+            navigateTo('next');
         } else {
-            prevBtn.click(); // Свайп вправо = предыдущий
+            navigateTo('prev');
         }
     }
 }
 
-// ===== LOGIN LOGIC =====
+// ===== INDICATORS =====
+function renderIndicators() {
+    indicatorsContainer.innerHTML = '';
+    const users = userManager.getAll();
+    
+    users.forEach((_, index) => {
+        const indicator = document.createElement('div');
+        indicator.className = 'indicator';
+        if (index === currentIndex) indicator.classList.add('active');
+        indicator.addEventListener('click', () => jumpToCard(index));
+        indicatorsContainer.appendChild(indicator);
+    });
+}
+
+function jumpToCard(index) {
+    if (index === currentIndex || isAnimating) return;
+    
+    currentIndex = index;
+    userManager.currentIndex = index;
+    renderCards();
+}
+
+// ===== LOGIN SYSTEM =====
 loginBtn.addEventListener('click', () => {
-    loginModal.classList.add('active');
+    loginModal.open();
 });
 
-loginClose.addEventListener('click', () => {
-    loginModal.classList.remove('active');
+logoutBtn.addEventListener('click', () => {
+    userSession.logout();
+    updateAuthUI();
+    toastManager.success('Logged out successfully');
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
 });
 
 loginForm.addEventListener('submit', (e) => {
@@ -138,10 +200,13 @@ loginForm.addEventListener('submit', (e) => {
     const account = accountManager.login(username, password);
     
     if (account) {
-        loginModal.classList.remove('active');
+        userSession.login(account);
+        updateAuthUI();
+        loginModal.close();
+        toastManager.success('Welcome back!');
         showRankAnimation(account);
     } else {
-        alert('Invalid credentials');
+        toastManager.error('Invalid username or password');
     }
 });
 
@@ -165,7 +230,6 @@ function showRankAnimation(account) {
     const animationInterval = setInterval(() => {
         frame++;
         const progress = frame / totalFrames;
-        
         const acceleratedProgress = Math.pow(progress, 1.5);
         currentRank = Math.floor(1 + (targetRank - 1) * acceleratedProgress);
         
@@ -174,12 +238,10 @@ function showRankAnimation(account) {
         
         if (frame >= totalFrames) {
             clearInterval(animationInterval);
-            
             rankNumber.style.animation = 'none';
             setTimeout(() => {
                 rankNumber.style.animation = 'rankFinalImpact 0.5s ease';
             }, 10);
-            
             rankType.textContent = account.rankType;
             rankBar.style.width = '100%';
         }
@@ -191,21 +253,23 @@ function showRankAnimation(account) {
     }, 4000);
 }
 
-const finalImpactStyle = document.createElement('style');
-finalImpactStyle.textContent = `
-    @keyframes rankFinalImpact {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.2); }
-        100% { transform: scale(1); }
-    }
-`;
-document.head.appendChild(finalImpactStyle);
-
-// ===== INITIAL RENDER =====
-renderCards();
-
 // ===== KEYBOARD NAVIGATION =====
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') prevBtn.click();
     if (e.key === 'ArrowRight') nextBtn.click();
+});
+
+// ===== INITIALIZATION =====
+window.addEventListener('load', () => {
+    // Set to toolgool as first card
+    currentIndex = findToolGoolIndex();
+    userManager.currentIndex = currentIndex;
+    
+    renderCards();
+    
+    // Auto-login if session exists
+    if (userSession.isLoggedIn()) {
+        updateAuthUI();
+        toastManager.info('Welcome back, ' + userSession.currentUser.username);
+    }
 });
