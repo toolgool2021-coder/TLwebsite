@@ -10,8 +10,8 @@
     --text-muted: #94a3b8;
     --border-color: rgba(148, 163, 184, 0.1);
     --glow-color: rgba(99, 102, 241, 0.4);
-    --card-width: 380px;
-    --card-height: 520px;
+    --card-width: 420px;
+    --card-height: 580px;
 }
 
 /* ===== RESET ===== */
@@ -89,6 +89,7 @@ body {
     background: var(--primary-color);
     color: white;
     transform: translateY(-2px);
+    box-shadow: 0 0 20px var(--glow-color);
 }
 
 .hidden {
@@ -108,10 +109,10 @@ body {
 
 .toast {
     padding: 1rem 1.5rem;
-    border-radius: 8px;
+    border-radius: 12px;
     background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
     color: var(--text-primary);
     display: flex;
     align-items: center;
@@ -362,6 +363,7 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: rankFlip 0.6s ease-out;
 }
 
 .rank-type {
@@ -397,16 +399,19 @@ body {
     }
 }
 
+@keyframes rankFlip {
+    0% {
+        transform: rotateX(90deg) scale(0.5);
+    }
+    100% {
+        transform: rotateX(0deg) scale(1);
+    }
+}
+
 @keyframes fillBar {
     to {
         width: 100%;
     }
-}
-
-@keyframes rankFinalImpact {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
 }
 
 /* ===== MAIN CONTAINER ===== */
@@ -463,6 +468,7 @@ body {
     justify-content: center;
     min-height: var(--card-height);
     position: relative;
+    perspective: 1000px;
 }
 
 .carousel-track {
@@ -477,22 +483,24 @@ body {
     flex: 0 0 var(--card-width);
     height: var(--card-height);
     background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
     border: 2px solid var(--border-color);
-    border-radius: 20px;
-    padding: 2rem;
+    border-radius: 24px;
+    padding: 2.5rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
     opacity: 0.4;
-    transform: scale(0.9) translateY(20px);
+    transform: scale(0.85) translateY(30px);
     position: relative;
     overflow: hidden;
     pointer-events: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .card::before {
@@ -503,13 +511,14 @@ body {
     opacity: 0;
     transition: opacity 0.4s ease;
     z-index: 1;
+    border-radius: 24px;
 }
 
 .card.active {
     opacity: 1;
     transform: scale(1) translateY(0);
     border-color: var(--primary-color);
-    box-shadow: 0 0 40px var(--glow-color), inset 0 0 40px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 40px var(--glow-color), inset 0 0 40px rgba(99, 102, 241, 0.1), 0 8px 32px rgba(0, 0, 0, 0.5);
     background: rgba(15, 23, 42, 0.8);
     pointer-events: auto;
     z-index: 100;
@@ -519,23 +528,26 @@ body {
     opacity: 1;
 }
 
+/* ===== RGB BORDER для главного пользователя ===== */
 .card.toolgool-card.active {
     animation: rgbBorder 3s linear infinite;
+    border-image: linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff00ff, #ff0000) 1;
 }
 
 .card.toolgool-card.active::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: 20px;
+    inset: -2px;
+    border-radius: 24px;
     padding: 2px;
     background: conic-gradient(from 0deg, #ff0000, #00ff00, #0000ff, #ff00ff, #ff0000);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    opacity: 0.5;
+    opacity: 0.6;
     animation: rgbBorder 3s linear infinite;
     z-index: -1;
+    pointer-events: none;
 }
 
 @keyframes rgbBorder {
@@ -552,18 +564,29 @@ body {
     align-items: center;
     gap: 1rem;
     flex: 1;
+    width: 100%;
 }
 
 .card-avatar-container {
     position: relative;
-    width: 140px;
-    height: 140px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid var(--primary-color);
-    box-shadow: 0 0 20px var(--glow-color);
+    box-shadow: 0 0 30px var(--glow-color);
     background: rgba(0, 0, 0, 0.2);
     flex-shrink: 0;
+    animation: avatarPulse 2s ease-in-out infinite;
+}
+
+@keyframes avatarPulse {
+    0%, 100% {
+        box-shadow: 0 0 30px var(--glow-color);
+    }
+    50% {
+        box-shadow: 0 0 50px var(--glow-color);
+    }
 }
 
 .card-avatar {
@@ -577,10 +600,11 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    width: 100%;
 }
 
 .card-name {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: var(--text-primary);
 }
@@ -588,17 +612,20 @@ body {
 .card-username {
     font-size: 0.95rem;
     color: var(--text-muted);
-    cursor: pointer;
+    cursor: default;
     transition: all 0.3s ease;
 }
 
 .card-username.clickable {
     color: var(--accent-color);
+    cursor: pointer;
+    font-weight: 600;
 }
 
 .card-username.clickable:hover {
     color: var(--primary-color);
     text-decoration: underline;
+    transform: scale(1.05);
 }
 
 .card-description {
@@ -614,58 +641,66 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+    padding-top: 0.5rem;
 }
 
 .badge {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: rgba(99, 102, 241, 0.1);
-    border: 1.5px solid var(--primary-color);
+    border: 2px solid var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
     overflow: hidden;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
 }
 
 .badge img {
-    width: 70%;
-    height: 70%;
+    width: 75%;
+    height: 75%;
     object-fit: contain;
     filter: brightness(0) invert(1);
 }
 
 .badge:hover {
-    transform: scale(1.2);
-    box-shadow: 0 0 25px var(--glow-color);
+    transform: scale(1.25) rotate(5deg);
+    box-shadow: 0 0 30px var(--glow-color);
     background: rgba(99, 102, 241, 0.3);
+    border-color: var(--accent-color);
 }
 
 /* ===== CAROUSEL INDICATORS ===== */
 .carousel-indicators {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    margin-top: 2rem;
+    gap: 0.75rem;
+    margin-top: 3rem;
 }
 
 .indicator {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: rgba(99, 102, 241, 0.3);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid var(--border-color);
+}
+
+.indicator:hover {
+    background: rgba(99, 102, 241, 0.6);
 }
 
 .indicator.active {
     background: var(--primary-color);
-    box-shadow: 0 0 10px var(--glow-color);
-    transform: scale(1.3);
+    box-shadow: 0 0 15px var(--glow-color);
+    transform: scale(1.4);
+    border-color: var(--primary-color);
 }
 
 /* ===== EFFECTS LAYER ===== */
@@ -676,10 +711,67 @@ body {
     z-index: 50;
 }
 
+.effect {
+    position: absolute;
+    pointer-events: none;
+}
+
+.burst {
+    position: absolute;
+    border-radius: 50%;
+    animation: burstExpand 0.6s ease-out forwards;
+}
+
+@keyframes burstExpand {
+    0% {
+        opacity: 1;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+.trail {
+    position: absolute;
+    border-radius: 50%;
+    animation: trailFade 0.8s ease-out forwards;
+    filter: blur(3px);
+}
+
+@keyframes trailFade {
+    0% {
+        opacity: 0.8;
+        transform: translateX(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50px) scale(0.5);
+    }
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: particleFloat 1.2s ease-out forwards;
+}
+
+@keyframes particleFloat {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+    }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .carousel-wrapper {
-        gap: 1rem;
+        gap: 1.5rem;
     }
 
     .carousel-arrow {
@@ -689,14 +781,32 @@ body {
     }
 
     :root {
-        --card-width: 340px;
-        --card-height: 480px;
+        --card-width: 380px;
+        --card-height: 520px;
+    }
+
+    .card {
+        padding: 2rem;
+    }
+
+    .card-avatar-container {
+        width: 140px;
+        height: 140px;
+    }
+
+    .card-name {
+        font-size: 1.5rem;
+    }
+
+    .badge {
+        width: 45px;
+        height: 45px;
     }
 }
 
 @media (max-width: 768px) {
     .carousel-wrapper {
-        gap: 0.75rem;
+        gap: 1rem;
     }
 
     .carousel-arrow {
@@ -706,17 +816,19 @@ body {
     }
 
     :root {
-        --card-width: 300px;
-        --card-height: 420px;
+        --card-width: 320px;
+        --card-height: 460px;
     }
 
     .card {
         padding: 1.5rem;
+        border-radius: 16px;
     }
 
     .card-avatar-container {
-        width: 110px;
-        height: 110px;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
     }
 
     .card-name {
@@ -731,11 +843,15 @@ body {
         width: 40px;
         height: 40px;
     }
+
+    .card-badges {
+        gap: 0.5rem;
+    }
 }
 
 @media (max-width: 480px) {
     .carousel-wrapper {
-        gap: 0.5rem;
+        gap: 0.75rem;
     }
 
     .carousel-arrow {
@@ -746,12 +862,13 @@ body {
 
     :root {
         --card-width: 280px;
-        --card-height: 380px;
+        --card-height: 400px;
     }
 
     .card {
         padding: 1.25rem;
-        gap: 1rem;
+        gap: 0.75rem;
+        border-radius: 12px;
     }
 
     .card-avatar-container {
@@ -774,9 +891,20 @@ body {
 
     .toast {
         min-width: 250px;
+        font-size: 0.9rem;
     }
 
     .modal-content {
         padding: 1.5rem;
+    }
+
+    .carousel-indicators {
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .indicator {
+        width: 8px;
+        height: 8px;
     }
 }
