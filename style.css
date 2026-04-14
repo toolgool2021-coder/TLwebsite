@@ -33,57 +33,6 @@ body {
     min-height: 100vh;
 }
 
-/* ===== BACKGROUND ===== */
-.background-animation {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.gradient-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.15;
-    animation: float 20s ease-in-out infinite;
-}
-
-.orb-1 {
-    width: 500px;
-    height: 500px;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    top: -10%;
-    left: -10%;
-}
-
-.orb-2 {
-    width: 400px;
-    height: 400px;
-    background: linear-gradient(135deg, #06b6d4, #6366f1);
-    top: 50%;
-    right: -5%;
-    animation-delay: 2s;
-}
-
-.orb-3 {
-    width: 300px;
-    height: 300px;
-    background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-    bottom: -10%;
-    left: 50%;
-    animation-delay: 4s;
-}
-
-@keyframes float {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(100px, 50px); }
-}
-
 /* ===== HEADER ===== */
 .header {
     position: fixed;
@@ -162,6 +111,7 @@ body {
     max-width: 400px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.3s ease;
+    position: relative;
 }
 
 .login-close {
@@ -386,12 +336,12 @@ body {
     align-items: center;
 }
 
-/* ===== CARDS ===== */
+/* ===== CARDS (Like Workers) ===== */
 .card {
     flex: 0 0 300px;
     aspect-ratio: 1;
     background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
     border-radius: 20px;
     padding: 2rem;
     text-align: center;
@@ -404,6 +354,8 @@ body {
     gap: 1rem;
     opacity: 0.5;
     transform: scale(0.8);
+    position: relative;
+    overflow: hidden;
 }
 
 .card.active {
@@ -411,16 +363,11 @@ body {
     transform: scale(1);
     border-color: var(--primary-color);
     box-shadow: 0 0 40px var(--glow-color);
+    background: rgba(99, 102, 241, 0.1);
 }
 
 .card.toolgool-card.active {
-    background: rgba(99, 102, 241, 0.1);
-    border: 2px solid transparent;
-    background-image: 
-        linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)),
-        conic-gradient(from 0deg, #ff0000, #00ff00, #0000ff, #ff00ff, #ff0000);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
     animation: rgbBorder 3s linear infinite;
 }
 
@@ -429,19 +376,41 @@ body {
     100% { filter: hue-rotate(360deg); }
 }
 
-.card-avatar {
+/* ===== AVATAR ===== */
+.card-avatar-container {
+    position: relative;
     width: 120px;
     height: 120px;
+    margin: 0 auto;
     border-radius: 50%;
+    overflow: visible;
     border: 3px solid var(--primary-color);
-    overflow: hidden;
-    box-shadow: 0 0 20px var(--glow-color);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
 }
 
-.card-avatar img {
+.card-avatar {
     width: 100%;
     height: 100%;
+    border-radius: 50%;
     object-fit: cover;
+    display: block;
+}
+
+.card-avatar-outline {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 50%;
+    z-index: 3;
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .card-name {
@@ -524,7 +493,7 @@ body {
         padding: 1.5rem;
     }
 
-    .card-avatar {
+    .card-avatar-container {
         width: 100px;
         height: 100px;
     }
@@ -550,7 +519,7 @@ body {
         padding: 1rem;
     }
 
-    .card-avatar {
+    .card-avatar-container {
         width: 80px;
         height: 80px;
     }
