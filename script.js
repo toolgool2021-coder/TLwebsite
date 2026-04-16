@@ -8,34 +8,109 @@ let isAnimating = false;
 const cardsTrack = document.getElementById('cardsTrack');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
-const loginBtn = document.getElementById('loginBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-const loginForm = document.getElementById('loginForm');
-const rankOverlay = document.getElementById('rankOverlay');
 const effectsLayer = document.getElementById('effectsLayer');
 const indicatorsContainer = document.getElementById('indicators');
 
-// ===== FIND TOOLGOOL USER =====
-function findToolGoolIndex() {
-    const users = userManager.getAll();
-    return users.findIndex(u => u.id === 'toolgool');
-}
+// ===== USER MANAGER =====
+const userManager = {
+    currentIndex: 0,
+
+    getAll() {
+        return users;
+    },
+
+    getCurrent() {
+        return users[this.currentIndex];
+    },
+
+    next() {
+        this.currentIndex = (this.currentIndex + 1) % users.length;
+        return this.getCurrent();
+    },
+
+    prev() {
+        this.currentIndex = (this.currentIndex - 1 + users.length) % users.length;
+        return this.getCurrent();
+    },
+
+    jumpTo(index) {
+        if (index >= 0 && index < users.length) {
+            this.currentIndex = index;
+            return this.getCurrent();
+        }
+        return null;
+    }
+};
+
+// ===== EFFECTS MANAGER =====
+const effectsManager = {
+    getParticleColor(effect) {
+        const colors = {
+            fire: ['#ff4500', '#ff6347', '#ffa500', '#ffd700'],
+            ice: ['#00ffff', '#00bfff', '#87ceeb', '#b0e0e6'],
+            lightning: ['#ffff00', '#00ffff', '#ffffff', '#ff00ff'],
+            stars: ['#ffff00', '#ffd700', '#ffffff', '#87ceeb'],
+            rainbow: ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#9400d3']
+        };
+        return colors[effect] || colors.fire;
+    },
+
+    createParticles(effect, x, y, count = 15) {
+        const colors = this.getParticleColor(effect);
+        const particleClass = this.getParticleClass(effect);
+
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.className = `particle ${particleClass}`;
+            
+            const angle = (Math.PI * 2 * i) / count;
+            const velocity = 50 + Math.random() * 100;
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+
+            const size = 4 + Math.random() * 8;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.backgroundColor = color;
+            particle.style.setProperty('--tx', tx + 'px');
+            particle.style.setProperty('--ty', ty + 'px');
+
+            effectsLayer.appendChild(particle);
+
+            setTimeout(() => particle.remove(), 1500);
+        }
+    },
+
+    getParticleClass(effect) {
+        const classes = {
+            fire: 'fire-particle',
+            ice: 'ice-particle',
+            lightning: 'lightning-particle',
+            stars: 'stars-particle',
+            rainbow: 'rainbow-particle'
+        };
+        return classes[effect] || 'particle';
+    }
+};
 
 // ===== RENDER CARDS =====
 function renderCards() {
     cardsTrack.innerHTML = '';
-    const users = userManager.getAll();
+    const allUsers = userManager.getAll();
     
-    users.forEach((user, index) => {
+    allUsers.forEach((user, index) => {
         const card = document.createElement('div');
         card.className = 'card';
         if (user.id === 'toolgool') card.classList.add('toolgool-card');
         if (index === currentIndex) card.classList.add('active');
 
-        const badges = badgeManager.getBadgesByUserId(user.id);
-        const badgesHTML = badges.map(badge => `
-            <div class="badge" onclick="window.open('${badge.link}', '_blank')" title="${badge.name || 'Badge'}" style="pointer-events: auto;">
-                <img src="${badge.image}" alt="badge">
+        const badgesHTML = user.socials.map(social => `
+            <div class="badge" onclick="window.open('${social.link}', '_blank')" title="${social.name}" style="pointer-events: auto; cursor: pointer;">
+                <i class="${social.icon}"></i>
             </div>
         `).join('');
 
@@ -62,7 +137,7 @@ function renderCards() {
                 const rect = card.getBoundingClientRect();
                 const x = rect.left + rect.width / 2;
                 const y = rect.top + rect.height / 2;
-                effectsManager.createBurst(user.effect, x, y);
+                effectsManager.createParticles(user.effect, x, y, 25);
             }
         });
 
@@ -106,7 +181,6 @@ function navigateTo(direction) {
     if (isAnimating) return;
     isAnimating = true;
     
-    const users = userManager.getAll();
     let user;
     
     if (direction === 'next') {
@@ -117,11 +191,11 @@ function navigateTo(direction) {
     
     currentIndex = userManager.currentIndex;
     
-    // Create trail effect
-    const card = document.querySelector('.card.active');
-    if (card) {
-        const rect = card.getBoundingClientRect();
-        effectsManager.createTrail(user.effect, rect.left + rect.width / 2, rect.top + rect.height / 2);
+    // Create effect on navigate
+    const oldCard = document.querySelector('.card.active');
+    if (oldCard) {
+        const rect = oldCard.getBoundingClientRect();
+        effectsManager.createParticles(user.effect, rect.left + rect.width / 2, rect.top + rect.height / 2, 15);
     }
     
     renderCards();
@@ -160,9 +234,9 @@ function handleSwipe() {
 // ===== INDICATORS =====
 function renderIndicators() {
     indicatorsContainer.innerHTML = '';
-    const users = userManager.getAll();
+    const allUsers = userManager.getAll();
     
-    users.forEach((_, index) => {
+    allUsers.forEach((_, index) => {
         const indicator = document.createElement('div');
         indicator.className = 'indicator';
         if (index === currentIndex) indicator.classList.add('active');
@@ -174,84 +248,23 @@ function renderIndicators() {
 function jumpToCard(index) {
     if (index === currentIndex || isAnimating) return;
     
+    isAnimating = true;
+    
+    // Create effect on jump
+    const currentUser = userManager.getCurrent();
+    const oldCard = document.querySelector('.card.active');
+    if (oldCard) {
+        const rect = oldCard.getBoundingClientRect();
+        effectsManager.createParticles(currentUser.effect, rect.left + rect.width / 2, rect.top + rect.height / 2, 12);
+    }
+    
     currentIndex = index;
     userManager.currentIndex = index;
     renderCards();
-}
-
-// ===== LOGIN SYSTEM =====
-loginBtn.addEventListener('click', () => {
-    loginModal.open();
-});
-
-logoutBtn.addEventListener('click', () => {
-    userSession.logout();
-    updateAuthUI();
-    toastManager.success('Logged out successfully');
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-});
-
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    const account = accountManager.login(username, password);
-    
-    if (account) {
-        userSession.login(account);
-        updateAuthUI();
-        loginModal.close();
-        toastManager.success('Welcome back!');
-        showRankAnimation(account);
-    } else {
-        toastManager.error('Invalid username or password');
-    }
-});
-
-// ===== RANK ANIMATION =====
-function showRankAnimation(account) {
-    rankOverlay.classList.remove('hidden');
-    rankOverlay.classList.add('active');
-    
-    const avatarImg = document.getElementById('rankAvatarImg');
-    const rankNumber = document.getElementById('rankNumber');
-    const rankType = document.getElementById('rankType');
-    const rankBar = document.getElementById('rankBar');
-    
-    avatarImg.src = account.avatar;
-    
-    let currentRank = 1;
-    const targetRank = account.rankLevel;
-    const totalFrames = 40;
-    let frame = 0;
-    
-    const animationInterval = setInterval(() => {
-        frame++;
-        const progress = frame / totalFrames;
-        const acceleratedProgress = Math.pow(progress, 1.2);
-        currentRank = Math.floor(1 + (targetRank - 1) * acceleratedProgress);
-        
-        rankNumber.textContent = currentRank;
-        rankNumber.style.color = accountManager.getRankColor(currentRank);
-        
-        if (frame >= totalFrames) {
-            clearInterval(animationInterval);
-            rankNumber.style.animation = 'none';
-            setTimeout(() => {
-                rankNumber.style.animation = 'rankFlip 0.5s ease';
-            }, 10);
-            rankType.textContent = account.rankType;
-            rankBar.style.width = '100%';
-        }
-    }, 30);
     
     setTimeout(() => {
-        rankOverlay.classList.remove('active');
-        setTimeout(() => rankOverlay.classList.add('hidden'), 300);
-    }, 4000);
+        isAnimating = false;
+    }, 600);
 }
 
 // ===== KEYBOARD NAVIGATION =====
@@ -262,17 +275,9 @@ document.addEventListener('keydown', (e) => {
 
 // ===== INITIALIZATION =====
 window.addEventListener('load', () => {
-    // Set to toolgool as first card
-    currentIndex = findToolGoolIndex();
-    userManager.currentIndex = currentIndex;
-    
+    currentIndex = 0;
+    userManager.currentIndex = 0;
     renderCards();
-    
-    // Auto-login if session exists
-    if (userSession.isLoggedIn()) {
-        updateAuthUI();
-        toastManager.info('Welcome back, ' + userSession.currentUser.username);
-    }
 });
 
 // ===== HANDLE WINDOW RESIZE =====
