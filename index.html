@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toolgool - Interactive Bio Profile</title>
+    <title>Toolgool - Bio Profile</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,58 +17,12 @@
     <!-- ===== HEADER ===== -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">⚡ Toolgool</div>
-            <div class="header-actions">
-                <button id="loginBtn" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-                <button id="logoutBtn" class="btn-logout hidden">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+            <div class="logo">⚡ Toolgool Bio</div>
+            <div class="header-info" id="headerInfo">
+                Свайп или используй стрелки →
             </div>
         </div>
     </header>
-
-    <!-- ===== TOAST NOTIFICATIONS ===== -->
-    <div id="toastContainer" class="toast-container"></div>
-
-    <!-- ===== LOGIN MODAL ===== -->
-    <div id="loginModal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close">&times;</button>
-            <h2>Welcome Back</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <input type="text" id="username" placeholder="Username" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="password" placeholder="Password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Enter</button>
-            </form>
-            <div class="login-hint">
-                <p>Demo: <strong>toolgool / 12345</strong></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== RANK OVERLAY ===== -->
-    <div id="rankOverlay" class="rank-overlay hidden">
-        <div class="rank-container">
-            <div class="rank-content">
-                <div class="rank-avatar">
-                    <img id="rankAvatarImg" src="" alt="Avatar">
-                </div>
-                <div class="rank-info">
-                    <div id="rankNumber" class="rank-number">1</div>
-                    <div id="rankType" class="rank-type">NOVICE</div>
-                </div>
-                <div class="rank-progress">
-                    <div id="rankBar" class="rank-bar-fill"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- ===== MAIN SECTION ===== -->
     <main class="main-container">
@@ -102,15 +56,11 @@
 
     </main>
 
-    <!-- ===== EFFECT LAYERS ===== -->
+    <!-- ===== EFFECTS LAYER ===== -->
     <div id="effectsLayer" class="effects-layer"></div>
 
     <!-- ===== SCRIPTS ===== -->
     <script src="users.js"></script>
-    <script src="badges.js"></script>
-    <script src="accounts.js"></script>
-    <script src="effects.js"></script>
-    <script src="ui.js"></script>
     <script src="script.js"></script>
 
 </body>
