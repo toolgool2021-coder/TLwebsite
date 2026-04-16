@@ -3,7 +3,7 @@ const users = [
         id: 'toolgool',
         name: 'Toolgool',
         username: '@toolgool',
-        avatar: 'https://avatars.githubusercontent.com/u/236378052?v=4',
+        avatar: 'images/avatars/icon.jpg',
         description: 'Developer & Creator | Building amazing things ⚡',
         effect: 'rainbow',
         socials: [
