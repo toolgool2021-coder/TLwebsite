@@ -55,20 +55,17 @@ const effectsManager = {
         return colors[effect] || colors.fire;
     },
 
-    createParticles(effect, cardRect, count = 30) {
+    createParticles(effect, cardRect, count = 40) {
         const colors = this.getParticleColor(effect);
         const particleClass = this.getParticleClass(effect);
 
-        // Создаём частицы по всей карточке
         for (let i = 0; i < count; i++) {
             const particle = document.createElement('div');
             particle.className = `particle ${particleClass}`;
             
-            // Случайная позиция на карточке
             const randomX = Math.random() * cardRect.width;
             const randomY = Math.random() * cardRect.height;
             
-            // Направление вылета
             const angle = (Math.PI * 2 * i) / count;
             const velocity = 60 + Math.random() * 120;
             const tx = Math.cos(angle) * velocity;
@@ -77,7 +74,6 @@ const effectsManager = {
             const size = 5 + Math.random() * 10;
             const color = colors[Math.floor(Math.random() * colors.length)];
 
-            // Абсолютная позиция на экране
             particle.style.left = (cardRect.left + randomX) + 'px';
             particle.style.top = (cardRect.top + randomY) + 'px';
             particle.style.width = size + 'px';
@@ -112,8 +108,17 @@ function renderCards() {
     allUsers.forEach((user, index) => {
         const card = document.createElement('div');
         card.className = 'card';
+        
         if (user.id === 'toolgool') card.classList.add('toolgool-card');
-        if (index === currentIndex) card.classList.add('active');
+        
+        // Определяем класс позиции
+        if (index === currentIndex) {
+            card.classList.add('active');
+        } else if (index === (currentIndex - 1 + allUsers.length) % allUsers.length) {
+            card.classList.add('prev');
+        } else if (index === (currentIndex + 1) % allUsers.length) {
+            card.classList.add('next');
+        }
 
         const badgesHTML = user.socials.map(social => `
             <div class="badge" onclick="window.open('${social.link}', '_blank')" title="${social.name}" style="pointer-events: auto; cursor: pointer;">
@@ -138,11 +143,11 @@ function renderCards() {
             </div>
         `;
 
-        // Click for effect burst на всю карточку
+        // Click for effect burst
         card.addEventListener('click', (e) => {
             if (!e.target.closest('.badge')) {
                 const rect = card.getBoundingClientRect();
-                effectsManager.createParticles(user.effect, rect, 40);
+                effectsManager.createParticles(user.effect, rect, 50);
             }
         });
 
@@ -159,15 +164,7 @@ function renderCards() {
         cardsTrack.appendChild(card);
     });
 
-    updateCarouselPosition();
     renderIndicators();
-}
-
-// ===== UPDATE CAROUSEL POSITION =====
-function updateCarouselPosition() {
-    document.querySelectorAll('.card').forEach((card, index) => {
-        card.classList.toggle('active', index === currentIndex);
-    });
 }
 
 // ===== NAVIGATION =====
@@ -175,23 +172,21 @@ function navigateTo(direction) {
     if (isAnimating) return;
     isAnimating = true;
     
-    let user;
+    // Create effect on navigate
+    const activeCard = document.querySelector('.card.active');
+    const currentUser = userManager.getCurrent();
+    if (activeCard) {
+        const rect = activeCard.getBoundingClientRect();
+        effectsManager.createParticles(currentUser.effect, rect, 30);
+    }
     
     if (direction === 'next') {
-        user = userManager.next();
+        userManager.next();
     } else {
-        user = userManager.prev();
+        userManager.prev();
     }
     
     currentIndex = userManager.currentIndex;
-    
-    // Create effect on navigate по всей карточке
-    const oldCard = document.querySelector('.card.active');
-    if (oldCard) {
-        const rect = oldCard.getBoundingClientRect();
-        effectsManager.createParticles(user.effect, rect, 20);
-    }
-    
     renderCards();
     
     setTimeout(() => {
@@ -244,12 +239,12 @@ function jumpToCard(index) {
     
     isAnimating = true;
     
-    // Create effect on jump по всей карточке
+    // Create effect
     const currentUser = userManager.getCurrent();
-    const oldCard = document.querySelector('.card.active');
-    if (oldCard) {
-        const rect = oldCard.getBoundingClientRect();
-        effectsManager.createParticles(currentUser.effect, rect, 18);
+    const activeCard = document.querySelector('.card.active');
+    if (activeCard) {
+        const rect = activeCard.getBoundingClientRect();
+        effectsManager.createParticles(currentUser.effect, rect, 25);
     }
     
     currentIndex = index;
@@ -276,5 +271,5 @@ window.addEventListener('load', () => {
 
 // ===== HANDLE WINDOW RESIZE =====
 window.addEventListener('resize', () => {
-    updateCarouselPosition();
+    renderCards();
 });
