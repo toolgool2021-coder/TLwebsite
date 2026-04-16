@@ -106,6 +106,7 @@ function renderCards() {
         const card = document.createElement('div');
         card.className = 'card';
         if (user.id === 'toolgool') card.classList.add('toolgool-card');
+        // Центральная карточка всегда в центре (активна)
         if (index === currentIndex) card.classList.add('active');
 
         const badgesHTML = user.socials.map(social => `
@@ -164,6 +165,7 @@ function updateCarouselPosition() {
     
     const cardWidth = getCardWidth();
     const gap = 32;
+    // Смещение чтобы центральная карточка была в центре экрана
     const offset = -currentIndex * (cardWidth + gap);
     cardsTrack.style.transform = `translateX(calc(50vw - ${cardWidth / 2}px + ${offset}px))`;
     
