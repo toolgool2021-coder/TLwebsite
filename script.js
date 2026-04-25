@@ -1,274 +1,280 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+const canvas = document.getElementById('snowCanvas');
+const ctx = canvas.getContext('2d');
+
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
+
+window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+});
+
+const snowflakes = [];
+const maxFlakes = 150;
+
+for (let i = 0; i < maxFlakes; i++) {
+    snowflakes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 3 + 1,
+        speed: Math.random() * 1 + 0.5,
+        opacity: Math.random() * 0.5 + 0.3
+    });
 }
 
-html, body {
-    width: 100%;
-    height: 100%;
-    background: #0a0a0a;
-    font-family: Arial, sans-serif;
-    color: white;
-    overflow-x: hidden;
-}
+function drawSnow() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "rgba(255,255,255,0.3)";
+    ctx.beginPath();
 
-/* Центрирование */
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
-.profile-section {
-    text-align: center;
-}
-
-/* ===== AVATAR ===== */
-.avatar-container {
-    margin-bottom: 15px;
-}
-
-.avatar-wrapper {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 auto;
-    position: relative;
-}
-
-.avatar-wrapper::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 3px solid #a855f7;
-    pointer-events: none;
-}
-
-.avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-/* ===== USERNAME ===== */
-.username {
-    font-size: 26px;
-    margin-bottom: 15px;
-}
-
-/* ===== SOCIALS ===== */
-.social-links {
-    display: grid;
-    grid-template-columns: repeat(5, 50px);
-    gap: 15px;
-    justify-content: center;
-    padding: 10px;
-}
-
-.social-link {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #a855f7;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-}
-
-.social-link:hover {
-    transform: scale(1.1);
-}
-
-.social-link img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-/* ===== SNOW ===== */
-#snowCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* ===== ФУТЕР ===== */
-footer {
-    background: rgba(10, 10, 10, 0.9);
-    backdrop-filter: blur(10px);
-    border-top: 2px solid rgba(168, 85, 247, 0.5);
-    padding: 50px 20px;
-    margin-top: 100px;
-    position: relative;
-    z-index: 10;
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Социальные сети в футере */
-.social-links-footer {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-}
-
-.social-link-footer {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: rgba(168, 85, 247, 0.1);
-    border: 2px solid #a855f7;
-    color: #a855f7;
-    font-size: 24px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.social-link-footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.6), transparent);
-    transition: left 0.5s;
-}
-
-.social-link-footer:hover {
-    transform: scale(1.2) rotate(360deg);
-    box-shadow: 0 0 30px rgba(168, 85, 247, 0.8), inset 0 0 20px rgba(168, 85, 247, 0.5);
-    background: rgba(168, 85, 247, 0.3);
-    border-color: #00ffff;
-    color: #00ffff;
-}
-
-.social-link-footer:hover::before {
-    left: 100%;
-}
-
-/* Вертикальный ряд правовых ссылок */
-.legal-links {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.legal-link {
-    display: inline-block;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 255, 255, 0.05));
-    border: 2px solid #a855f7;
-    border-radius: 8px;
-    color: #a855f7;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), inset 0 0 10px rgba(168, 85, 247, 0.1);
-    position: relative;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.legal-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.6), transparent);
-    transition: left 0.6s;
-    z-index: -1;
-}
-
-.legal-link:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 25px rgba(168, 85, 247, 0.8), 
-                inset 0 0 15px rgba(168, 85, 247, 0.6),
-                0 0 40px rgba(0, 255, 255, 0.4);
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 255, 255, 0.2));
-    border-color: #00ffff;
-    color: #fff;
-    text-shadow: 0 0 10px #a855f7;
-}
-
-.legal-link:hover::before {
-    left: 100%;
-}
-
-.legal-link:active {
-    transform: translateY(-1px);
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(168, 85, 247, 0.4);
-}
-
-/* Пульсирующий неон эффект */
-@keyframes neonPulse {
-    0%, 100% {
-        box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), inset 0 0 10px rgba(168, 85, 247, 0.1);
+    for (let f of snowflakes) {
+        ctx.moveTo(f.x, f.y);
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
     }
-    50% {
-        box-shadow: 0 0 25px rgba(168, 85, 247, 0.6), inset 0 0 15px rgba(168, 85, 247, 0.3);
+
+    ctx.fill();
+    updateSnow();
+}
+
+function updateSnow() {
+    for (let f of snowflakes) {
+        f.y += f.speed;
+        f.x += Math.sin(f.y / height * Math.PI * 2) * 0.5;
+
+        if (f.y > height) f.y = 0;
+        if (f.x > width) f.x = 0;
+        if (f.x < 0) f.x = width;
+    }
+
+    requestAnimationFrame(drawSnow);
+}
+
+drawSnow();
+
+// ===== ДОПОЛНИТЕЛЬНЫЕ СПЕЦЭФФЕКТЫ =====
+
+// Частицы при движении мыши
+document.addEventListener('mousemove', (e) => {
+    createMouseParticles(e.clientX, e.clientY);
+});
+
+function createMouseParticles(x, y) {
+    if (Math.random() > 0.8) {
+        const particle = document.createElement('div');
+        particle.style.position = 'fixed';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.width = '5px';
+        particle.style.height = '5px';
+        particle.style.borderRadius = '50%';
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '3';
+        particle.style.boxShadow = '0 0 10px #a855f7';
+        particle.style.animation = 'particleFloat 1s ease-out forwards';
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), 1000);
     }
 }
 
-.legal-link:not(:hover) {
-    animation: neonPulse 2s ease-in-out infinite;
-}
-
-/* Footer текст */
-.footer-text {
-    text-align: center;
-    color: rgba(168, 85, 247, 0.6);
-    font-size: 12px;
-    border-top: 1px solid rgba(168, 85, 247, 0.2);
-    padding-top: 20px;
-    position: relative;
-    z-index: 10;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .legal-link {
-        font-size: 12px;
-        padding: 10px 20px;
+// CSS анимация для частиц
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes particleFloat {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(${Math.random() * 100 - 50}px, -50px) scale(0);
+        }
     }
 
-    .social-link-footer {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
+    @keyframes floatingGradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
     }
+`;
+document.head.appendChild(style);
 
-    footer {
-        padding: 30px 15px;
+// Звёзды мерцающие случайно
+function createStars() {
+    const starsContainer = document.createElement('div');
+    starsContainer.className = 'stars';
+    document.body.insertBefore(starsContainer, document.body.firstChild);
+    
+    for (let i = 0; i < 50; i++) {
+        const star = document.createElement('div');
+        star.style.position = 'fixed';
+        star.style.width = Math.random() * 2 + 'px';
+        star.style.height = star.style.width;
+        star.style.borderRadius = '50%';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 50 + '%';
+        star.style.backgroundColor = '#fff';
+        star.style.opacity = Math.random() * 0.5 + 0.3;
+        star.style.zIndex = '0';
+        star.style.animation = `twinkle ${Math.random() * 3 + 2}s infinite`;
+        star.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px rgba(168, 85, 247, 0.8)`;
+        
+        starsContainer.appendChild(star);
     }
 }
+
+const twinkleStyle = document.createElement('style');
+twinkleStyle.textContent = `
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
+    }
+`;
+document.head.appendChild(twinkleStyle);
+
+createStars();
+
+// Светящиеся линии между элементами при наведении
+const socialLinks = document.querySelectorAll('.social-link');
+
+socialLinks.forEach((link, index) => {
+    link.addEventListener('mouseenter', () => {
+        link.style.filter = 'drop-shadow(0 0 20px rgba(168, 85, 247, 1))';
+    });
+
+    link.addEventListener('mouseleave', () => {
+        link.style.filter = 'none';
+    });
+});
+
+// Дополнительный эффект - волны от клика
+document.addEventListener('click', (e) => {
+    createClickWave(e.clientX, e.clientY);
+});
+
+function createClickWave(x, y) {
+    const wave = document.createElement('div');
+    wave.style.position = 'fixed';
+    wave.style.left = x + 'px';
+    wave.style.top = y + 'px';
+    wave.style.width = '10px';
+    wave.style.height = '10px';
+    wave.style.borderRadius = '50%';
+    wave.style.border = '2px solid #a855f7';
+    wave.style.pointerEvents = 'none';
+    wave.style.zIndex = '3';
+    wave.style.transform = 'translate(-50%, -50%)';
+    wave.style.animation = 'ripple 0.6s ease-out forwards';
+    
+    document.body.appendChild(wave);
+    
+    setTimeout(() => wave.remove(), 600);
+}
+
+const rippleStyle = document.createElement('style');
+rippleStyle.textContent = `
+    @keyframes ripple {
+        0% {
+            width: 10px;
+            height: 10px;
+            opacity: 1;
+        }
+        100% {
+            width: 100px;
+            height: 100px;
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(rippleStyle);
+
+// Плавающие огоньки вокруг курсора
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+// Создание аура вокруг курсора
+function createCursorAura() {
+    const aura = document.createElement('div');
+    aura.style.position = 'fixed';
+    aura.style.pointerEvents = 'none';
+    aura.style.zIndex = '2';
+    aura.style.width = '100px';
+    aura.style.height = '100px';
+    aura.style.borderRadius = '50%';
+    aura.style.background = 'radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%)';
+    aura.style.filter = 'blur(20px)';
+    aura.style.left = (mouseX - 50) + 'px';
+    aura.style.top = (mouseY - 50) + 'px';
+    aura.style.opacity = '0.5';
+    
+    document.body.appendChild(aura);
+    
+    // Удаляем старую ауру если её больше 1
+    const auras = document.querySelectorAll('div[style*="radial-gradient"]');
+    if (auras.length > 1) {
+        auras[0].remove();
+    }
+}
+
+setInterval(createCursorAura, 50);
+
+// Эффект при скролле
+window.addEventListener('scroll', () => {
+    const scrollParticle = document.createElement('div');
+    scrollParticle.style.position = 'fixed';
+    scrollParticle.style.left = Math.random() * width + 'px';
+    scrollParticle.style.top = Math.random() * height + 'px';
+    scrollParticle.style.width = '3px';
+    scrollParticle.style.height = '3px';
+    scrollParticle.style.borderRadius = '50%';
+    scrollParticle.style.backgroundColor = '#00ffc8';
+    scrollParticle.style.pointerEvents = 'none';
+    scrollParticle.style.zIndex = '1';
+    scrollParticle.style.boxShadow = '0 0 10px #00ffc8';
+    scrollParticle.style.animation = 'scrollParticleFloat 2s ease-out forwards';
+    
+    document.body.appendChild(scrollParticle);
+    
+    setTimeout(() => scrollParticle.remove(), 2000);
+});
+
+const scrollParticleStyle = document.createElement('style');
+scrollParticleStyle.textContent = `
+    @keyframes scrollParticleFloat {
+        0% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-100px);
+        }
+    }
+`;
+document.head.appendChild(scrollParticleStyle);
+
+// Эффект для кнопок в футере
+const legalLinks = document.querySelectorAll('.legal-link');
+
+legalLinks.forEach((link) => {
+    link.addEventListener('mousemove', (e) => {
+        const rect = link.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        link.style.setProperty('--x', x + 'px');
+        link.style.setProperty('--y', y + 'px');
+    });
+});
