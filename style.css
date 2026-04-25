@@ -13,7 +13,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Центрирование */
 .container {
     display: flex;
     justify-content: center;
@@ -25,7 +24,6 @@ html, body {
     text-align: center;
 }
 
-/* ===== AVATAR ===== */
 .avatar-container {
     margin-bottom: 15px;
 }
@@ -55,13 +53,11 @@ html, body {
     object-position: center;
 }
 
-/* ===== USERNAME ===== */
 .username {
     font-size: 26px;
     margin-bottom: 15px;
 }
 
-/* ===== SOCIALS ===== */
 .social-links {
     display: grid;
     grid-template-columns: repeat(5, 50px);
@@ -93,7 +89,6 @@ html, body {
     object-position: center;
 }
 
-/* ===== SNOW ===== */
 #snowCanvas {
     position: fixed;
     top: 0;
@@ -104,7 +99,6 @@ html, body {
     z-index: 1;
 }
 
-/* ===== ФУТЕР ===== */
 footer {
     background: rgba(10, 10, 10, 0.9);
     backdrop-filter: blur(10px);
@@ -120,7 +114,6 @@ footer {
     margin: 0 auto;
 }
 
-/* Социальные сети в футере */
 .social-links-footer {
     display: flex;
     justify-content: center;
@@ -171,7 +164,6 @@ footer {
     left: 100%;
 }
 
-/* Вертикальный ряд правовых ссылок */
 .legal-links {
     display: flex;
     flex-direction: column;
@@ -230,7 +222,6 @@ footer {
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(168, 85, 247, 0.4);
 }
 
-/* Пульсирующий неон эффект */
 @keyframes neonPulse {
     0%, 100% {
         box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), inset 0 0 10px rgba(168, 85, 247, 0.1);
@@ -244,7 +235,6 @@ footer {
     animation: neonPulse 2s ease-in-out infinite;
 }
 
-/* Footer текст */
 .footer-text {
     text-align: center;
     color: rgba(168, 85, 247, 0.6);
@@ -255,7 +245,6 @@ footer {
     z-index: 10;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
     .legal-link {
         font-size: 12px;
