@@ -51,9 +51,7 @@ function updateSnow() {
 
 drawSnow();
 
-// ===== ДОПОЛНИТЕЛЬНЫЕ СПЕЦЭФФЕКТЫ =====
 
-// Частицы при движении мыши
 document.addEventListener('mousemove', (e) => {
     createMouseParticles(e.clientX, e.clientY);
 });
@@ -78,7 +76,6 @@ function createMouseParticles(x, y) {
     }
 }
 
-// CSS анимация для частиц
 const style = document.createElement('style');
 style.textContent = `
     @keyframes particleFloat {
@@ -106,7 +103,6 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Звёзды мерцающие случайно
 function createStars() {
     const starsContainer = document.createElement('div');
     starsContainer.className = 'stars';
@@ -141,7 +137,6 @@ document.head.appendChild(twinkleStyle);
 
 createStars();
 
-// Светящиеся линии между элементами при наведении
 const socialLinks = document.querySelectorAll('.social-link');
 
 socialLinks.forEach((link, index) => {
@@ -154,7 +149,6 @@ socialLinks.forEach((link, index) => {
     });
 });
 
-// Дополнительный эффект - волны от клика
 document.addEventListener('click', (e) => {
     createClickWave(e.clientX, e.clientY);
 });
@@ -195,7 +189,6 @@ rippleStyle.textContent = `
 `;
 document.head.appendChild(rippleStyle);
 
-// Плавающие огоньки вокруг курсора
 let mouseX = 0;
 let mouseY = 0;
 
@@ -204,7 +197,6 @@ document.addEventListener('mousemove', (e) => {
     mouseY = e.clientY;
 });
 
-// Создание аура вокруг курсора
 function createCursorAura() {
     const aura = document.createElement('div');
     aura.style.position = 'fixed';
@@ -221,7 +213,6 @@ function createCursorAura() {
     
     document.body.appendChild(aura);
     
-    // Удаляем старую ауру если её больше 1
     const auras = document.querySelectorAll('div[style*="radial-gradient"]');
     if (auras.length > 1) {
         auras[0].remove();
@@ -230,7 +221,6 @@ function createCursorAura() {
 
 setInterval(createCursorAura, 50);
 
-// Эффект при скролле
 window.addEventListener('scroll', () => {
     const scrollParticle = document.createElement('div');
     scrollParticle.style.position = 'fixed';
@@ -265,7 +255,6 @@ scrollParticleStyle.textContent = `
 `;
 document.head.appendChild(scrollParticleStyle);
 
-// Эффект для кнопок в футере
 const legalLinks = document.querySelectorAll('.legal-link');
 
 legalLinks.forEach((link) => {
