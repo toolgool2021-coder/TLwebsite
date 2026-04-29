@@ -18,10 +18,12 @@ html, body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
 }
 
 .profile-section {
     text-align: center;
+    width: 100%;
 }
 
 .avatar-container {
@@ -64,6 +66,7 @@ html, body {
     gap: 15px;
     justify-content: center;
     padding: 10px;
+    margin-bottom: 40px;
 }
 
 .social-link {
@@ -87,6 +90,206 @@ html, body {
     height: 100%;
     object-fit: cover;
     object-position: center;
+}
+
+/* НОВЫЕ СТИЛИ ДЛЯ КОМАНДЫ */
+.team-section {
+    margin-top: 60px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(0, 255, 200, 0.05));
+    border-radius: 20px;
+    border: 2px solid rgba(168, 85, 247, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.team-section h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    color: #a855f7;
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.team-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.team-card-inner {
+    background: rgba(168, 85, 247, 0.1);
+    border: 2px solid #a855f7;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.team-card:hover .team-card-inner {
+    transform: translateY(-10px);
+    background: rgba(168, 85, 247, 0.2);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(168, 85, 247, 0.1);
+    border-color: #00ffff;
+}
+
+.team-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #a855f7;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.team-card:hover .team-avatar {
+    border-color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 200, 0.8);
+}
+
+.team-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.team-relationship {
+    font-size: 12px;
+    color: #00ffff;
+    font-weight: 500;
+}
+
+/* МОДАЛЬНОЕ ОКНО */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 255, 200, 0.05));
+    border: 2px solid #a855f7;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+    backdrop-filter: blur(10px);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #a855f7;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #00ffff;
+    transform: rotate(90deg);
+}
+
+.profile-card {
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #a855f7;
+    object-fit: cover;
+    margin-bottom: 20px;
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+}
+
+.profile-card h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.relationship-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #a855f7, #00ffff);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #000;
+    font-weight: 600;
+}
+
+.profile-description {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-socials {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.modal-social {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(168, 85, 247, 0.2);
+    border: 2px solid #a855f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a855f7;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.modal-social:hover {
+    background: rgba(0, 255, 200, 0.3);
+    border-color: #00ffff;
+    color: #00ffff;
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgba(0, 255, 200, 0.8);
 }
 
 #snowCanvas {
@@ -246,6 +449,11 @@ footer {
 }
 
 @media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 15px;
+    }
+
     .legal-link {
         font-size: 12px;
         padding: 10px 20px;
@@ -259,5 +467,10 @@ footer {
 
     footer {
         padding: 30px 15px;
+    }
+
+    .modal-content {
+        padding: 30px;
+        max-width: 90%;
     }
 }
