@@ -1,3 +1,153 @@
+// ДАННЫЕ ЛЮДЕЙ - РЕДАКТИРУЙ ЗДЕСЬ!
+const teamMembers = [
+    {
+        id: 1,
+        name: "Альфа",
+        relationship: "👨‍💼 Брат",
+        emoji: "👨",
+        avatar: "https://i.pravatar.cc/200?u=alpha",
+        description: "Мой брат, лучший человек",
+        socials: {
+            telegram: "https://t.me/example",
+            instagram: "https://instagram.com/example"
+        }
+    },
+    {
+        id: 2,
+        name: "Лиза",
+        relationship: "💕 Девушка",
+        emoji: "👩",
+        avatar: "https://i.pravatar.cc/200?u=liza",
+        description: "Моя королева",
+        socials: {
+            instagram: "https://instagram.com/example",
+            tiktok: "https://tiktok.com/example"
+        }
+    },
+    {
+        id: 3,
+        name: "Влад",
+        relationship: "🤝 Лучший друг",
+        emoji: "👨",
+        avatar: "https://i.pravatar.cc/200?u=vlad",
+        description: "С ним всё веселее",
+        socials: {
+            telegram: "https://t.me/example",
+            discord: "https://discord.com/example"
+        }
+    },
+    {
+        id: 4,
+        name: "Маша",
+        relationship: "👯 Подруга",
+        emoji: "👩",
+        avatar: "https://i.pravatar.cc/200?u=masha",
+        description: "Весёлая и красивая",
+        socials: {
+            instagram: "https://instagram.com/example",
+            tiktok: "https://tiktok.com/example"
+        }
+    },
+    {
+        id: 5,
+        name: "Дима",
+        relationship: "🎮 Друг",
+        emoji: "👨",
+        avatar: "https://i.pravatar.cc/200?u=dima",
+        description: "Геймер №1",
+        socials: {
+            discord: "https://discord.com/example",
+            twitch: "https://twitch.tv/example"
+        }
+    },
+    {
+        id: 6,
+        name: "Ксюша",
+        relationship: "✨ Подруга",
+        emoji: "👩",
+        avatar: "https://i.pravatar.cc/200?u=ksusha",
+        description: "Самая добрая",
+        socials: {
+            telegram: "https://t.me/example",
+            instagram: "https://instagram.com/example"
+        }
+    }
+];
+
+// Функция для инициализации команды
+function initializeTeam() {
+    const teamGrid = document.getElementById('teamGrid');
+    teamGrid.innerHTML = '';
+
+    teamMembers.forEach(member => {
+        const card = document.createElement('div');
+        card.className = 'team-card';
+        card.innerHTML = `
+            <div class="team-card-inner">
+                <img src="${member.avatar}" alt="${member.name}" class="team-avatar">
+                <h3 class="team-name">${member.name}</h3>
+                <span class="team-relationship">${member.relationship}</span>
+            </div>
+        `;
+        
+        card.addEventListener('click', () => openProfile(member));
+        teamGrid.appendChild(card);
+    });
+}
+
+// Функция открытия профиля в модалке
+function openProfile(member) {
+    const modal = document.getElementById('profileModal');
+    const modalBody = document.getElementById('modalBody');
+    
+    let socialsHtml = '';
+    for (const [platform, link] of Object.entries(member.socials || {})) {
+        const icons = {
+            telegram: 'fab fa-telegram',
+            instagram: 'fab fa-instagram',
+            tiktok: 'fab fa-tiktok',
+            discord: 'fab fa-discord',
+            twitch: 'fab fa-twitch',
+            youtube: 'fab fa-youtube'
+        };
+        
+        if (link && icons[platform]) {
+            socialsHtml += `
+                <a href="${link}" target="_blank" class="modal-social">
+                    <i class="${icons[platform]}"></i>
+                </a>
+            `;
+        }
+    }
+
+    modalBody.innerHTML = `
+        <div class="profile-card">
+            <img src="${member.avatar}" alt="${member.name}" class="profile-avatar">
+            <h2>${member.name}</h2>
+            <p class="relationship-tag">${member.relationship}</p>
+            <p class="profile-description">${member.description}</p>
+            <div class="modal-socials">
+                ${socialsHtml || '<p>Соцсети скоро добавят...</p>'}
+            </div>
+        </div>
+    `;
+    
+    modal.style.display = 'flex';
+}
+
+// Закрытие модального окна
+function closeModal() {
+    const modal = document.getElementById('profileModal');
+    modal.style.display = 'none';
+}
+
+document.getElementById('profileModal').addEventListener('click', (e) => {
+    if (e.target.id === 'profileModal') closeModal();
+});
+
+document.querySelector('.modal-close').addEventListener('click', closeModal);
+
+// ОРИГИНАЛЬНЫЙ КОД АНИМАЦИЙ СНЕГА
 const canvas = document.getElementById('snowCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -267,3 +417,6 @@ legalLinks.forEach((link) => {
         link.style.setProperty('--y', y + 'px');
     });
 });
+
+// ИНИЦИАЛИЗАЦИЯ КОМАНДЫ ПРИ ЗАГРУЗКЕ
+document.addEventListener('DOMContentLoaded', initializeTeam);
