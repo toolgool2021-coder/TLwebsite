@@ -13,14 +13,13 @@ const teamMembers = [
     },
     {
         id: 2,
-        name: "Лиза",
-        relationship: "💕 Девушка",
-        emoji: "👩",
-        avatar: "https://i.pravatar.cc/200?u=liza",
-        description: "Моя королева",
+        name: "Nver",
+        relationship: "🎭 Best Friend",
+        emoji: "👑",
+        avatar: "https://i.pravatar.cc/200?u=alpha",
+        description: "🫂",
         socials: {
-            instagram: "https://instagram.com/example",
-            tiktok: "https://tiktok.com/example"
+            telegram: "t.me/NverDavtyan0"
         }
     },
     {
