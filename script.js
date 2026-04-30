@@ -2,14 +2,13 @@
 const teamMembers = [
     {
         id: 1,
-        name: "Альфа",
-        relationship: "👨‍💼 Брат",
-        emoji: "👨",
+        name: "Alex's",
+        relationship: "🎭 Best Friend",
+        emoji: "👑",
         avatar: "https://i.pravatar.cc/200?u=alpha",
-        description: "Мой брат, лучший человек",
+        description: "🫂",
         socials: {
-            telegram: "https://t.me/example",
-            instagram: "https://instagram.com/example"
+            telegram: "https://t.me/example"
         }
     },
     {
