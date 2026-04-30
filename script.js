@@ -41,19 +41,18 @@ const teamMembers = [
         avatar: "./images/icon_5.jpg",
         description: "Весёлая и красивая",
         socials: {
-            tiktok: "https://tiktok.com/My_love000000"
+            telegram: "https://t.me/My_love000000"
         }
     },
     {
         id: 5,
-        name: "Дима",
-        relationship: "🎮 Друг",
-        emoji: "👨",
+        name: "أوكسي",
+        relationship: "🫠 girlfriend",
+        emoji: "🎭",
         avatar: "https://i.pravatar.cc/200?u=dima",
         description: "Геймер №1",
         socials: {
-            discord: "https://discord.com/example",
-            twitch: "https://twitch.tv/example"
+            telegram: "https://t.me/Ok_si112"
         }
     },
     {
