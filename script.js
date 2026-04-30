@@ -2,46 +2,50 @@
 const teamMembers = [
     {
         id: 1,
-        name: "Alex's",
-        relationship: "🎭 Best Friend",
-        emoji: "👑",
-        avatar: "./images/icon_2.jpg",
-        description: "🫂",
-        socials: {
-            telegram: "tg://user?id=5300151185"
-        }
-    },
-    {
-        id: 2,
-        name: "Nver",
-        relationship: "🎭 Best Friend",
-        emoji: "👑",
-        avatar: "./images/icon_3.jpg",
-        description: "🫂",
-        socials: {
-            telegram: "https://t.me/NverDavtyan0"
-        }
-    },
-    {
-        id: 3,
-        name: "𝙵𝙻𝚄𝙾𝚁𝙸𝚃𝙴 [#𝙻𝚇𝚁]",
-        relationship: "🎭 Best Friend",
-        emoji: "👑",
-        avatar: "./images/icon_4.jpg",
-        description: "🫂",
-        socials: {
-            telegram: "https://t.me/"
-        }
-    },
-    {
-        id: 4,
         name: "༒ПoНчИк༒",
         relationship: "💎 Girlfriend",
         emoji: "🪷",
         avatar: "./images/icon_5.jpg",
         description: "Весёлая и красивая",
+        color: "#ffd700", // ← ЗОЛОТОЙ ЦВЕТ ✨
         socials: {
             telegram: "https://t.me/My_love000000"
+        }
+    },
+    {
+        id: 2,
+        name: "Alex's",
+        relationship: "🎭 Best Friend",
+        emoji: "👑",
+        avatar: "./images/icon_2.jpg",
+        description: "🫂",
+        color: "#a855f7", // ФИОЛЕТОВЫЙ
+        socials: {
+            telegram: "tg://user?id=5300151185"
+        }
+    },
+    {
+        id: 3,
+        name: "Nver",
+        relationship: "🎭 Best Friend",
+        emoji: "👑",
+        avatar: "./images/icon_3.jpg",
+        description: "🫂",
+        color: "#00ffff", // ЦИАН
+        socials: {
+            telegram: "https://t.me/NverDavtyan0"
+        }
+    },
+    {
+        id: 4,
+        name: "𝙵𝙻𝚄𝙾𝚁𝙸𝚃𝙴 [#𝙻𝚇𝚁]",
+        relationship: "🎭 Best Friend",
+        emoji: "👑",
+        avatar: "./images/icon_4.jpg",
+        description: "🫂",
+        color: "#ff006e", // РОЗОВЫЙ
+        socials: {
+            telegram: "https://t.me/"
         }
     },
     {
@@ -51,6 +55,7 @@ const teamMembers = [
         emoji: "🎭",
         avatar: "./images/icon_6.jpg",
         description: "marriage in bot @moolokobot",
+        color: "#00ff88", // ЗЕЛЁНЫЙ
         socials: {
             telegram: "https://t.me/Ok_si112"
         }
@@ -62,6 +67,7 @@ const teamMembers = [
         emoji: "⚜️",
         avatar: "./images/icon_7.jpg",
         description: "Let's play Minecraft",
+        color: "#fb5607", // ОРАНЖЕВЫЙ
         socials: {
             telegram: "https://t.me/Fl0rlet"
         }
@@ -76,6 +82,7 @@ function initializeTeam() {
     teamMembers.forEach(member => {
         const card = document.createElement('div');
         card.className = 'team-card';
+        card.style.setProperty('--card-color', member.color || '#a855f7');
         card.innerHTML = `
             <div class="team-card-inner">
                 <img src="${member.avatar}" alt="${member.name}" class="team-avatar">
@@ -126,13 +133,22 @@ function openProfile(member) {
         </div>
     `;
     
+    modal.style.setProperty('--card-color', member.color || '#a855f7');
+    modal.classList.add('modal-opening');
     modal.style.display = 'flex';
+    
+    // Убираем класс анимации после завершения
+    setTimeout(() => modal.classList.remove('modal-opening'), 600);
 }
 
 // Закрытие модального окна
 function closeModal() {
     const modal = document.getElementById('profileModal');
-    modal.style.display = 'none';
+    modal.classList.add('modal-closing');
+    setTimeout(() => {
+        modal.style.display = 'none';
+        modal.classList.remove('modal-closing');
+    }, 300);
 }
 
 document.getElementById('profileModal').addEventListener('click', (e) => {
