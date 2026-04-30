@@ -5,7 +5,7 @@ const teamMembers = [
         name: "Alex's",
         relationship: "🎭 Best Friend",
         emoji: "👑",
-        avatar: "https://i.pravatar.cc/200?u=alpha",
+        avatar: "./images/icon_2.jpg",
         description: "🫂",
         socials: {
             telegram: "tg://user?id=5300151185"
@@ -16,7 +16,7 @@ const teamMembers = [
         name: "Nver",
         relationship: "🎭 Best Friend",
         emoji: "👑",
-        avatar: "https://i.pravatar.cc/200?u=alpha",
+        avatar: "./images/icon_3.jpg",
         description: "🫂",
         socials: {
             telegram: "https://t.me/NverDavtyan0"
@@ -27,7 +27,7 @@ const teamMembers = [
         name: "𝙵𝙻𝚄𝙾𝚁𝙸𝚃𝙴 [#𝙻𝚇𝚁]",
         relationship: "🎭 Best Friend",
         emoji: "👑",
-        avatar: "https://i.pravatar.cc/200?u=vlad",
+        avatar: "./images/icon_4.jpg"",
         description: "🫂",
         socials: {
             telegram: "https://t.me/QuantaCrest"
