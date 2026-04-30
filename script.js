@@ -57,14 +57,13 @@ const teamMembers = [
     },
     {
         id: 6,
-        name: "Ксюша",
-        relationship: "✨ Подруга",
-        emoji: "👩",
-        avatar: "https://i.pravatar.cc/200?u=ksusha",
-        description: "Самая добрая",
+        name: "✿",
+        relationship: "✨ Female friend",
+        emoji: "⚜️",
+        avatar: "./images/icon_7.jpg",
+        description: "Let's play Minecraft",
         socials: {
-            telegram: "https://t.me/example",
-            instagram: "https://instagram.com/example"
+            telegram: "https://t.me/Fl0rlet"
         }
     }
 ];
