@@ -36,7 +36,7 @@ const teamMembers = [
     {
         id: 4,
         name: "༒ПoНчИк༒",
-        relationship: "💎 young woman",
+        relationship: "💎 Girlfriend",
         emoji: "🪷",
         avatar: "./images/icon_5.jpg",
         description: "Весёлая и красивая",
@@ -47,7 +47,7 @@ const teamMembers = [
     {
         id: 5,
         name: "أوكسي",
-        relationship: "🫠 girlfriend",
+        relationship: "🫠 Female friend",
         emoji: "🎭",
         avatar: "./images/icon_6.jpg",
         description: "marriage in bot @moolokobot",
