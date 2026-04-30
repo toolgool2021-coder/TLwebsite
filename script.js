@@ -49,8 +49,8 @@ const teamMembers = [
         name: "أوكسي",
         relationship: "🫠 girlfriend",
         emoji: "🎭",
-        avatar: "https://i.pravatar.cc/200?u=dima",
-        description: "Геймер №1",
+        avatar: "./images/icon_6.jpg",
+        description: "marriage in bot @moolokobot",
         socials: {
             telegram: "https://t.me/Ok_si112"
         }
