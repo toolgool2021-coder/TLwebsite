@@ -198,7 +198,6 @@ function updateSnow() {
 
 drawSnow();
 
-
 document.addEventListener('mousemove', (e) => {
     createMouseParticles(e.clientX, e.clientY);
 });
@@ -247,6 +246,17 @@ style.textContent = `
             background-position: 0% 50%;
         }
     }
+
+    @keyframes iconParticleDrift {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(var(--tx), var(--ty)) scale(0);
+        }
+    }
 `;
 document.head.appendChild(style);
 
@@ -288,13 +298,48 @@ const socialLinks = document.querySelectorAll('.social-link');
 
 socialLinks.forEach((link, index) => {
     link.addEventListener('mouseenter', () => {
-        link.style.filter = 'drop-shadow(0 0 20px rgba(168, 85, 247, 1))';
+        createIconParticles(link);
     });
 
     link.addEventListener('mouseleave', () => {
         link.style.filter = 'none';
     });
 });
+
+// НОВАЯ ФУНКЦИЯ: Создание частиц вокруг иконки
+function createIconParticles(iconElement) {
+    const rect = iconElement.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const particleCount = 8;
+    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607', '#3a86ff', '#8338ec'];
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const angle = (i / particleCount) * Math.PI * 2;
+        const distance = 60;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+
+        particle.style.position = 'fixed';
+        particle.style.left = centerX + 'px';
+        particle.style.top = centerY + 'px';
+        particle.style.width = '8px';
+        particle.style.height = '8px';
+        particle.style.borderRadius = '50%';
+        particle.style.backgroundColor = colors[i];
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '999';
+        particle.style.boxShadow = `0 0 10px ${colors[i]}`;
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+        particle.style.animation = 'iconParticleDrift 0.8s ease-out forwards';
+        particle.style.transform = 'translate(-50%, -50%)';
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 800);
+    }
+}
 
 document.addEventListener('click', (e) => {
     createClickWave(e.clientX, e.clientY);
