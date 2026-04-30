@@ -41,8 +41,7 @@ const teamMembers = [
         avatar: "./images/icon_5.jpg",
         description: "Весёлая и красивая",
         socials: {
-            instagram: "https://instagram.com/example",
-            tiktok: "https://tiktok.com/example"
+            tiktok: "https://tiktok.com/My_love000000"
         }
     },
     {
