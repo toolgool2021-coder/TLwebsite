@@ -8,7 +8,7 @@ const teamMembers = [
         avatar: "https://i.pravatar.cc/200?u=alpha",
         description: "🫂",
         socials: {
-            telegram: "https://t.me/example"
+            telegram: "tg://user?id=5300151185"
         }
     },
     {
