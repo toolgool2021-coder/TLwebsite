@@ -30,15 +30,15 @@ const teamMembers = [
         avatar: "./images/icon_4.jpg",
         description: "🫂",
         socials: {
-            telegram: "https://t.me/QuantaCrest"
+            telegram: "https://t.me/"
         }
     },
     {
         id: 4,
-        name: "Маша",
-        relationship: "👯 Подруга",
-        emoji: "👩",
-        avatar: "https://i.pravatar.cc/200?u=masha",
+        name: "༒ПoНчИк༒",
+        relationship: "💎 young woman",
+        emoji: "🪷",
+        avatar: "./images/icon_5.jpg",
         description: "Весёлая и красивая",
         socials: {
             instagram: "https://instagram.com/example",
