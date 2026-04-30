@@ -74,6 +74,42 @@ const teamMembers = [
     }
 ];
 
+// ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
+function createModalParticles(color) {
+    const particleCount = 30;
+    const modal = document.getElementById('profileModal');
+    const modalContent = modal.querySelector('.modal-content');
+    const rect = modalContent.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const angle = (Math.random() * Math.PI * 2);
+        const distance = Math.random() * 200 + 50;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        
+        particle.style.position = 'fixed';
+        particle.style.left = centerX + 'px';
+        particle.style.top = centerY + 'px';
+        particle.style.width = Math.random() * 8 + 4 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.borderRadius = '50%';
+        particle.style.backgroundColor = color;
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '999';
+        particle.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px ${color}`;
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+        particle.style.animation = 'modalParticleBurst 1s ease-out forwards';
+        particle.style.transform = 'translate(-50%, -50%)';
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+    }
+}
+
 // Функция для инициализации команды
 function initializeTeam() {
     const teamGrid = document.getElementById('teamGrid');
@@ -134,21 +170,16 @@ function openProfile(member) {
     `;
     
     modal.style.setProperty('--card-color', member.color || '#a855f7');
-    modal.classList.add('modal-opening');
     modal.style.display = 'flex';
     
-    // Убираем класс анимации после завершения
-    setTimeout(() => modal.classList.remove('modal-opening'), 600);
+    // Создаём партиклы при открытии
+    setTimeout(() => createModalParticles(member.color || '#a855f7'), 100);
 }
 
 // Закрытие модального окна
 function closeModal() {
     const modal = document.getElementById('profileModal');
-    modal.classList.add('modal-closing');
-    setTimeout(() => {
-        modal.style.display = 'none';
-        modal.classList.remove('modal-closing');
-    }, 300);
+    modal.style.display = 'none';
 }
 
 document.getElementById('profileModal').addEventListener('click', (e) => {
@@ -268,6 +299,17 @@ style.textContent = `
         100% {
             opacity: 0;
             transform: translate(var(--tx), var(--ty)) scale(0);
+        }
+    }
+
+    @keyframes modalParticleBurst {
+        0% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
         }
     }
 `;
