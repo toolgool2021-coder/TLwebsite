@@ -27,7 +27,7 @@ const teamMembers = [
         name: "𝙵𝙻𝚄𝙾𝚁𝙸𝚃𝙴 [#𝙻𝚇𝚁]",
         relationship: "🎭 Best Friend",
         emoji: "👑",
-        avatar: "./images/icon_4.jpg"",
+        avatar: "./images/icon_4.jpg",
         description: "🫂",
         socials: {
             telegram: "https://t.me/QuantaCrest"
