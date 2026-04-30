@@ -19,19 +19,18 @@ const teamMembers = [
         avatar: "https://i.pravatar.cc/200?u=alpha",
         description: "🫂",
         socials: {
-            telegram: "t.me/NverDavtyan0"
+            telegram: "https://t.me/NverDavtyan0"
         }
     },
     {
         id: 3,
-        name: "Влад",
-        relationship: "🤝 Лучший друг",
-        emoji: "👨",
+        name: "𝙵𝙻𝚄𝙾𝚁𝙸𝚃𝙴 [#𝙻𝚇𝚁]",
+        relationship: "🎭 Best Friend",
+        emoji: "👑",
         avatar: "https://i.pravatar.cc/200?u=vlad",
-        description: "С ним всё веселее",
+        description: "🫂",
         socials: {
-            telegram: "https://t.me/example",
-            discord: "https://discord.com/example"
+            telegram: "https://t.me/QuantaCrest"
         }
     },
     {
