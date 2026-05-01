@@ -6,8 +6,8 @@ const teamMembers = [
         relationship: "💎 Girlfriend",
         emoji: "🪷",
         avatar: "./images/icon_5.jpg",
-        description: "Весёлая и красивая",
-        color: "#ffd700", // ← ЗОЛОТОЙ ЦВЕТ ✨
+        description: "Та самая, с кем спокойно и тепло. Поддерживает, вдохновляет и делает каждый день лучше ✨",
+        color: "#ffd700",
         socials: {
             telegram: "https://t.me/My_love000000"
         }
@@ -18,8 +18,8 @@ const teamMembers = [
         relationship: "🎭 Best Friend",
         emoji: "👑",
         avatar: "./images/icon_2.jpg",
-        description: "🫂",
-        color: "#a855f7", // ФИОЛЕТОВЫЙ
+        description: "Проверенный человек. Можно угарать, можно серьёзно поговорить — всегда на одной волне 🫂",
+        color: "#a855f7",
         socials: {
             telegram: "tg://user?id=5300151185"
         }
@@ -30,8 +30,8 @@ const teamMembers = [
         relationship: "🎭 Best Friend",
         emoji: "👑",
         avatar: "./images/icon_3.jpg",
-        description: "🫂",
-        color: "#00ffff", // ЦИАН
+        description: "Надёжный и спокойный. Не кидает на словах и держит своё слово 💯",
+        color: "#00ffff",
         socials: {
             telegram: "https://t.me/NverDavtyan0"
         }
@@ -42,8 +42,8 @@ const teamMembers = [
         relationship: "🎭 Best Friend",
         emoji: "👑",
         avatar: "./images/icon_4.jpg",
-        description: "🫂",
-        color: "#ff006e", // РОЗОВЫЙ
+        description: "Своя атмосфера и стиль. Человек с вайбом, который не перепутаешь 🔥",
+        color: "#ff006e",
         socials: {
             telegram: "https://t.me/"
         }
@@ -54,8 +54,8 @@ const teamMembers = [
         relationship: "🫠 Female friend",
         emoji: "🎭",
         avatar: "./images/icon_6.jpg",
-        description: "marriage in bot @moolokobot",
-        color: "#00ff88", // ЗЕЛЁНЫЙ
+        description: "Весёлая и немного хаотичная, но в этом весь кайф. С ней не бывает скучно 😅",
+        color: "#00ff88",
         socials: {
             telegram: "https://t.me/Ok_si112"
         }
@@ -66,8 +66,8 @@ const teamMembers = [
         relationship: "✨ Female friend",
         emoji: "⚜️",
         avatar: "./images/icon_7.jpg",
-        description: "Let's play Minecraft",
-        color: "#fb5607", // ОРАНЖЕВЫЙ
+        description: "Лёгкая в общении и уютная. Идеальный напарник для Minecraft и ламповых вечеров 🎮",
+        color: "#fb5607",
         socials: {
             telegram: "https://t.me/Fl0rlet"
         }
