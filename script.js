@@ -55,7 +55,7 @@ const teamMembers = [
         emoji: "🎭",
         avatar: "./images/icon_6.jpg",
         description: "Весёлая и немного хаотичная, но в этом весь кайф. С ней не бывает скучно 😅",
-        color: "#00ff88",
+        color: "#EE82EE",
         socials: {
             telegram: "https://t.me/Ok_si112"
         }
@@ -67,7 +67,7 @@ const teamMembers = [
         emoji: "⚜️",
         avatar: "./images/icon_7.jpg",
         description: "Лёгкая в общении и уютная. Идеальный напарник для Minecraft и ламповых вечеров 🎮",
-        color: "#fb5607",
+        color: "#DCDCDC",
         socials: {
             telegram: "https://t.me/Fl0rlet"
         }
