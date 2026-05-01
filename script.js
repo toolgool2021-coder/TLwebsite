@@ -19,7 +19,7 @@ const teamMembers = [
         emoji: "👑",
         avatar: "./images/icon_2.jpg",
         description: "Проверенный человек. Можно угарать, можно серьёзно поговорить — всегда на одной волне 🫂",
-        color: "#a855f7",
+        color: "#808080",
         socials: {
             telegram: "tg://user?id=5300151185"
         }
@@ -31,7 +31,7 @@ const teamMembers = [
         emoji: "👑",
         avatar: "./images/icon_3.jpg",
         description: "Надёжный и спокойный. Не кидает на словах и держит своё слово 💯",
-        color: "#00ffff",
+        color: "#808080",
         socials: {
             telegram: "https://t.me/NverDavtyan0"
         }
