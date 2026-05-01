@@ -43,7 +43,7 @@ const teamMembers = [
         emoji: "👑",
         avatar: "./images/icon_4.jpg",
         description: "Своя атмосфера и стиль. Человек с вайбом, который не перепутаешь 🔥",
-        color: "#ff006e",
+        color: "#FFFFFF",
         socials: {
             telegram: "https://t.me/"
         }
