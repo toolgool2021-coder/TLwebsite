@@ -224,14 +224,14 @@ html, body {
 }
 
 .modal-content {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 255, 200, 0.05));
-    border: 2px solid #a855f7;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--card-color) 10%, transparent), color-mix(in srgb, #00ffff 5%, transparent));
+    border: 2px solid var(--card-color);
     border-radius: 20px;
     padding: 40px;
     max-width: 400px;
     width: 90%;
     position: relative;
-    box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 40px var(--card-color);
     backdrop-filter: blur(10px);
     animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -253,7 +253,7 @@ html, body {
     top: 15px;
     font-size: 28px;
     font-weight: bold;
-    color: #a855f7;
+    color: var(--card-color);
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -271,10 +271,10 @@ html, body {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 3px solid #a855f7;
+    border: 3px solid var(--card-color);
     object-fit: cover;
     margin-bottom: 20px;
-    box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 30px var(--card-color);
 }
 
 .profile-card h2 {
@@ -285,7 +285,7 @@ html, body {
 
 .relationship-tag {
     display: inline-block;
-    background: linear-gradient(135deg, #a855f7, #00ffff);
+    background: linear-gradient(135deg, var(--card-color), #00ffff);
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 14px;
@@ -312,12 +312,12 @@ html, body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: rgba(168, 85, 247, 0.2);
-    border: 2px solid #a855f7;
+    background: color-mix(in srgb, var(--card-color) 20%, transparent);
+    border: 2px solid var(--card-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #a855f7;
+    color: var(--card-color);
     font-size: 18px;
     transition: all 0.3s ease;
     text-decoration: none;
@@ -330,19 +330,19 @@ html, body {
     color: #00ffff;
     transform: scale(1.2) rotate(360deg);
     box-shadow: 0 0 25px rgba(0, 255, 200, 0.8),
-                0 0 50px rgba(168, 85, 247, 0.6),
-                inset 0 0 15px rgba(168, 85, 247, 0.3);
+                0 0 50px var(--card-color),
+                inset 0 0 15px color-mix(in srgb, var(--card-color) 30%, transparent);
     animation: socialPulse 0.6s ease-out;
 }
 
 @keyframes socialPulse {
     0% {
         box-shadow: 0 0 0px rgba(0, 255, 200, 0.8),
-                    0 0 0px rgba(168, 85, 247, 0.6);
+                    0 0 0px var(--card-color);
     }
     100% {
         box-shadow: 0 0 25px rgba(0, 255, 200, 0.8),
-                    0 0 50px rgba(168, 85, 247, 0.6);
+                    0 0 50px var(--card-color);
     }
 }
 
