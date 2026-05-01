@@ -74,9 +74,9 @@ const teamMembers = [
     }
 ];
 
-// ОПТИМИЗИРОВАННАЯ ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ
+// ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
 function createModalParticles(color) {
-    const particleCount = 15; // Уменьшено с 30 для производительности
+    const particleCount = 30;
     const modal = document.getElementById('profileModal');
     const modalContent = modal.querySelector('.modal-content');
     const rect = modalContent.getBoundingClientRect();
@@ -102,11 +102,11 @@ function createModalParticles(color) {
         particle.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px ${color}`;
         particle.style.setProperty('--tx', tx + 'px');
         particle.style.setProperty('--ty', ty + 'px');
-        particle.style.animation = 'modalParticleBurst 0.8s ease-out forwards';
+        particle.style.animation = 'modalParticleBurst 1s ease-out forwards';
         particle.style.transform = 'translate(-50%, -50%)';
 
         document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 800);
+        setTimeout(() => particle.remove(), 1000);
     }
 }
 
@@ -164,7 +164,7 @@ function openProfile(member) {
             <p class="relationship-tag">${member.relationship}</p>
             <p class="profile-description">${member.description}</p>
             <div class="modal-socials">
-                ${socialsHtml || '<p style="color: #888; font-size: 13px;">Соцсети скоро добавят...</p>'}
+                ${socialsHtml || '<p>Соцсети скоро добавят...</p>'}
             </div>
         </div>
     `;
@@ -188,7 +188,7 @@ document.getElementById('profileModal').addEventListener('click', (e) => {
 
 document.querySelector('.modal-close').addEventListener('click', closeModal);
 
-// === АНИМАЦИЯ СНЕГА ===
+// ОРИГИНАЛЬНЫЙ КОД АНИМАЦИЙ СНЕГА
 const canvas = document.getElementById('snowCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -201,7 +201,7 @@ window.addEventListener('resize', () => {
 });
 
 const snowflakes = [];
-const maxFlakes = 100; // Уменьшено с 150 для оптимизации
+const maxFlakes = 120;
 
 for (let i = 0; i < maxFlakes; i++) {
     snowflakes.push({
@@ -242,19 +242,12 @@ function updateSnow() {
 
 drawSnow();
 
-// === ЧАСТИЦЫ ПРИ ДВИЖЕНИИ МЫШИ (ОПТИМИЗИРОВАНО) ===
-let lastMouseParticleTime = 0;
-
 document.addEventListener('mousemove', (e) => {
-    const now = Date.now();
-    if (now - lastMouseParticleTime > 50) { // Создавать максимум каждые 50ms
-        createMouseParticles(e.clientX, e.clientY);
-        lastMouseParticleTime = now;
-    }
+    createMouseParticles(e.clientX, e.clientY);
 });
 
 function createMouseParticles(x, y) {
-    if (Math.random() > 0.7) { // Уменьшена вероятность для оптимизации
+    if (Math.random() > 0.8) {
         const particle = document.createElement('div');
         particle.style.position = 'fixed';
         particle.style.left = x + 'px';
@@ -264,7 +257,7 @@ function createMouseParticles(x, y) {
         particle.style.borderRadius = '50%';
         particle.style.pointerEvents = 'none';
         particle.style.zIndex = '3';
-        particle.style.boxShadow = '0 0 10px rgba(168, 85, 247, 0.8)';
+        particle.style.boxShadow = '0 0 10px #a855f7';
         particle.style.animation = 'particleFloat 1s ease-out forwards';
         
         document.body.appendChild(particle);
@@ -273,7 +266,6 @@ function createMouseParticles(x, y) {
     }
 }
 
-// === СТИЛИ АНИМАЦИЙ ===
 const style = document.createElement('style');
 style.textContent = `
     @keyframes particleFloat {
@@ -284,6 +276,29 @@ style.textContent = `
         100% {
             opacity: 0;
             transform: translate(${Math.random() * 100 - 50}px, -50px) scale(0);
+        }
+    }
+
+    @keyframes floatingGradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @keyframes iconParticleDrift {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(var(--tx), var(--ty)) scale(0);
         }
     }
 
@@ -300,13 +315,12 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// === ЗВЁЗДЫ В ФОНЕ ===
 function createStars() {
     const starsContainer = document.createElement('div');
     starsContainer.className = 'stars';
     document.body.insertBefore(starsContainer, document.body.firstChild);
     
-    for (let i = 0; i < 30; i++) { // Уменьшено с 50 для оптимизации
+    for (let i = 0; i < 50; i++) {
         const star = document.createElement('div');
         star.style.position = 'fixed';
         star.style.width = Math.random() * 2 + 'px';
@@ -318,7 +332,7 @@ function createStars() {
         star.style.opacity = Math.random() * 0.5 + 0.3;
         star.style.zIndex = '0';
         star.style.animation = `twinkle ${Math.random() * 3 + 2}s infinite`;
-        star.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px rgba(168, 85, 247, 0.6)`;
+        star.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px rgba(168, 85, 247, 0.8)`;
         
         starsContainer.appendChild(star);
     }
@@ -335,7 +349,6 @@ document.head.appendChild(twinkleStyle);
 
 createStars();
 
-// === ЧАСТИЦЫ ВОКРУГ ИКОНОК ===
 const socialLinks = document.querySelectorAll('.social-link');
 
 socialLinks.forEach((link, index) => {
@@ -348,12 +361,13 @@ socialLinks.forEach((link, index) => {
     });
 });
 
+// НОВАЯ ФУНКЦИЯ: Создание частиц вокруг иконки
 function createIconParticles(iconElement) {
     const rect = iconElement.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const particleCount = 6; // Уменьшено с 8 для оптимизации
-    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607'];
+    const particleCount = 8;
+    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607', '#3a86ff', '#8338ec'];
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -382,30 +396,8 @@ function createIconParticles(iconElement) {
     }
 }
 
-const iconParticleStyle = document.createElement('style');
-iconParticleStyle.textContent = `
-    @keyframes iconParticleDrift {
-        0% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
-        }
-    }
-`;
-document.head.appendChild(iconParticleStyle);
-
-// === ВОЛНА ПРИ КЛИКЕ (ОПТИМИЗИРОВАНО) ===
-let lastClickWaveTime = 0;
-
 document.addEventListener('click', (e) => {
-    const now = Date.now();
-    if (now - lastClickWaveTime > 200) { // Ограничить клики каждые 200ms
-        createClickWave(e.clientX, e.clientY);
-        lastClickWaveTime = now;
-    }
+    createClickWave(e.clientX, e.clientY);
 });
 
 function createClickWave(x, y) {
@@ -416,7 +408,7 @@ function createClickWave(x, y) {
     wave.style.width = '10px';
     wave.style.height = '10px';
     wave.style.borderRadius = '50%';
-    wave.style.border = '2px solid rgba(168, 85, 247, 0.8)';
+    wave.style.border = '2px solid #a855f7';
     wave.style.pointerEvents = 'none';
     wave.style.zIndex = '3';
     wave.style.transform = 'translate(-50%, -50%)';
@@ -444,10 +436,8 @@ rippleStyle.textContent = `
 `;
 document.head.appendChild(rippleStyle);
 
-// === АУРА КУРСОРА (ОПТИМИЗИРОВАНО) ===
 let mouseX = 0;
 let mouseY = 0;
-let lastAuraTime = 0;
 
 document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
@@ -462,7 +452,7 @@ function createCursorAura() {
     aura.style.width = '100px';
     aura.style.height = '100px';
     aura.style.borderRadius = '50%';
-    aura.style.background = 'radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%)';
+    aura.style.background = 'radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%)';
     aura.style.filter = 'blur(20px)';
     aura.style.left = (mouseX - 50) + 'px';
     aura.style.top = (mouseY - 50) + 'px';
@@ -476,7 +466,54 @@ function createCursorAura() {
     }
 }
 
-setInterval(createCursorAura, 80); // Увеличен интервал для оптимизации
+setInterval(createCursorAura, 50);
 
-// === ИНИЦИАЛИЗАЦИЯ ===
+window.addEventListener('scroll', () => {
+    const scrollParticle = document.createElement('div');
+    scrollParticle.style.position = 'fixed';
+    scrollParticle.style.left = Math.random() * width + 'px';
+    scrollParticle.style.top = Math.random() * height + 'px';
+    scrollParticle.style.width = '3px';
+    scrollParticle.style.height = '3px';
+    scrollParticle.style.borderRadius = '50%';
+    scrollParticle.style.backgroundColor = '#00ffc8';
+    scrollParticle.style.pointerEvents = 'none';
+    scrollParticle.style.zIndex = '1';
+    scrollParticle.style.boxShadow = '0 0 10px #00ffc8';
+    scrollParticle.style.animation = 'scrollParticleFloat 2s ease-out forwards';
+    
+    document.body.appendChild(scrollParticle);
+    
+    setTimeout(() => scrollParticle.remove(), 2000);
+});
+
+const scrollParticleStyle = document.createElement('style');
+scrollParticleStyle.textContent = `
+    @keyframes scrollParticleFloat {
+        0% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-100px);
+        }
+    }
+`;
+document.head.appendChild(scrollParticleStyle);
+
+const legalLinks = document.querySelectorAll('.legal-link');
+
+legalLinks.forEach((link) => {
+    link.addEventListener('mousemove', (e) => {
+        const rect = link.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        link.style.setProperty('--x', x + 'px');
+        link.style.setProperty('--y', y + 'px');
+    });
+});
+
+// ИНИЦИАЛИЗАЦИЯ КОМАНДЫ ПРИ ЗАГРУЗКЕ
 document.addEventListener('DOMContentLoaded', initializeTeam);
