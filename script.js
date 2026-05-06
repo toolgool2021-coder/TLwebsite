@@ -150,7 +150,7 @@ function openProfile(member) {
         
         if (link && icons[platform]) {
             socialsHtml += `
-                <a href="${link}" target="_blank" class="modal-social">
+                <a href="${link}" target="_blank" class="modal-social" data-link="${link}">
                     <i class="${icons[platform]}"></i>
                 </a>
             `;
@@ -174,6 +174,28 @@ function openProfile(member) {
     
     // Создаём партиклы при открытии
     setTimeout(() => createModalParticles(member.color || '#a855f7'), 100);
+    
+    // Добавляем обработчик для модальных социальных ссылок
+    attachModalSocialLinks();
+}
+
+// Функция для добавления обработчиков на социальные ссылки в модалке
+function attachModalSocialLinks() {
+    const modalSocials = document.querySelectorAll('.modal-social');
+    modalSocials.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('data-link');
+            if (href) {
+                // Создаём ripple эффект
+                createClickWave(e.clientX, e.clientY);
+                // Ждём 600ms (длина ripple анимации) и потом переходим
+                setTimeout(() => {
+                    window.open(href, '_blank');
+                }, 600);
+            }
+        });
+    });
 }
 
 // Закрытие модального окна
@@ -505,6 +527,17 @@ document.head.appendChild(scrollParticleStyle);
 const legalLinks = document.querySelectorAll('.legal-link');
 
 legalLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        // Создаём ripple эффект
+        createClickWave(e.clientX, e.clientY);
+        // Ждём 600ms (длина ripple анимации) и потом переходим
+        setTimeout(() => {
+            window.open(href, '_blank');
+        }, 600);
+    });
+
     link.addEventListener('mousemove', (e) => {
         const rect = link.getBoundingClientRect();
         const x = e.clientX - rect.left;
