@@ -371,9 +371,27 @@ document.head.appendChild(twinkleStyle);
 
 createStars();
 
+// ОБРАБОТЧИК ДЛЯ ВЕРХНИХ СОЦИАЛЬНЫХ ССЫЛОК
 const socialLinks = document.querySelectorAll('.social-link');
 
-socialLinks.forEach((link, index) => {
+socialLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        
+        // Создаём ripple эффект
+        createClickWave(e.clientX, e.clientY);
+        
+        // Ждём 600ms (длина ripple анимации) и потом переходим
+        setTimeout(() => {
+            if (href.startsWith('mailto:')) {
+                window.location.href = href;
+            } else {
+                window.open(href, '_blank');
+            }
+        }, 600);
+    });
+
     link.addEventListener('mouseenter', () => {
         createIconParticles(link);
     });
@@ -417,10 +435,6 @@ function createIconParticles(iconElement) {
         setTimeout(() => particle.remove(), 800);
     }
 }
-
-document.addEventListener('click', (e) => {
-    createClickWave(e.clientX, e.clientY);
-});
 
 function createClickWave(x, y) {
     const wave = document.createElement('div');
