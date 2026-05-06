@@ -42,7 +42,7 @@ const teamMembers = [
         relationship: "🎭 Best Friend",
         emoji: "👑",
         avatar: "./images/icon_4.jpg",
-        description: "Своя атмосфера и стиль. Человек с вайбом, который не перепутаешь 🔥",
+        description: "Своя атмосфера и стиль. Человек с вайбом, который н�� перепутаешь 🔥",
         color: "#FFFFFF",
         socials: {
             telegram: "https://t.me/"
@@ -150,7 +150,7 @@ function openProfile(member) {
         
         if (link && icons[platform]) {
             socialsHtml += `
-                <a href="${link}" target="_blank" class="modal-social" data-link="${link}">
+                <a href="javascript:void(0)" data-href="${link}" target="_blank" class="modal-social">
                     <i class="${icons[platform]}"></i>
                 </a>
             `;
@@ -185,7 +185,8 @@ function attachModalSocialLinks() {
     modalSocials.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const href = link.getAttribute('data-link');
+            e.stopPropagation();
+            const href = link.getAttribute('data-href');
             if (href) {
                 // Создаём ripple эффект
                 createClickWave(e.clientX, e.clientY);
@@ -377,7 +378,8 @@ const socialLinks = document.querySelectorAll('.social-link');
 socialLinks.forEach((link) => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        const href = link.getAttribute('href');
+        e.stopPropagation();
+        const href = link.getAttribute('data-href');
         
         // Создаём ripple эффект
         createClickWave(e.clientX, e.clientY);
@@ -543,7 +545,8 @@ const legalLinks = document.querySelectorAll('.legal-link');
 legalLinks.forEach((link) => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        const href = link.getAttribute('href');
+        e.stopPropagation();
+        const href = link.getAttribute('data-href');
         // Создаём ripple эффект
         createClickWave(e.clientX, e.clientY);
         // Ждём 600ms (длина ripple анимации) и потом переходим
