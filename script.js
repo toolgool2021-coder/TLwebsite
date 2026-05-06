@@ -42,7 +42,7 @@ const teamMembers = [
         relationship: "🎭 Best Friend",
         emoji: "👑",
         avatar: "./images/icon_4.jpg",
-        description: "Своя атмосфера и стиль. Человек с вайбом, который н�� перепутаешь 🔥",
+        description: "Своя атмосфера и стиль. Человек с вайбом, который не перепутаешь 🔥",
         color: "#FFFFFF",
         socials: {
             telegram: "https://t.me/"
