@@ -9,7 +9,7 @@ const teamMembers = [
         description: "Та самая, с кем спокойно и тепло. Поддерживает, вдохновляет и делает каждый день лучше ✨",
         color: "#ffd700",
         socials: {
-            telegram: "https://t.me/My_love000000"
+            telegram: "https://t.me/"
         }
     },
     {
