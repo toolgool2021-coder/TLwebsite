@@ -77,8 +77,8 @@ const teamMembers = [
 // ПЛЕЙЛИСТ ПЕСЕН - РЕДАКТИРУЙ ЗДЕСЬ!
 const playlist = [
     {
-        title: "Montagem Uranium (Super slowed) - ZAYLO",
-        url: "./music/Montagem Uranium (Super Slowed) - ZAYLO.mp3"
+        title: "Тестовая песня 1",
+        url: "./music/song1.mp3"
     },
     {
         title: "Тестовая песня 2",
@@ -121,9 +121,14 @@ function initMusicPlayer() {
 // ЗАГРУЗИТЬ ТРЕК
 function loadTrack(index) {
     currentTrack = index;
+    if (playlist.length === 0) {
+        songTitle.textContent = 'Нет песен';
+        return;
+    }
     const track = playlist[currentTrack];
     audioElement.src = track.url;
     songTitle.textContent = track.title;
+    audioElement.load();
 }
 
 // ПЕРЕКЛЮЧЕНИЕ PLAY/PAUSE
@@ -133,7 +138,10 @@ function togglePlay() {
         playBtn.innerHTML = '<i class="fas fa-play"></i>';
         isPlaying = false;
     } else {
-        audioElement.play();
+        audioElement.play().catch(err => {
+            console.error('Ошибка воспроизведения:', err);
+            songTitle.textContent = 'Ошибка загрузки';
+        });
         playBtn.innerHTML = '<i class="fas fa-pause"></i>';
         isPlaying = true;
     }
@@ -169,9 +177,10 @@ function maximizePlayer() {
 
 // ОБНОВЛЕНИЕ ПРОГРЕССА
 audioElement.addEventListener('timeupdate', () => {
-    const percent = (audioElement.currentTime / audioElement.duration) * 100;
-    progressBar.style.width = percent + '%';
-    
+    if (!isNaN(audioElement.duration)) {
+        const percent = (audioElement.currentTime / audioElement.duration) * 100;
+        progressBar.style.width = percent + '%';
+    }
     currentTimeEl.textContent = formatTime(audioElement.currentTime);
     durationEl.textContent = formatTime(audioElement.duration);
 });
@@ -190,18 +199,23 @@ audioElement.addEventListener('ended', () => {
 });
 
 // КЛИК ПО ПРОГРЕСС-БАРУ
-document.querySelector('.music-progress').addEventListener('click', (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    audioElement.currentTime = percent * audioElement.duration;
-});
+const progressElement = document.querySelector('.music-progress');
+if (progressElement) {
+    progressElement.addEventListener('click', (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        if (!isNaN(audioElement.duration)) {
+            audioElement.currentTime = percent * audioElement.duration;
+        }
+    });
+}
 
 // ОБРАБОТЧИКИ КНОПОК
-playBtn.addEventListener('click', togglePlay);
-nextBtn.addEventListener('click', nextTrack);
-prevBtn.addEventListener('click', prevTrack);
-minimizeBtn.addEventListener('click', minimizePlayer);
-playerToggleBtn.addEventListener('click', maximizePlayer);
+if (playBtn) playBtn.addEventListener('click', togglePlay);
+if (nextBtn) nextBtn.addEventListener('click', nextTrack);
+if (prevBtn) prevBtn.addEventListener('click', prevTrack);
+if (minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
+if (playerToggleBtn) playerToggleBtn.addEventListener('click', maximizePlayer);
 
 // ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
 function createModalParticles(color) {
@@ -242,6 +256,7 @@ function createModalParticles(color) {
 // Функция для инициализации команды
 function initializeTeam() {
     const teamGrid = document.getElementById('teamGrid');
+    if (!teamGrid) return;
     teamGrid.innerHTML = '';
 
     teamMembers.forEach(member => {
@@ -331,68 +346,73 @@ function attachModalSocialLinks() {
 // Закрытие модального окна
 function closeModal() {
     const modal = document.getElementById('profileModal');
-    modal.style.display = 'none';
+    if (modal) modal.style.display = 'none';
 }
 
-document.getElementById('profileModal').addEventListener('click', (e) => {
-    if (e.target.id === 'profileModal') closeModal();
-});
-
-document.querySelector('.modal-close').addEventListener('click', closeModal);
-
-// ОРИГИНАЛЬНЫЙ КОД АНИМАЦИЙ СНЕГА
-const canvas = document.getElementById('snowCanvas');
-const ctx = canvas.getContext('2d');
-
-let width = canvas.width = window.innerWidth;
-let height = canvas.height = window.innerHeight;
-
-window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-});
-
-const snowflakes = [];
-const maxFlakes = 120;
-
-for (let i = 0; i < maxFlakes; i++) {
-    snowflakes.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        r: Math.random() * 3 + 1,
-        speed: Math.random() * 1 + 0.5,
-        opacity: Math.random() * 0.5 + 0.3
+const profileModal = document.getElementById('profileModal');
+if (profileModal) {
+    profileModal.addEventListener('click', (e) => {
+        if (e.target.id === 'profileModal') closeModal();
     });
 }
 
-function drawSnow() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "rgba(255,255,255,0.3)";
-    ctx.beginPath();
+const modalClose = document.querySelector('.modal-close');
+if (modalClose) modalClose.addEventListener('click', closeModal);
 
-    for (let f of snowflakes) {
-        ctx.moveTo(f.x, f.y);
-        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+// ОРИГИНАЛЬНЫЙ КОД АНИМАЦИЙ СНЕГА
+const canvas = document.getElementById('snowCanvas');
+if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const snowflakes = [];
+    const maxFlakes = 120;
+
+    for (let i = 0; i < maxFlakes; i++) {
+        snowflakes.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            r: Math.random() * 3 + 1,
+            speed: Math.random() * 1 + 0.5,
+            opacity: Math.random() * 0.5 + 0.3
+        });
     }
 
-    ctx.fill();
-    updateSnow();
-}
+    function drawSnow() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.beginPath();
 
-function updateSnow() {
-    for (let f of snowflakes) {
-        f.y += f.speed;
-        f.x += Math.sin(f.y / height * Math.PI * 2) * 0.5;
+        for (let f of snowflakes) {
+            ctx.moveTo(f.x, f.y);
+            ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        }
 
-        if (f.y > height) f.y = 0;
-        if (f.x > width) f.x = 0;
-        if (f.x < 0) f.x = width;
+        ctx.fill();
+        updateSnow();
     }
 
-    requestAnimationFrame(drawSnow);
-}
+    function updateSnow() {
+        for (let f of snowflakes) {
+            f.y += f.speed;
+            f.x += Math.sin(f.y / height * Math.PI * 2) * 0.5;
 
-drawSnow();
+            if (f.y > height) f.y = 0;
+            if (f.x > width) f.x = 0;
+            if (f.x < 0) f.x = width;
+        }
+
+        requestAnimationFrame(drawSnow);
+    }
+
+    drawSnow();
+}
 
 document.addEventListener('mousemove', (e) => {
     createMouseParticles(e.clientX, e.clientY);
@@ -499,7 +519,7 @@ twinkleStyle.textContent = `
 `;
 document.head.appendChild(twinkleStyle);
 
-createStars();
+createstars();
 
 // ОБРАБОТЧИК ДЛЯ ВЕРХНИХ СОЦИАЛЬНЫХ ССЫЛОК
 const socialLinks = document.querySelectorAll('.social-link');
@@ -619,83 +639,4 @@ function createCursorAura() {
     aura.style.width = '100px';
     aura.style.height = '100px';
     aura.style.borderRadius = '50%';
-    aura.style.background = 'radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%)';
-    aura.style.filter = 'blur(20px)';
-    aura.style.left = (mouseX - 50) + 'px';
-    aura.style.top = (mouseY - 50) + 'px';
-    aura.style.opacity = '0.5';
-    
-    document.body.appendChild(aura);
-    
-    const auras = document.querySelectorAll('div[style*="radial-gradient"]');
-    if (auras.length > 1) {
-        auras[0].remove();
-    }
-}
-
-setInterval(createCursorAura, 50);
-
-window.addEventListener('scroll', () => {
-    const scrollParticle = document.createElement('div');
-    scrollParticle.style.position = 'fixed';
-    scrollParticle.style.left = Math.random() * width + 'px';
-    scrollParticle.style.top = Math.random() * height + 'px';
-    scrollParticle.style.width = '3px';
-    scrollParticle.style.height = '3px';
-    scrollParticle.style.borderRadius = '50%';
-    scrollParticle.style.backgroundColor = '#00ffc8';
-    scrollParticle.style.pointerEvents = 'none';
-    scrollParticle.style.zIndex = '1';
-    scrollParticle.style.boxShadow = '0 0 10px #00ffc8';
-    scrollParticle.style.animation = 'scrollParticleFloat 2s ease-out forwards';
-    
-    document.body.appendChild(scrollParticle);
-    
-    setTimeout(() => scrollParticle.remove(), 2000);
-});
-
-const scrollParticleStyle = document.createElement('style');
-scrollParticleStyle.textContent = `
-    @keyframes scrollParticleFloat {
-        0% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        100% {
-            opacity: 0;
-            transform: translateY(-100px);
-        }
-    }
-`;
-document.head.appendChild(scrollParticleStyle);
-
-const legalLinks = document.querySelectorAll('.legal-link');
-
-legalLinks.forEach((link) => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const href = link.getAttribute('data-href');
-        // Создаём ripple эффект
-        createClickWave(e.clientX, e.clientY);
-        // Ждём 600ms (длина ripple анимации) и потом переходим
-        setTimeout(() => {
-            window.open(href, '_blank');
-        }, 600);
-    });
-
-    link.addEventListener('mousemove', (e) => {
-        const rect = link.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        link.style.setProperty('--x', x + 'px');
-        link.style.setProperty('--y', y + 'px');
-    });
-});
-
-// ИНИЦИАЛИЗАЦИЯ КОМАНДЫ ПРИ ЗАГРУЗКЕ
-document.addEventListener('DOMContentLoaded', () => {
-    initializeTeam();
-    initMusicPlayer();
-});
+    aura.style.background = 'radial-
