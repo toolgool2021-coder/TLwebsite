@@ -77,8 +77,8 @@ const teamMembers = [
 // ПЛЕЙЛИСТ ПЕСЕН - РЕДАКТИРУЙ ЗДЕСЬ!
 const playlist = [
     {
-        title: "Тестовая песня 1",
-        url: "./music/song1.mp3"
+        title: "Montagem Uranium (Super slowed) - ZAYLO",
+        url: "./music/Montagem Uranium (Super Slowed) - ZAYLO.mp3"
     },
     {
         title: "Тестовая песня 2",
