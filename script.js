@@ -1,4 +1,3 @@
-// ДАННЫЕ ЛЮДЕЙ - РЕДАКТИРУЙ ЗДЕСЬ!
 const teamMembers = [
     {
         id: 1,
@@ -6,11 +5,9 @@ const teamMembers = [
         relationship: "💎 Girlfriend",
         emoji: "🪷",
         avatar: "./images/icon_5.jpg",
-        description: "Та самая, с кем спокойно и тепло. Поддерживает, вдохновляет и делает каждый день лучше ✨",
+        description: "Та самая, с кем спокойно и тепло ✨",
         color: "#ffd700",
-        socials: {
-            telegram: "https://t.me/"
-        }
+        socials: { telegram: "https://t.me/" }
     },
     {
         id: 2,
@@ -18,11 +15,9 @@ const teamMembers = [
         relationship: "🎭 Best Friend",
         emoji: "👑",
         avatar: "./images/icon_2.jpg",
-        description: "Проверенный человек. Можно угарать, можно серьёзно поговорить — всегда на одной волне 🫂",
+        description: "Проверенный человек 🫂",
         color: "#808080",
-        socials: {
-            telegram: "tg://user?id=5300151185"
-        }
+        socials: { telegram: "tg://user?id=5300151185" }
     },
     {
         id: 3,
@@ -30,72 +25,32 @@ const teamMembers = [
         relationship: "🎭 Best Friend",
         emoji: "👑",
         avatar: "./images/icon_3.jpg",
-        description: "Надёжный и спокойный. Не кидает на словах и держит своё слово 💯",
+        description: "Надёжный и спокойный 💯",
         color: "#808080",
-        socials: {
-            telegram: "https://t.me/NverDavtyan0"
-        }
+        socials: { telegram: "https://t.me/NverDavtyan0" }
     },
     {
         id: 4,
-        name: "𝙵𝙻𝚄𝙾𝚁𝙸𝚃𝙴 [#𝙻𝚇𝚁]",
+        name: "𝙵𝙻𝚄𝙾𝚁𝙸𝚃𝙴",
         relationship: "🎭 Best Friend",
         emoji: "👑",
         avatar: "./images/icon_4.jpg",
-        description: "Своя атмосфера и стиль. Человек с вайбом, который не перепутаешь 🔥",
+        description: "Своя атмосфера и стиль 🔥",
         color: "#FFFFFF",
-        socials: {
-            telegram: "https://t.me/"
-        }
-    },
-    {
-        id: 5,
-        name: "أوكسي",
-        relationship: "🫠 Female friend",
-        emoji: "🎭",
-        avatar: "./images/icon_6.jpg",
-        description: "Весёлая и немного хаотичная, но в этом весь кайф. С ней не бывает скучно 😅",
-        color: "#c110bc",
-        socials: {
-            telegram: "https://t.me/Ok_si112"
-        }
-    },
-    {
-        id: 6,
-        name: "✿",
-        relationship: "✨ Female friend",
-        emoji: "⚜️",
-        avatar: "./images/icon_7.jpg",
-        description: "Лёгкая в общении и уютная. Идеальный напарник для Minecraft и ламповых вечеров 🎮",
-        color: "#827382",
-        socials: {
-            telegram: "https://t.me/Fl0rlet"
-        }
+        socials: { telegram: "https://t.me/" }
     }
 ];
 
-// ПЛЕЙЛИСТ ПЕСЕН - РЕДАКТИРУЙ ЗДЕСЬ!
 const playlist = [
-    {
-        title: "Montagem Uranium (Super slowed) - ZAYLO",
-        url: "./music/Montagem Uranium (Super slowed) - ZAYLO.mp3"
-    },
-    {
-        title: "Тестовая песня 2",
-        url: "./music/song2.mp3"
-    },
-    {
-        title: "Тестовая песня 3",
-        url: "./music/song3.mp3"
-    }
+    { title: "Тестовая песня 1", url: "./music/song1.mp3" },
+    { title: "Тестовая песня 2", url: "./music/song2.mp3" },
+    { title: "Тестовая песня 3", url: "./music/song3.mp3" }
 ];
 
-// ПЕРЕМЕННЫЕ ПЛЕЕРА
 let currentTrack = 0;
 let isPlaying = false;
 let playerMinimized = false;
 
-// ЭЛЕМЕНТЫ ПЛЕЕРА
 const audioElement = document.getElementById('audioElement');
 const musicPlayer = document.getElementById('musicPlayer');
 const playerToggleBtn = document.getElementById('playerToggleBtn');
@@ -108,84 +63,61 @@ const progressBar = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
 const durationEl = document.getElementById('duration');
 
-// ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ ПЛЕЕРА
 function initMusicPlayer() {
     loadTrack(currentTrack);
-    
-    // Автоматически скрыть плеер через 4 секунды
-    setTimeout(() => {
-        minimizePlayer();
-    }, 4000);
+    setTimeout(() => { minimizePlayer(); }, 4000);
 }
 
-// ЗАГРУЗИТЬ ТРЕК
 function loadTrack(index) {
     currentTrack = index;
-    if (playlist.length === 0) {
-        songTitle.textContent = 'Нет песен';
-        return;
-    }
     const track = playlist[currentTrack];
     audioElement.src = track.url;
     songTitle.textContent = track.title;
-    audioElement.load();
 }
 
-// ПЕРЕКЛЮЧЕНИЕ PLAY/PAUSE
 function togglePlay() {
     if (isPlaying) {
         audioElement.pause();
         playBtn.innerHTML = '<i class="fas fa-play"></i>';
         isPlaying = false;
     } else {
-        audioElement.play().catch(err => {
-            console.error('Ошибка воспроизведения:', err);
-            songTitle.textContent = 'Ошибка загрузки';
-        });
+        audioElement.play();
         playBtn.innerHTML = '<i class="fas fa-pause"></i>';
         isPlaying = true;
     }
 }
 
-// СЛЕДУЮЩИЙ ТРЕК
 function nextTrack() {
     currentTrack = (currentTrack + 1) % playlist.length;
     loadTrack(currentTrack);
     if (isPlaying) audioElement.play();
 }
 
-// ПРЕДЫДУЩИЙ ТРЕК
 function prevTrack() {
     currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
     loadTrack(currentTrack);
     if (isPlaying) audioElement.play();
 }
 
-// МИНИМИЗИРОВАТЬ ПЛЕЕР
 function minimizePlayer() {
     playerMinimized = true;
     musicPlayer.classList.add('minimized');
     playerToggleBtn.style.display = 'flex';
 }
 
-// РАЗВЕРНУТЬ ПЛЕЕР
 function maximizePlayer() {
     playerMinimized = false;
     musicPlayer.classList.remove('minimized');
     playerToggleBtn.style.display = 'none';
 }
 
-// ОБНОВЛЕНИЕ ПРОГРЕССА
 audioElement.addEventListener('timeupdate', () => {
-    if (!isNaN(audioElement.duration)) {
-        const percent = (audioElement.currentTime / audioElement.duration) * 100;
-        progressBar.style.width = percent + '%';
-    }
+    const percent = (audioElement.currentTime / audioElement.duration) * 100;
+    progressBar.style.width = percent + '%';
     currentTimeEl.textContent = formatTime(audioElement.currentTime);
     durationEl.textContent = formatTime(audioElement.duration);
 });
 
-// ФОРМАТИРОВАНИЕ ВРЕМЕНИ
 function formatTime(seconds) {
     if (isNaN(seconds)) return '0:00';
     const mins = Math.floor(seconds / 60);
@@ -193,450 +125,115 @@ function formatTime(seconds) {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-// АВТОПЕРЕХОД НА СЛЕДУЮЩИЙ ТРЕК
-audioElement.addEventListener('ended', () => {
-    nextTrack();
+audioElement.addEventListener('ended', () => { nextTrack(); });
+
+document.querySelector('.music-progress').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    audioElement.currentTime = percent * audioElement.duration;
 });
 
-// КЛИК ПО ПРОГРЕСС-БАРУ
-const progressElement = document.querySelector('.music-progress');
-if (progressElement) {
-    progressElement.addEventListener('click', (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        if (!isNaN(audioElement.duration)) {
-            audioElement.currentTime = percent * audioElement.duration;
-        }
-    });
-}
+playBtn.addEventListener('click', togglePlay);
+nextBtn.addEventListener('click', nextTrack);
+prevBtn.addEventListener('click', prevTrack);
+minimizeBtn.addEventListener('click', minimizePlayer);
+playerToggleBtn.addEventListener('click', maximizePlayer);
 
-// ОБРАБОТЧИКИ КНОПОК
-if (playBtn) playBtn.addEventListener('click', togglePlay);
-if (nextBtn) nextBtn.addEventListener('click', nextTrack);
-if (prevBtn) prevBtn.addEventListener('click', prevTrack);
-if (minimizeBtn) minimizeBtn.addEventListener('click', minimizePlayer);
-if (playerToggleBtn) playerToggleBtn.addEventListener('click', maximizePlayer);
-
-// ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
-function createModalParticles(color) {
-    const particleCount = 30;
-    const modal = document.getElementById('profileModal');
-    const modalContent = modal.querySelector('.modal-content');
-    const rect = modalContent.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        const angle = (Math.random() * Math.PI * 2);
-        const distance = Math.random() * 200 + 50;
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance;
-        
-        particle.style.position = 'fixed';
-        particle.style.left = centerX + 'px';
-        particle.style.top = centerY + 'px';
-        particle.style.width = Math.random() * 8 + 4 + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.borderRadius = '50%';
-        particle.style.backgroundColor = color;
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '999';
-        particle.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px ${color}`;
-        particle.style.setProperty('--tx', tx + 'px');
-        particle.style.setProperty('--ty', ty + 'px');
-        particle.style.animation = 'modalParticleBurst 1s ease-out forwards';
-        particle.style.transform = 'translate(-50%, -50%)';
-
-        document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 1000);
-    }
-}
-
-// Функция для инициализации команды
 function initializeTeam() {
     const teamGrid = document.getElementById('teamGrid');
-    if (!teamGrid) return;
     teamGrid.innerHTML = '';
-
     teamMembers.forEach(member => {
         const card = document.createElement('div');
         card.className = 'team-card';
         card.style.setProperty('--card-color', member.color || '#a855f7');
-        card.innerHTML = `
-            <div class="team-card-inner">
-                <img src="${member.avatar}" alt="${member.name}" class="team-avatar">
-                <h3 class="team-name">${member.name}</h3>
-                <span class="team-relationship">${member.relationship}</span>
-            </div>
-        `;
-        
+        card.innerHTML = `<div class="team-card-inner"><img src="${member.avatar}" alt="${member.name}" class="team-avatar"><h3 class="team-name">${member.name}</h3><span class="team-relationship">${member.relationship}</span></div>`;
         card.addEventListener('click', () => openProfile(member));
         teamGrid.appendChild(card);
     });
 }
 
-// Функция открытия профиля в модалке
 function openProfile(member) {
     const modal = document.getElementById('profileModal');
     const modalBody = document.getElementById('modalBody');
-    
     let socialsHtml = '';
     for (const [platform, link] of Object.entries(member.socials || {})) {
-        const icons = {
-            telegram: 'fab fa-telegram',
-            instagram: 'fab fa-instagram',
-            tiktok: 'fab fa-tiktok',
-            discord: 'fab fa-discord',
-            twitch: 'fab fa-twitch',
-            youtube: 'fab fa-youtube'
-        };
-        
+        const icons = { telegram: 'fab fa-telegram', instagram: 'fab fa-instagram', tiktok: 'fab fa-tiktok' };
         if (link && icons[platform]) {
-            socialsHtml += `
-                <a href="javascript:void(0)" data-href="${link}" target="_blank" class="modal-social">
-                    <i class="${icons[platform]}"></i>
-                </a>
-            `;
+            socialsHtml += `<a href="javascript:void(0)" data-href="${link}" target="_blank" class="modal-social"><i class="${icons[platform]}"></i></a>`;
         }
     }
-
-    modalBody.innerHTML = `
-        <div class="profile-card">
-            <img src="${member.avatar}" alt="${member.name}" class="profile-avatar">
-            <h2>${member.name}</h2>
-            <p class="relationship-tag">${member.relationship}</p>
-            <p class="profile-description">${member.description}</p>
-            <div class="modal-socials">
-                ${socialsHtml || '<p>Соцсети скоро добавят...</p>'}
-            </div>
-        </div>
-    `;
-    
+    modalBody.innerHTML = `<div class="profile-card"><img src="${member.avatar}" alt="${member.name}" class="profile-avatar"><h2>${member.name}</h2><p class="relationship-tag">${member.relationship}</p><p class="profile-description">${member.description}</p><div class="modal-socials">${socialsHtml}</div></div>`;
     modal.style.setProperty('--card-color', member.color || '#a855f7');
     modal.style.display = 'flex';
-    
-    // Создаём партиклы при открытии
-    setTimeout(() => createModalParticles(member.color || '#a855f7'), 100);
-    
-    // Добавляем обработчик для модальных социальных ссылок
     attachModalSocialLinks();
 }
 
-// Функция для добавления обработчиков на социальные ссылки в модалке
 function attachModalSocialLinks() {
     const modalSocials = document.querySelectorAll('.modal-social');
     modalSocials.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation();
             const href = link.getAttribute('data-href');
-            if (href) {
-                // Создаём ripple эффект
-                createClickWave(e.clientX, e.clientY);
-                // Ждём 600ms (длина ripple анимации) и потом переходим
-                setTimeout(() => {
-                    window.open(href, '_blank');
-                }, 600);
-            }
+            if (href) window.open(href, '_blank');
         });
     });
 }
 
-// Закрытие модального окна
 function closeModal() {
-    const modal = document.getElementById('profileModal');
-    if (modal) modal.style.display = 'none';
+    document.getElementById('profileModal').style.display = 'none';
 }
 
-const profileModal = document.getElementById('profileModal');
-if (profileModal) {
-    profileModal.addEventListener('click', (e) => {
-        if (e.target.id === 'profileModal') closeModal();
-    });
-}
+document.getElementById('profileModal').addEventListener('click', (e) => {
+    if (e.target.id === 'profileModal') closeModal();
+});
 
-const modalClose = document.querySelector('.modal-close');
-if (modalClose) modalClose.addEventListener('click', closeModal);
+document.querySelector('.modal-close').addEventListener('click', closeModal);
 
-// ОРИГИНАЛЬНЫЙ КОД АНИМАЦИЙ СНЕГА
 const canvas = document.getElementById('snowCanvas');
-if (canvas) {
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+const ctx = canvas.getContext('2d');
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
 
-    window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    });
-
-    const snowflakes = [];
-    const maxFlakes = 120;
-
-    for (let i = 0; i < maxFlakes; i++) {
-        snowflakes.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            r: Math.random() * 3 + 1,
-            speed: Math.random() * 1 + 0.5,
-            opacity: Math.random() * 0.5 + 0.3
-        });
-    }
-
-    function drawSnow() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = "rgba(255,255,255,0.3)";
-        ctx.beginPath();
-
-        for (let f of snowflakes) {
-            ctx.moveTo(f.x, f.y);
-            ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-        }
-
-        ctx.fill();
-        updateSnow();
-    }
-
-    function updateSnow() {
-        for (let f of snowflakes) {
-            f.y += f.speed;
-            f.x += Math.sin(f.y / height * Math.PI * 2) * 0.5;
-
-            if (f.y > height) f.y = 0;
-            if (f.x > width) f.x = 0;
-            if (f.x < 0) f.x = width;
-        }
-
-        requestAnimationFrame(drawSnow);
-    }
-
-    drawSnow();
-}
-
-document.addEventListener('mousemove', (e) => {
-    createMouseParticles(e.clientX, e.clientY);
+window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
 });
 
-function createMouseParticles(x, y) {
-    if (Math.random() > 0.8) {
-        const particle = document.createElement('div');
-        particle.style.position = 'fixed';
-        particle.style.left = x + 'px';
-        particle.style.top = y + 'px';
-        particle.style.width = '5px';
-        particle.style.height = '5px';
-        particle.style.borderRadius = '50%';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '3';
-        particle.style.boxShadow = '0 0 10px #a855f7';
-        particle.style.animation = 'particleFloat 1s ease-out forwards';
-        
-        document.body.appendChild(particle);
-        
-        setTimeout(() => particle.remove(), 1000);
-    }
+const snowflakes = [];
+for (let i = 0; i < 120; i++) {
+    snowflakes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 3 + 1,
+        speed: Math.random() * 1 + 0.5
+    });
 }
 
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes particleFloat {
-        0% {
-            opacity: 1;
-            transform: translate(0, 0) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(${Math.random() * 100 - 50}px, -50px) scale(0);
-        }
+function drawSnow() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "rgba(255,255,255,0.3)";
+    ctx.beginPath();
+    for (let f of snowflakes) {
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
     }
-
-    @keyframes floatingGradient {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-
-    @keyframes iconParticleDrift {
-        0% {
-            opacity: 1;
-            transform: translate(0, 0) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(var(--tx), var(--ty)) scale(0);
-        }
-    }
-
-    @keyframes modalParticleBurst {
-        0% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
-        }
-    }
-`;
-document.head.appendChild(style);
-
-function createStars() {
-    const starsContainer = document.createElement('div');
-    starsContainer.className = 'stars';
-    document.body.insertBefore(starsContainer, document.body.firstChild);
-    
-    for (let i = 0; i < 50; i++) {
-        const star = document.createElement('div');
-        star.style.position = 'fixed';
-        star.style.width = Math.random() * 2 + 'px';
-        star.style.height = star.style.width;
-        star.style.borderRadius = '50%';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 50 + '%';
-        star.style.backgroundColor = '#fff';
-        star.style.opacity = Math.random() * 0.5 + 0.3;
-        star.style.zIndex = '0';
-        star.style.animation = `twinkle ${Math.random() * 3 + 2}s infinite`;
-        star.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px rgba(168, 85, 247, 0.8)`;
-        
-        starsContainer.appendChild(star);
-    }
+    ctx.fill();
+    updateSnow();
 }
 
-const twinkleStyle = document.createElement('style');
-twinkleStyle.textContent = `
-    @keyframes twinkle {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 1; }
+function updateSnow() {
+    for (let f of snowflakes) {
+        f.y += f.speed;
+        f.x += Math.sin(f.y / height * Math.PI * 2) * 0.5;
+        if (f.y > height) f.y = 0;
+        if (f.x > width) f.x = 0;
+        if (f.x < 0) f.x = width;
     }
-`;
-document.head.appendChild(twinkleStyle);
+    requestAnimationFrame(drawSnow);
+}
 
-createstars();
+drawSnow();
 
-// ОБРАБОТЧИК ДЛЯ ВЕРХНИХ СОЦИАЛЬНЫХ ССЫЛОК
-const socialLinks = document.querySelectorAll('.social-link');
-
-socialLinks.forEach((link) => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const href = link.getAttribute('data-href');
-        
-        // Создаём ripple эффект
-        createClickWave(e.clientX, e.clientY);
-        
-        // Ждём 600ms (длина ripple анимации) и потом переходим
-        setTimeout(() => {
-            if (href.startsWith('mailto:')) {
-                window.location.href = href;
-            } else {
-                window.open(href, '_blank');
-            }
-        }, 600);
-    });
-
-    link.addEventListener('mouseenter', () => {
-        createIconParticles(link);
-    });
-
-    link.addEventListener('mouseleave', () => {
-        link.style.filter = 'none';
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    initializeTeam();
+    initMusicPlayer();
 });
-
-// НОВАЯ ФУНКЦИЯ: Создание частиц вокруг иконки
-function createIconParticles(iconElement) {
-    const rect = iconElement.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const particleCount = 8;
-    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607', '#3a86ff', '#8338ec'];
-
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        const angle = (i / particleCount) * Math.PI * 2;
-        const distance = 60;
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance;
-
-        particle.style.position = 'fixed';
-        particle.style.left = centerX + 'px';
-        particle.style.top = centerY + 'px';
-        particle.style.width = '8px';
-        particle.style.height = '8px';
-        particle.style.borderRadius = '50%';
-        particle.style.backgroundColor = colors[i];
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '999';
-        particle.style.boxShadow = `0 0 10px ${colors[i]}`;
-        particle.style.setProperty('--tx', tx + 'px');
-        particle.style.setProperty('--ty', ty + 'px');
-        particle.style.animation = 'iconParticleDrift 0.8s ease-out forwards';
-        particle.style.transform = 'translate(-50%, -50%)';
-
-        document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 800);
-    }
-}
-
-function createClickWave(x, y) {
-    const wave = document.createElement('div');
-    wave.style.position = 'fixed';
-    wave.style.left = x + 'px';
-    wave.style.top = y + 'px';
-    wave.style.width = '10px';
-    wave.style.height = '10px';
-    wave.style.borderRadius = '50%';
-    wave.style.border = '2px solid #a855f7';
-    wave.style.pointerEvents = 'none';
-    wave.style.zIndex = '3';
-    wave.style.transform = 'translate(-50%, -50%)';
-    wave.style.animation = 'ripple 0.6s ease-out forwards';
-    
-    document.body.appendChild(wave);
-    
-    setTimeout(() => wave.remove(), 600);
-}
-
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        0% {
-            width: 10px;
-            height: 10px;
-            opacity: 1;
-        }
-        100% {
-            width: 100px;
-            height: 100px;
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(rippleStyle);
-
-let mouseX = 0;
-let mouseY = 0;
-
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
-
-function createCursorAura() {
-    const aura = document.createElement('div');
-    aura.style.position = 'fixed';
-    aura.style.pointerEvents = 'none';
-    aura.style.zIndex = '2';
-    aura.style.width = '100px';
-    aura.style.height = '100px';
-    aura.style.borderRadius = '50%';
-    aura.style.background = 'radial-
