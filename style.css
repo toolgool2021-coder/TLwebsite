@@ -6,8 +6,9 @@
 
 html, body {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%);
+    background-attachment: fixed;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     color: #e0e0e0;
     overflow-x: hidden;
@@ -112,7 +113,7 @@ html, body {
     transition: all 0.3s ease;
 }
 
-/* РљРћРњРђРќР”Рђ */
+/* КОМАНДА */
 .team-section {
     margin-top: 80px;
     padding: 50px 30px;
@@ -233,7 +234,7 @@ html, body {
     z-index: 2;
 }
 
-/* РџР›РђР’РђР®Р©РР™ РђРЈР”РРћРџР›Р•Р•Р  */
+/* ПЛАВАЮЩИЙ АУДИОПЛЕЕР */
 .music-player {
     position: fixed;
     bottom: 30px;
@@ -384,7 +385,6 @@ html, body {
                 0 0 30px rgba(0, 255, 200, 0.4);
 }
 
-/* РљРќРћРџРљРђ Р’Р«Р—РћР’Рђ РџР›Р•Р•Р Рђ */
 .music-player-toggle {
     position: fixed;
     bottom: 30px;
@@ -423,7 +423,7 @@ html, body {
     color: #00ffff;
 }
 
-/* РњРћР”РђР›Р¬РќРћР• РћРљРќРћ */
+/* МОДАЛЬНОЕ ОКНО */
 .modal {
     display: none;
     position: fixed;
