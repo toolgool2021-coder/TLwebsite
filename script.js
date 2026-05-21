@@ -5,7 +5,7 @@ const teamMembers = [
         name: "",
         relationship: "",
         emoji: "",
-        avatar: "",
+        avatar: "./images/icon_5.jpg",
         description: "",
         color: "#a855f7",
         socials: {}
