@@ -19,7 +19,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: calc(100vh - 70px);
     padding: 40px 20px;
 }
 
@@ -743,114 +743,7 @@ footer {
     z-index: 10;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 30px 15px;
-    }
-
-    .username {
-        font-size: 26px;
-    }
-
-    .team-grid {
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-        gap: 18px;
-    }
-
-    .team-section {
-        padding: 35px 20px;
-        margin-top: 60px;
-    }
-
-    .legal-link {
-        font-size: 12px;
-        padding: 10px 18px;
-    }
-
-    .social-link-footer {
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
-    }
-
-    footer {
-        padding: 40px 15px 30px;
-    }
-
-    .modal-content {
-        padding: 35px 25px;
-        max-width: 90%;
-    }
-
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
-    }
-
-    .music-player {
-        width: 280px;
-        padding: 15px;
-        bottom: 20px;
-        right: 20px;
-    }
-
-    .music-player-toggle {
-        bottom: 20px;
-        right: 20px;
-        width: 55px;
-        height: 55px;
-        font-size: 22px;
-    }
-}
-
-@media (max-width: 480px) {
-    .username {
-        font-size: 22px;
-    }
-
-    .team-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 12px;
-    }
-
-    .avatar-wrapper {
-        width: 140px;
-        height: 140px;
-    }
-
-    .music-player {
-        width: 260px;
-        padding: 12px;
-        bottom: 15px;
-        right: 15px;
-    }
-
-    .music-player-header h3 {
-        font-size: 13px;
-    }
-
-    .music-control-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 12px;
-    }
-
-    .music-control-btn.play-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 14px;
-    }
-
-    .music-player-toggle {
-        bottom: 15px;
-        right: 15px;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-    }
-}
-
-/* НАВИГАЦИЯ */
+/* ===== НАВИГАЦИЯ ===== */
 .navbar {
     position: fixed;
     top: 0;
@@ -881,6 +774,11 @@ footer {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.navbar-logo a:hover {
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
 }
 
 .nav-menu {
@@ -894,27 +792,47 @@ footer {
     text-decoration: none;
     transition: all 0.3s ease;
     font-weight: 500;
+    position: relative;
+    padding: 8px 0;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #a855f7, #00ffff);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
 }
 
 .nav-link:hover,
 .nav-link.active {
     color: #a855f7;
-    text-shadow: 0 0 10px #a855f7;
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
 }
 
 .hamburger {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    gap: 6px;
 }
 
 .hamburger span {
     width: 25px;
     height: 3px;
-    background: #a855f7;
-    margin: 5px 0;
-    transition: all 0.3s ease;
+    background: linear-gradient(90deg, #a855f7, #00ffff);
+    margin: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     border-radius: 2px;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
 }
 
 .hamburger.active span:nth-child(1) {
@@ -933,39 +851,7 @@ body {
     padding-top: 70px;
 }
 
-@media (max-width: 768px) {
-    .hamburger {
-        display: flex;
-    }
-
-    .nav-menu {
-        position: fixed;
-        left: -100%;
-        top: 70px;
-        flex-direction: column;
-        background-color: rgba(10, 10, 10, 0.98);
-        width: 100%;
-        text-align: center;
-        transition: 0.3s;
-        gap: 0;
-        padding: 20px 0;
-    }
-
-    .nav-menu.active {
-        left: 0;
-    }
-
-    .nav-item {
-        padding: 15px 0;
-        border-bottom: 1px solid rgba(168, 85, 247, 0.2);
-    }
-
-    .navbar-container {
-        padding: 0 15px;
-    }
-}
-
-/* СТРАНИЦЫ */
+/* ===== СТРАНИЦЫ ===== */
 .section-title {
     font-size: 32px;
     font-weight: 700;
@@ -975,6 +861,16 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
+    }
 }
 
 .friends-section,
@@ -983,7 +879,7 @@ body {
     width: 100%;
 }
 
-/* КАРУСЕЛЬ ДРУЗЕЙ */
+/* ===== КАРУСЕЛЬ ДРУЗЕЙ ===== */
 .carousel-wrapper {
     position: relative;
     width: 100%;
@@ -1029,6 +925,8 @@ body {
     transform: translateX(0) scale(1);
     z-index: 2;
     box-shadow: 0 12px 40px rgba(168, 85, 247, 0.5);
+    border-color: #00ffff;
+    border-width: 2px;
 }
 
 .carousel-card.prev {
@@ -1051,13 +949,16 @@ body {
     border-radius: 50%;
     object-fit: cover;
     margin: 0 auto;
-    border: 3px solid #a855f7;
+    border: 3px solid;
+    border-color: inherit;
+    box-shadow: 0 0 20px currentColor;
 }
 
 .carousel-card h2 {
     color: #fff;
     font-size: 20px;
     margin: 10px 0;
+    font-weight: 700;
 }
 
 .carousel-card p {
@@ -1071,28 +972,70 @@ body {
     overflow-y: auto;
 }
 
-/* КАРТОЧКИ ИГР */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 255, 200, 0.1));
+    border: 2px solid rgba(168, 85, 247, 0.7);
+    color: #a855f7;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 10;
+}
+
+.nav-btn:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.6), rgba(0, 255, 200, 0.3));
+    border-color: #00ffff;
+    color: #00ffff;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), 0 0 30px rgba(0, 255, 200, 0.4);
+    transform: translateY(-50%) scale(1.15);
+}
+
+.btn-left {
+    left: 20px;
+}
+
+.btn-right {
+    right: 20px;
+}
+
+/* ===== КАРТОЧКИ ИГР ===== */
 .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
 }
 
 .game-card {
     background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(0, 255, 200, 0.05) 100%);
-    border: 2px solid #a855f7;
+    border: 2px solid;
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     backdrop-filter: blur(10px);
+    position: relative;
+    --game-color: #a855f7;
+}
+
+.game-card {
+    border-color: var(--game-color);
 }
 
 .game-card:hover {
     transform: translateY(-12px);
-    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.5);
+    box-shadow: 0 12px 40px var(--game-color);
     border-color: #00ffff;
 }
 
@@ -1100,6 +1043,7 @@ body {
     width: 100%;
     height: 250px;
     overflow: hidden;
+    position: relative;
 }
 
 .game-card-image img {
@@ -1115,6 +1059,9 @@ body {
 
 .game-card-content {
     padding: 20px;
+    background: linear-gradient(135deg, 
+        rgba(168, 85, 247, 0.05) 0%, 
+        rgba(0, 255, 200, 0.02) 100%);
 }
 
 .game-card-title {
@@ -1139,9 +1086,10 @@ body {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 3px solid #a855f7;
+    border: 3px solid;
     object-fit: cover;
     margin-bottom: 20px;
+    box-shadow: 0 0 30px currentColor;
 }
 
 .game-detail h2 {
@@ -1157,9 +1105,27 @@ body {
 }
 
 @media (max-width: 768px) {
+    .container {
+        padding: 30px 15px;
+    }
+
+    .username {
+        font-size: 26px;
+    }
+
     .section-title {
         font-size: 24px;
         margin-bottom: 30px;
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 18px;
+    }
+
+    .team-section {
+        padding: 35px 20px;
+        margin-top: 60px;
     }
 
     .carousel-wrapper {
@@ -1176,9 +1142,98 @@ body {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 20px;
     }
+
+    .legal-link {
+        font-size: 12px;
+        padding: 10px 18px;
+    }
+
+    .social-link-footer {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+
+    footer {
+        padding: 40px 15px 30px;
+    }
+
+    .modal-content {
+        padding: 35px 25px;
+        max-width: 90%;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .music-player {
+        width: 280px;
+        padding: 15px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .music-player-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background-color: rgba(10, 10, 10, 0.98);
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        gap: 0;
+        padding: 20px 0;
+        border-bottom: 2px solid rgba(168, 85, 247, 0.5);
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-item {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+    }
+
+    .navbar-container {
+        padding: 0 15px;
+    }
+
+    .nav-link::after {
+        display: none;
+    }
 }
 
 @media (max-width: 480px) {
+    .username {
+        font-size: 22px;
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 12px;
+    }
+
+    .avatar-wrapper {
+        width: 140px;
+        height: 140px;
+    }
+
     .carousel-wrapper {
         height: 300px;
     }
@@ -1189,11 +1244,46 @@ body {
         padding: 15px;
     }
 
+    .music-player {
+        width: 260px;
+        padding: 12px;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .music-player-header h3 {
+        font-size: 13px;
+    }
+
+    .music-control-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .music-control-btn.play-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 14px;
+    }
+
+    .music-player-toggle {
+        bottom: 15px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
     .games-grid {
         grid-template-columns: 1fr;
     }
 
     .section-title {
         font-size: 20px;
+    }
+
+    .nav-menu {
+        top: 70px;
     }
 }
