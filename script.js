@@ -76,7 +76,7 @@ const teamMembers = [
 const playlist = [
     {
         title: "Montagem Uranium (Super Slowed) - ZAYLO",
-        url: "./music/Montagem Uranium (Super Slowed) - ZAYLO.mp3"
+        url: "./Music/Montagem Uranium (Super Slowed) - ZAYLO.mp3"
     }
 ];
 
