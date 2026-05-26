@@ -72,11 +72,31 @@ const teamMembers = [
     }
 ];
 
-// ПЛЕЙЛИСТ ПЕСЕН - РЕДАКТИРУЙ ЗДЕСЬ!
+// ПЛЕЙЛИСТ ПЕСЕН - ОБНОВЛЕНО!
 const playlist = [
     {
         title: "Montagem Uranium (Super Slowed) - ZAYLO",
         url: "./Music/Montagem Uranium (Super Slowed) - ZAYLO.mp3"
+    },
+    {
+        title: "Track 2",
+        url: "./Music/2_5190803538715904020.m4a"
+    },
+    {
+        title: "Track 3",
+        url: "./Music/2_5226618940284779690.m4a"
+    },
+    {
+        title: "Track 4",
+        url: "./Music/2_5235580346598202344.m4a"
+    },
+    {
+        title: "Track 5",
+        url: "./Music/2_5346101906802504103.m4a"
+    },
+    {
+        title: "Track 6",
+        url: "./Music/2_5397758474903915744.m4a"
     }
 ];
 
@@ -90,8 +110,8 @@ const audioElement = document.getElementById('audioElement');
 const musicPlayer = document.getElementById('musicPlayer');
 const playerToggleBtn = document.getElementById('playerToggleBtn');
 const playBtn = document.getElementById('playBtn');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
+const prevBtn = document.getElementById('prevBtn') || document.getElementById('prevBtnPlayer');
+const nextBtn = document.getElementById('nextBtn') || document.getElementById('nextBtnPlayer');
 const minimizeBtn = document.getElementById('minimizeBtn');
 const songTitle = document.getElementById('songTitle');
 const progressBar = document.getElementById('progressBar');
@@ -102,12 +122,10 @@ const durationEl = document.getElementById('duration');
 function initMusicPlayer() {
     loadTrack(currentTrack);
     
-    // Автоматически скрыть плеер через 4 секунды
     setTimeout(() => {
         minimizePlayer();
     }, 4000);
 
-    // Обработка ошибок загрузки
     audioElement.addEventListener('error', () => {
         songTitle.textContent = '❌ Ошибка загрузки';
     });
@@ -195,12 +213,12 @@ document.querySelector('.music-progress').addEventListener('click', (e) => {
 
 // ОБРАБОТЧИКИ КНОПОК
 playBtn.addEventListener('click', togglePlay);
-nextBtn.addEventListener('click', nextTrack);
-prevBtn.addEventListener('click', prevTrack);
+if (prevBtn) prevBtn.addEventListener('click', prevTrack);
+if (nextBtn) nextBtn.addEventListener('click', nextTrack);
 minimizeBtn.addEventListener('click', minimizePlayer);
 playerToggleBtn.addEventListener('click', maximizePlayer);
 
-// ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ (ОПТИМИЗИРОВАНА)
+// ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
 function createModalParticles(color) {
     const particleCount = 15;
     const modal = document.getElementById('profileModal');
@@ -236,9 +254,11 @@ function createModalParticles(color) {
     }
 }
 
-// Функция для инициализации команды
+// Функция для инициализации команды (только на index.html)
 function initializeTeam() {
     const teamGrid = document.getElementById('teamGrid');
+    if (!teamGrid) return;
+
     teamGrid.innerHTML = '';
 
     teamMembers.forEach(member => {
@@ -309,14 +329,20 @@ function closeModal() {
     modal.style.display = 'none';
 }
 
-document.getElementById('profileModal').addEventListener('click', (e) => {
-    if (e.target.id === 'profileModal') closeModal();
-});
+const profileModal = document.getElementById('profileModal');
+if (profileModal) {
+    profileModal.addEventListener('click', (e) => {
+        if (e.target.id === 'profileModal') closeModal();
+    });
 
-document.querySelector('.modal-close').addEventListener('click', closeModal);
-document.querySelector('.modal-close').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') closeModal();
-});
+    const modalClose = profileModal.querySelector('.modal-close');
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+        modalClose.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') closeModal();
+        });
+    }
+}
 
 // АНИМАЦИЯ СНЕГА
 const canvas = document.getElementById('snowCanvas');
@@ -372,7 +398,7 @@ function updateSnow() {
 
 drawSnow();
 
-// ПАРТИКЛЫ ПРИ ДВИЖЕНИИ МЫШИ (ОПТИМИЗИРОВАНЫ)
+// ПАРТИКЛЫ ПРИ ДВИЖЕНИИ МЫШИ
 let mouseParticleThrottle = 0;
 document.addEventListener('mousemove', (e) => {
     mouseParticleThrottle++;
@@ -498,7 +524,7 @@ document.head.appendChild(twinkleStyle);
 
 createStars();
 
-// ОБРАБОТЧИК ДЛЯ СОЦИАЛЬНЫХ ССЫЛОК - СВЕРХУ
+// ОБРАБОТЧИК ДЛЯ СОЦИАЛЬНЫХ ССЫЛОК
 const socialLinks = document.querySelectorAll('.social-link');
 
 socialLinks.forEach((link) => {
@@ -527,7 +553,7 @@ socialLinks.forEach((link) => {
     });
 });
 
-// ФУНКЦИЯ: Создание частиц вокруг иконки
+// СОЗДАНИЕ ЧАСТИЦ ВОКРУГ ИКОНКИ
 function createIconParticles(iconElement) {
     const rect = iconElement.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -562,7 +588,6 @@ function createIconParticles(iconElement) {
     }
 }
 
-// ФУНКЦИЯ RIPPLE ЭФФЕКТА
 function createClickWave(x, y) {
     const wave = document.createElement('div');
     wave.style.position = 'fixed';
@@ -624,6 +649,24 @@ legalLinks.forEach((link) => {
         link.style.setProperty('--y', y + 'px');
     });
 });
+
+// НАВИГАЦИЯ МОБИЛЬНАЯ
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
+
+if (hamburger) {
+    hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        });
+    });
+}
 
 // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
 document.addEventListener('DOMContentLoaded', () => {
