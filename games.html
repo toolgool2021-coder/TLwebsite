@@ -97,49 +97,55 @@
 
 <script src="script.js"></script>
 <script>
-    // ДАННЫЕ ИГР
+    // ДАННЫЕ ИГР - С ЦВЕТАМИ!
     const games = [
         {
             id: 1,
             title: "Minecraft",
             image: "./images/icon_2.jpg",
             description: "Песочница с бесконечными возможностями. Строй, исследуй, выживай! 🎮",
-            fullDescription: "Классическая игра про выживание и творчество. Идеальна для релакса или приключений с друзьями."
+            fullDescription: "Классическая игра про выживание и творчество. Идеальна для релакса или приключений с друзьями.",
+            color: "#FFB800"
         },
         {
             id: 2,
             title: "Valorant",
             image: "./images/icon_3.jpg",
             description: "Тактический шутер с суперспособностями. Командная работа на первом месте! 🎯",
-            fullDescription: "Динамичный 5v5 шутер с элементами стратегии. Требует координации и хорошей реакции."
+            fullDescription: "Динамичный 5v5 шутер с элементами стратегии. Требует координации и хорошей реакции.",
+            color: "#FF4655"
         },
         {
             id: 3,
             title: "Among Us",
             image: "./images/icon_4.jpg",
             description: "Социальная игра про предателей и детективов. Весело играть с друзьями! 🕵️",
-            fullDescription: "Попробуй найти самозванца! Отличная игра для вечеров с компанией друзей."
+            fullDescription: "Попробуй найти самозванца! Отличная игра для вечеров с компанией друзей.",
+            color: "#2E8B57"
         },
         {
             id: 4,
             title: "Fortnite",
             image: "./images/icon_5.jpg",
             description: "Battle Royale с крутыми скинами и боевым пассом. Последний выживший победит! 🏆",
-            fullDescription: "Популярнейший батл-рояль с регулярными обновлениями и совместной игрой."
+            fullDescription: "Популярнейший батл-рояль с регулярными обновлениями и совместной игрой.",
+            color: "#7C3AED"
         },
         {
             id: 5,
             title: "League of Legends",
             image: "./images/icon_6.jpg",
             description: "MOBA с насыщенным геймплеем. Выбери чемпиона и иди на победу! ⚔️",
-            fullDescription: "Легендарная MOBA с огромным количеством чемпионов и глубокой тактикой."
+            fullDescription: "Легендарная MOBA с огромным количеством чемпионов и глубокой тактикой.",
+            color: "#0A8FDC"
         },
         {
             id: 6,
             title: "Terraria",
             image: "./images/icon_7.jpg",
             description: "2D платформер с боссами и сокровищами. Готов к подземным приключениям? ⛏️",
-            fullDescription: "Пиксельный шедевр с адом боссов и бесконечными возможностями крафта."
+            fullDescription: "Пиксельный шедевр с адом боссов и бесконечными возможностями крафта.",
+            color: "#E74C3C"
         }
     ];
 
@@ -154,6 +160,7 @@
         games.forEach(game => {
             const card = document.createElement('div');
             card.className = 'game-card';
+            card.style.setProperty('--game-color', game.color);
             card.innerHTML = `
                 <div class="game-card-image">
                     <img src="${game.image}" alt="${game.title}">
@@ -172,11 +179,12 @@
     function openGameModal(game) {
         gameModalBody.innerHTML = `
             <div class="game-detail">
-                <img src="${game.image}" alt="${game.title}" class="game-detail-image">
+                <img src="${game.image}" alt="${game.title}" class="game-detail-image" style="border-color: ${game.color}; box-shadow: 0 0 30px ${game.color};">
                 <h2>${game.title}</h2>
                 <p>${game.fullDescription}</p>
             </div>
         `;
+        gameModal.style.setProperty('--card-color', game.color);
         gameModal.style.display = 'flex';
     }
 
