@@ -94,6 +94,7 @@ html, body {
     position: relative;
     cursor: pointer;
     background: rgba(168, 85, 247, 0.05);
+    text-decoration: none;
 }
 
 .social-link:hover {
