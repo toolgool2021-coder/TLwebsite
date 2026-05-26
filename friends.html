@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Toolgool - Friends">
+    <title>Toolgool - Friends</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="snowCanvas"></canvas>
+
+<!-- НАВИГАЦИЯ -->
+<nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-logo">
+            <a href="index.html">@Toolgool</a>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="index.html" class="nav-link">🏠 Home</a></li>
+            <li class="nav-item"><a href="friends.html" class="nav-link active">👥 Friends</a></li>
+            <li class="nav-item"><a href="games.html" class="nav-link">🎮 Games</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="friends-section">
+        <h1 class="section-title">𓆩♡𓆪 𝖒𝖞 𝖇𝖊𝖘𝖙 𝖋𝖗𝖎𝖊𝖓𝖉𝖘 𓆩♡𓆪</h1>
+
+        <div class="carousel-wrapper">
+            <button class="nav-btn btn-left" id="prevBtn">←</button>
+            
+            <div class="carousel-container" id="carouselContainer">
+                <!-- Карточки генерируются JavaScript -->
+            </div>
+
+            <button class="nav-btn btn-right" id="nextBtn">→</button>
+        </div>
+    </div>
+</div>
+
+<!-- ПЛАВАЮЩИЙ АУДИОПЛЕЕР -->
+<div class="music-player" id="musicPlayer">
+    <div class="music-player-content">
+        <div class="music-player-header">
+            <h3 id="songTitle">Загрузка...</h3>
+            <button class="music-player-minimize" id="minimizeBtn" aria-label="Свернуть плеер">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div class="music-player-body">
+            <div class="music-progress">
+                <div class="music-progress-bar" id="progressBar"></div>
+            </div>
+            <div class="music-time">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+        <div class="music-player-controls">
+            <button class="music-control-btn" id="prevBtnPlayer" title="Назад" aria-label="Предыдущий трек">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="music-control-btn play-btn" id="playBtn" title="Играть/Пауза" aria-label="Воспроизвести">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="music-control-btn" id="nextBtnPlayer" title="Далее" aria-label="Следующий трек">
+                <i class="fas fa-step-forward"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<button class="music-player-toggle" id="playerToggleBtn" title="Открыть плеер" aria-label="Открыть плеер">
+    <i class="fas fa-music"></i>
+</button>
+
+<audio id="audioElement"></audio>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-text">
+            <p>&copy; 2024-2026 Toolgool. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ПРОФИЛЯ -->
+<div class="modal" id="profileModal" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <span class="modal-close" role="button" tabindex="0" aria-label="Закрыть">&times;</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // ИНИЦИАЛИЗАЦИЯ КАРУСЕЛИ ДРУЗЕЙ
+    const friendsCarousel = (() => {
+        const container = document.getElementById('carouselContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const modal = document.getElementById('profileModal');
+        let currentIndex = 0;
+
+        // Фильтруем только друзей с именами
+        const friends = teamMembers.filter(member => member.name);
+
+        function renderCards() {
+            container.innerHTML = '';
+            friends.forEach((friend, index) => {
+                const card = document.createElement('div');
+                card.className = 'carousel-card';
+                card.innerHTML = `
+                    <div class="carousel-card-inner">
+                        <img src="${friend.avatar}" alt="${friend.name}" class="carousel-avatar">
+                        <h2>${friend.name}</h2>
+                        <p><strong>Роль:</strong> ${friend.relationship}</p>
+                        <p class="description">${friend.description}</p>
+                    </div>
+                `;
+
+                if (index === currentIndex) {
+                    card.classList.add('active');
+                } else if (index === (currentIndex - 1 + friends.length) % friends.length) {
+                    card.classList.add('prev');
+                } else if (index === (currentIndex + 1) % friends.length) {
+                    card.classList.add('next');
+                }
+
+                card.addEventListener('click', () => openFriendProfile(friend));
+                container.appendChild(card);
+            });
+        }
+
+        function updateCarousel() {
+            const cards = document.querySelectorAll('.carousel-card');
+            cards.forEach((card, index) => {
+                card.classList.remove('active', 'prev', 'next');
+
+                if (index === currentIndex) {
+                    card.classList.add('active');
+                } else if (index === (currentIndex - 1 + friends.length) % friends.length) {
+                    card.classList.add('prev');
+                } else if (index === (currentIndex + 1) % friends.length) {
+                    card.classList.add('next');
+                }
+            });
+        }
+
+        function openFriendProfile(friend) {
+            const modalBody = document.getElementById('modalBody');
+            
+            let socialsHtml = '';
+            for (const [platform, link] of Object.entries(friend.socials || {})) {
+                const icons = {
+                    telegram: 'fab fa-telegram',
+                    instagram: 'fab fa-instagram',
+                    tiktok: 'fab fa-tiktok',
+                    discord: 'fab fa-discord',
+                    twitch: 'fab fa-twitch',
+                    youtube: 'fab fa-youtube'
+                };
+                
+                if (link && icons[platform]) {
+                    socialsHtml += `
+                        <a href="${link}" target="_blank" rel="noopener noreferrer" class="modal-social">
+                            <i class="${icons[platform]}"></i>
+                        </a>
+                    `;
+                }
+            }
+
+            modalBody.innerHTML = `
+                <div class="profile-card">
+                    <img src="${friend.avatar}" alt="${friend.name}" class="profile-avatar">
+                    <h2>${friend.name}</h2>
+                    <p class="relationship-tag">${friend.relationship}</p>
+                    <p class="profile-description">${friend.description}</p>
+                    <div class="modal-socials">
+                        ${socialsHtml || '<p>Соцсети скоро добавят...</p>'}
+                    </div>
+                </div>
+            `;
+            
+            modal.style.setProperty('--card-color', friend.color || '#a855f7');
+            modal.style.display = 'flex';
+            
+            setTimeout(() => createModalParticles(friend.color || '#a855f7'), 100);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + friends.length) % friends.length;
+            updateCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % friends.length;
+            updateCarousel();
+        });
+
+        renderCards();
+    })();
+</script>
+</body>
+</html>
