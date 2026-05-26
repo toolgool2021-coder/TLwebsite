@@ -106,6 +106,11 @@ function initMusicPlayer() {
     setTimeout(() => {
         minimizePlayer();
     }, 4000);
+
+    // Обработка ошибок загрузки
+    audioElement.addEventListener('error', () => {
+        songTitle.textContent = '❌ Ошибка загрузки';
+    });
 }
 
 // ЗАГРУЗИТЬ ТРЕК
@@ -123,7 +128,9 @@ function togglePlay() {
         playBtn.innerHTML = '<i class="fas fa-play"></i>';
         isPlaying = false;
     } else {
-        audioElement.play();
+        audioElement.play().catch(() => {
+            songTitle.textContent = '❌ Невозможно воспроизвести';
+        });
         playBtn.innerHTML = '<i class="fas fa-pause"></i>';
         isPlaying = true;
     }
@@ -133,14 +140,14 @@ function togglePlay() {
 function nextTrack() {
     currentTrack = (currentTrack + 1) % playlist.length;
     loadTrack(currentTrack);
-    if (isPlaying) audioElement.play();
+    if (isPlaying) audioElement.play().catch(() => {});
 }
 
 // ПРЕДЫДУЩИЙ ТРЕК
 function prevTrack() {
     currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
     loadTrack(currentTrack);
-    if (isPlaying) audioElement.play();
+    if (isPlaying) audioElement.play().catch(() => {});
 }
 
 // МИНИМИЗИРОВАТЬ ПЛЕЕР
@@ -193,9 +200,9 @@ prevBtn.addEventListener('click', prevTrack);
 minimizeBtn.addEventListener('click', minimizePlayer);
 playerToggleBtn.addEventListener('click', maximizePlayer);
 
-// ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
+// ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ (ОПТИМИЗИРОВАНА)
 function createModalParticles(color) {
-    const particleCount = 30;
+    const particleCount = 15;
     const modal = document.getElementById('profileModal');
     const modalContent = modal.querySelector('.modal-content');
     const rect = modalContent.getBoundingClientRect();
@@ -235,7 +242,6 @@ function initializeTeam() {
     teamGrid.innerHTML = '';
 
     teamMembers.forEach(member => {
-        // Пропускаем пустого члена команды
         if (!member.name) return;
         
         const card = document.createElement('div');
@@ -272,7 +278,7 @@ function openProfile(member) {
         
         if (link && icons[platform]) {
             socialsHtml += `
-                <a href="javascript:void(0)" data-href="${link}" target="_blank" class="modal-social">
+                <a href="${link}" target="_blank" rel="noopener noreferrer" class="modal-social">
                     <i class="${icons[platform]}"></i>
                 </a>
             `;
@@ -294,31 +300,7 @@ function openProfile(member) {
     modal.style.setProperty('--card-color', member.color || '#a855f7');
     modal.style.display = 'flex';
     
-    // Создаём партиклы при открытии
     setTimeout(() => createModalParticles(member.color || '#a855f7'), 100);
-    
-    // Добавляем обработчик для модальных социальных ссылок
-    attachModalSocialLinks();
-}
-
-// Функция для добавления обработчиков на социальные ссылки в модалке
-function attachModalSocialLinks() {
-    const modalSocials = document.querySelectorAll('.modal-social');
-    modalSocials.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const href = link.getAttribute('data-href');
-            if (href) {
-                // Создаём ripple эффект
-                createClickWave(e.clientX, e.clientY);
-                // Ждём 600ms (длина ripple анимации) и потом переходим
-                setTimeout(() => {
-                    window.open(href, '_blank');
-                }, 600);
-            }
-        });
-    });
 }
 
 // Закрытие модального окна
@@ -332,8 +314,11 @@ document.getElementById('profileModal').addEventListener('click', (e) => {
 });
 
 document.querySelector('.modal-close').addEventListener('click', closeModal);
+document.querySelector('.modal-close').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') closeModal();
+});
 
-// ОРИГИНАЛЬНЫЙ КОД АНИМАЦИЙ СНЕГА
+// АНИМАЦИЯ СНЕГА
 const canvas = document.getElementById('snowCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -346,7 +331,7 @@ window.addEventListener('resize', () => {
 });
 
 const snowflakes = [];
-const maxFlakes = 120;
+const maxFlakes = 50;
 
 for (let i = 0; i < maxFlakes; i++) {
     snowflakes.push({
@@ -387,12 +372,18 @@ function updateSnow() {
 
 drawSnow();
 
+// ПАРТИКЛЫ ПРИ ДВИЖЕНИИ МЫШИ (ОПТИМИЗИРОВАНЫ)
+let mouseParticleThrottle = 0;
 document.addEventListener('mousemove', (e) => {
-    createMouseParticles(e.clientX, e.clientY);
+    mouseParticleThrottle++;
+    if (mouseParticleThrottle > 5) {
+        createMouseParticles(e.clientX, e.clientY);
+        mouseParticleThrottle = 0;
+    }
 });
 
 function createMouseParticles(x, y) {
-    if (Math.random() > 0.8) {
+    if (Math.random() > 0.85) {
         const particle = document.createElement('div');
         particle.style.position = 'fixed';
         particle.style.left = x + 'px';
@@ -457,6 +448,19 @@ style.textContent = `
             transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
         }
     }
+
+    @keyframes ripple {
+        0% {
+            width: 10px;
+            height: 10px;
+            opacity: 1;
+        }
+        100% {
+            width: 100px;
+            height: 100px;
+            opacity: 0;
+        }
+    }
 `;
 document.head.appendChild(style);
 
@@ -465,7 +469,7 @@ function createStars() {
     starsContainer.className = 'stars';
     document.body.insertBefore(starsContainer, document.body.firstChild);
     
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 30; i++) {
         const star = document.createElement('div');
         star.style.position = 'fixed';
         star.style.width = Math.random() * 2 + 'px';
@@ -494,7 +498,7 @@ document.head.appendChild(twinkleStyle);
 
 createStars();
 
-// ОБРАБОТЧИК ДЛЯ ВЕРХНИХ СОЦИАЛЬНЫХ ССЫЛОК
+// ОБРАБОТЧИК ДЛЯ СОЦИАЛЬНЫХ ССЫЛОК - СВЕРХУ
 const socialLinks = document.querySelectorAll('.social-link');
 
 socialLinks.forEach((link) => {
@@ -503,10 +507,8 @@ socialLinks.forEach((link) => {
         e.stopPropagation();
         const href = link.getAttribute('data-href');
         
-        // Создаём ripple эффект
         createClickWave(e.clientX, e.clientY);
         
-        // Ждём 600ms (длина ripple анимации) и потом переходим
         setTimeout(() => {
             if (href.startsWith('mailto:')) {
                 window.location.href = href;
@@ -525,13 +527,13 @@ socialLinks.forEach((link) => {
     });
 });
 
-// НОВАЯ ФУНКЦИЯ: Создание частиц вокруг иконки
+// ФУНКЦИЯ: Создание частиц вокруг иконки
 function createIconParticles(iconElement) {
     const rect = iconElement.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const particleCount = 8;
-    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607', '#3a86ff', '#8338ec'];
+    const particleCount = 6;
+    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607'];
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -560,6 +562,7 @@ function createIconParticles(iconElement) {
     }
 }
 
+// ФУНКЦИЯ RIPPLE ЭФФЕКТА
 function createClickWave(x, y) {
     const wave = document.createElement('div');
     wave.style.position = 'fixed';
@@ -579,89 +582,24 @@ function createClickWave(x, y) {
     setTimeout(() => wave.remove(), 600);
 }
 
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        0% {
-            width: 10px;
-            height: 10px;
-            opacity: 1;
-        }
-        100% {
-            width: 100px;
-            height: 100px;
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(rippleStyle);
+// FOOTER SOCIAL LINKS
+const socialLinksFooter = document.querySelectorAll('.social-link-footer');
 
-let mouseX = 0;
-let mouseY = 0;
-
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+socialLinksFooter.forEach((link) => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = link.getAttribute('data-href');
+        
+        createClickWave(e.clientX, e.clientY);
+        
+        setTimeout(() => {
+            window.open(href, '_blank');
+        }, 600);
+    });
 });
 
-function createCursorAura() {
-    const aura = document.createElement('div');
-    aura.style.position = 'fixed';
-    aura.style.pointerEvents = 'none';
-    aura.style.zIndex = '2';
-    aura.style.width = '100px';
-    aura.style.height = '100px';
-    aura.style.borderRadius = '50%';
-    aura.style.background = 'radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 70%)';
-    aura.style.filter = 'blur(20px)';
-    aura.style.left = (mouseX - 50) + 'px';
-    aura.style.top = (mouseY - 50) + 'px';
-    aura.style.opacity = '0.5';
-    
-    document.body.appendChild(aura);
-    
-    const auras = document.querySelectorAll('div[style*="radial-gradient"]');
-    if (auras.length > 1) {
-        auras[0].remove();
-    }
-}
-
-setInterval(createCursorAura, 50);
-
-window.addEventListener('scroll', () => {
-    const scrollParticle = document.createElement('div');
-    scrollParticle.style.position = 'fixed';
-    scrollParticle.style.left = Math.random() * width + 'px';
-    scrollParticle.style.top = Math.random() * height + 'px';
-    scrollParticle.style.width = '3px';
-    scrollParticle.style.height = '3px';
-    scrollParticle.style.borderRadius = '50%';
-    scrollParticle.style.backgroundColor = '#00ffc8';
-    scrollParticle.style.pointerEvents = 'none';
-    scrollParticle.style.zIndex = '1';
-    scrollParticle.style.boxShadow = '0 0 10px #00ffc8';
-    scrollParticle.style.animation = 'scrollParticleFloat 2s ease-out forwards';
-    
-    document.body.appendChild(scrollParticle);
-    
-    setTimeout(() => scrollParticle.remove(), 2000);
-});
-
-const scrollParticleStyle = document.createElement('style');
-scrollParticleStyle.textContent = `
-    @keyframes scrollParticleFloat {
-        0% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        100% {
-            opacity: 0;
-            transform: translateY(-100px);
-        }
-    }
-`;
-document.head.appendChild(scrollParticleStyle);
-
+// FOOTER LEGAL LINKS
 const legalLinks = document.querySelectorAll('.legal-link');
 
 legalLinks.forEach((link) => {
@@ -669,9 +607,9 @@ legalLinks.forEach((link) => {
         e.preventDefault();
         e.stopPropagation();
         const href = link.getAttribute('data-href');
-        // Создаём ripple эффект
+        
         createClickWave(e.clientX, e.clientY);
-        // Ждём 600ms (длина ripple анимации) и потом переходим
+        
         setTimeout(() => {
             window.open(href, '_blank');
         }, 600);
@@ -687,7 +625,7 @@ legalLinks.forEach((link) => {
     });
 });
 
-// ИНИЦИАЛИЗАЦИЯ КОМАНДЫ И ПЛЕЕРА ПРИ ЗАГРУЗКЕ
+// ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
 document.addEventListener('DOMContentLoaded', () => {
     initializeTeam();
     initMusicPlayer();
