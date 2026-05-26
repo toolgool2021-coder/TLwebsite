@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Toolgool - Games">
+    <title>Toolgool - Games</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="snowCanvas"></canvas>
+
+<!-- НАВИГАЦИЯ -->
+<nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-logo">
+            <a href="index.html">@Toolgool</a>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="index.html" class="nav-link">🏠 Home</a></li>
+            <li class="nav-item"><a href="friends.html" class="nav-link">👥 Friends</a></li>
+            <li class="nav-item"><a href="games.html" class="nav-link active">🎮 Games</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="games-section">
+        <h1 class="section-title">🎮 Мои Игры 🎮</h1>
+        
+        <div class="games-grid" id="gamesGrid">
+            <!-- Карточки игр генерируются JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- ПЛАВАЮЩИЙ АУДИОПЛЕЕР -->
+<div class="music-player" id="musicPlayer">
+    <div class="music-player-content">
+        <div class="music-player-header">
+            <h3 id="songTitle">Загрузка...</h3>
+            <button class="music-player-minimize" id="minimizeBtn" aria-label="Свернуть плеер">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div class="music-player-body">
+            <div class="music-progress">
+                <div class="music-progress-bar" id="progressBar"></div>
+            </div>
+            <div class="music-time">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+        <div class="music-player-controls">
+            <button class="music-control-btn" id="prevBtnPlayer" title="Назад" aria-label="Предыдущий трек">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="music-control-btn play-btn" id="playBtn" title="Играть/Пауза" aria-label="Воспроизвести">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="music-control-btn" id="nextBtnPlayer" title="Далее" aria-label="Следующий трек">
+                <i class="fas fa-step-forward"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<button class="music-player-toggle" id="playerToggleBtn" title="Открыть плеер" aria-label="Открыть плеер">
+    <i class="fas fa-music"></i>
+</button>
+
+<audio id="audioElement"></audio>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-text">
+            <p>&copy; 2024-2026 Toolgool. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ИГРЫ -->
+<div class="modal" id="gameModal" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <span class="modal-close" role="button" tabindex="0" aria-label="Закрыть">&times;</span>
+        <div id="gameModalBody"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    // ДАННЫЕ ИГР
+    const games = [
+        {
+            id: 1,
+            title: "Minecraft",
+            image: "./images/icon_2.jpg",
+            description: "Песочница с бесконечными возможностями. Строй, исследуй, выживай! 🎮",
+            fullDescription: "Классическая игра про выживание и творчество. Идеальна для релакса или приключений с друзьями."
+        },
+        {
+            id: 2,
+            title: "Valorant",
+            image: "./images/icon_3.jpg",
+            description: "Тактический шутер с суперспособностями. Командная работа на первом месте! 🎯",
+            fullDescription: "Динамичный 5v5 шутер с элементами стратегии. Требует координации и хорошей реакции."
+        },
+        {
+            id: 3,
+            title: "Among Us",
+            image: "./images/icon_4.jpg",
+            description: "Социальная игра про предателей и детективов. Весело играть с друзьями! 🕵️",
+            fullDescription: "Попробуй найти самозванца! Отличная игра для вечеров с компанией друзей."
+        },
+        {
+            id: 4,
+            title: "Fortnite",
+            image: "./images/icon_5.jpg",
+            description: "Battle Royale с крутыми скинами и боевым пассом. Последний выживший победит! 🏆",
+            fullDescription: "Популярнейший батл-рояль с регулярными обновлениями и совместной игрой."
+        },
+        {
+            id: 5,
+            title: "League of Legends",
+            image: "./images/icon_6.jpg",
+            description: "MOBA с насыщенным геймплеем. Выбери чемпиона и иди на победу! ⚔️",
+            fullDescription: "Легендарная MOBA с огромным количеством чемпионов и глубокой тактикой."
+        },
+        {
+            id: 6,
+            title: "Terraria",
+            image: "./images/icon_7.jpg",
+            description: "2D платформер с боссами и сокровищами. Готов к подземным приключениям? ⛏️",
+            fullDescription: "Пиксельный шедевр с адом боссов и бесконечными возможностями крафта."
+        }
+    ];
+
+    // РЕНДЕРИНГ КАРТОЧЕК ИГР
+    const gamesGrid = document.getElementById('gamesGrid');
+    const gameModal = document.getElementById('gameModal');
+    const gameModalBody = document.getElementById('gameModalBody');
+    const gameModalClose = gameModal.querySelector('.modal-close');
+
+    function renderGames() {
+        gamesGrid.innerHTML = '';
+        games.forEach(game => {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.innerHTML = `
+                <div class="game-card-image">
+                    <img src="${game.image}" alt="${game.title}">
+                </div>
+                <div class="game-card-content">
+                    <h3 class="game-card-title">${game.title}</h3>
+                    <p class="game-card-description">${game.description}</p>
+                </div>
+            `;
+
+            card.addEventListener('click', () => openGameModal(game));
+            gamesGrid.appendChild(card);
+        });
+    }
+
+    function openGameModal(game) {
+        gameModalBody.innerHTML = `
+            <div class="game-detail">
+                <img src="${game.image}" alt="${game.title}" class="game-detail-image">
+                <h2>${game.title}</h2>
+                <p>${game.fullDescription}</p>
+            </div>
+        `;
+        gameModal.style.display = 'flex';
+    }
+
+    gameModalClose.addEventListener('click', () => {
+        gameModal.style.display = 'none';
+    });
+
+    gameModal.addEventListener('click', (e) => {
+        if (e.target.id === 'gameModal') {
+            gameModal.style.display = 'none';
+        }
+    });
+
+    renderGames();
+</script>
+</body>
+</html>
