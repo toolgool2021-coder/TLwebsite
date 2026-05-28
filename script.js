@@ -172,14 +172,16 @@ function prevTrack() {
 function minimizePlayer() {
     playerMinimized = true;
     musicPlayer.classList.add('minimized');
-    playerToggleBtn.style.display = 'flex';
+    setTimeout(() => {
+        playerToggleBtn.style.display = 'flex';
+    }, 400);
 }
 
 // РАЗВЕРНУТЬ ПЛЕЕР
 function maximizePlayer() {
     playerMinimized = false;
-    musicPlayer.classList.remove('minimized');
     playerToggleBtn.style.display = 'none';
+    musicPlayer.classList.remove('minimized');
 }
 
 // ОБНОВЛЕНИЕ ПРОГРЕССА
@@ -217,6 +219,51 @@ if (prevBtn) prevBtn.addEventListener('click', prevTrack);
 if (nextBtn) nextBtn.addEventListener('click', nextTrack);
 minimizeBtn.addEventListener('click', minimizePlayer);
 playerToggleBtn.addEventListener('click', maximizePlayer);
+
+// ОСТАНОВКА МУЗЫКИ ПРИ ПЕРЕХОДЕ НА ДРУГУЮ СТРАНИЦУ
+window.addEventListener('beforeunload', () => {
+    if (isPlaying) {
+        audioElement.pause();
+        isPlaying = false;
+    }
+});
+
+// ФУНКЦИЯ ПАРСИНГА ТЕКСТА СО ЦВЕТНЫМИ КОДАМИ (§0-10)
+function parseColoredText(text) {
+    const colorMap = {
+        '§0': '#000000', // Черный
+        '§1': '#0000aa', // Тёмный синий
+        '§2': '#00aa00', // Тёмный зелёный
+        '§3': '#00aaaa', // Тёмный голубой
+        '§4': '#aa0000', // Тёмный красный
+        '§5': '#aa00aa', // Тёмный фиолетовый
+        '§6': '#ffaa00', // Золотой
+        '§7': '#aaaaaa', // Серый
+        '§8': '#555555', // Тёмный серый
+        '§9': '#5555ff', // Синий
+        '§a': '#55ff55', // Зелёный
+        '§b': '#55ffff', // Голубой
+        '§c': '#ff5555', // Красный
+        '§d': '#ff55ff', // Фиолетовый
+        '§e': '#ffff55', // Жёлтый
+        '§f': '#ffffff'  // Белый
+    };
+
+    const regex = /(§[0-9a-f])/g;
+    const parts = text.split(regex);
+    let currentColor = '#ffffff';
+    let result = '';
+
+    for (let part of parts) {
+        if (colorMap[part]) {
+            currentColor = colorMap[part];
+        } else if (part) {
+            result += `<span style="color: ${currentColor}">${part}</span>`;
+        }
+    }
+
+    return result;
+}
 
 // ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
 function createModalParticles(color) {
@@ -305,12 +352,15 @@ function openProfile(member) {
         }
     }
 
+    // Парсим описание с цветными кодами
+    const coloredDescription = parseColoredText(member.description);
+
     modalBody.innerHTML = `
         <div class="profile-card">
             <img src="${member.avatar}" alt="${member.name}" class="profile-avatar">
             <h2>${member.name}</h2>
             <p class="relationship-tag">${member.relationship}</p>
-            <p class="profile-description">${member.description}</p>
+            <p class="profile-description">${coloredDescription}</p>
             <div class="modal-socials">
                 ${socialsHtml || '<p>Соцсети скоро добавят...</p>'}
             </div>
@@ -522,7 +572,7 @@ twinkleStyle.textContent = `
 `;
 document.head.appendChild(twinkleStyle);
 
-createStars();
+createStar();
 
 // ОБРАБОТЧИК ДЛЯ СОЦИАЛЬНЫХ ССЫЛОК
 const socialLinks = document.querySelectorAll('.social-link');
