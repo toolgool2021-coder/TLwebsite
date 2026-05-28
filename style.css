@@ -6,7 +6,7 @@
 
 html, body {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%);
     background-attachment: fixed;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
@@ -264,10 +264,19 @@ html, body {
     }
 }
 
+@keyframes slideOutPlayer {
+    from {
+        opacity: 1;
+        transform: translateY(0) translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(100px) translateX(0);
+    }
+}
+
 .music-player.minimized {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(400px);
+    animation: slideOutPlayer 0.4s ease-in forwards;
 }
 
 .music-player-content {
@@ -833,10 +842,11 @@ footer {
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     border-radius: 2px;
     box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+    transform-origin: center;
 }
 
 .hamburger.active span:nth-child(1) {
-    transform: rotate(-45deg) translate(-10px, 10px);
+    transform: rotate(-45deg) translate(-8px, 8px);
 }
 
 .hamburger.active span:nth-child(2) {
@@ -999,291 +1009,39 @@ body {
     transform: translateY(-50%) scale(1.15);
 }
 
-.btn-left {
-    left: 20px;
+.nav-btn-left {
+    left: 10px;
 }
 
-.btn-right {
-    right: 20px;
+.nav-btn-right {
+    right: 10px;
 }
 
-/* ===== КАРТОЧКИ ИГР ===== */
-.games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.game-card {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(0, 255, 200, 0.05) 100%);
-    border: 2px solid;
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    backdrop-filter: blur(10px);
-    position: relative;
-    --game-color: #a855f7;
-}
-
-.game-card {
-    border-color: var(--game-color);
-}
-
-.game-card:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 12px 40px var(--game-color);
-    border-color: #00ffff;
-}
-
-.game-card-image {
-    width: 100%;
-    height: 250px;
-    overflow: hidden;
-    position: relative;
-}
-
-.game-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.game-card:hover .game-card-image img {
-    transform: scale(1.1);
-}
-
-.game-card-content {
-    padding: 20px;
-    background: linear-gradient(135deg, 
-        rgba(168, 85, 247, 0.05) 0%, 
-        rgba(0, 255, 200, 0.02) 100%);
-}
-
-.game-card-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 12px;
-}
-
-.game-card-description {
-    color: #8b949e;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.game-detail {
-    text-align: center;
-    padding: 20px;
-}
-
-.game-detail-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 3px solid;
-    object-fit: cover;
-    margin-bottom: 20px;
-    box-shadow: 0 0 30px currentColor;
-}
-
-.game-detail h2 {
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #fff;
-}
-
-.game-detail p {
-    color: #b0b0b0;
-    line-height: 1.7;
-    font-size: 15px;
-}
-
+/* МЕДИА ЗАПРОСЫ */
 @media (max-width: 768px) {
-    .container {
-        padding: 30px 15px;
-    }
-
-    .username {
-        font-size: 26px;
-    }
-
-    .section-title {
-        font-size: 24px;
-        margin-bottom: 30px;
-    }
-
-    .team-grid {
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-        gap: 18px;
-    }
-
-    .team-section {
-        padding: 35px 20px;
-        margin-top: 60px;
-    }
-
-    .carousel-wrapper {
-        height: 350px;
-    }
-
-    .carousel-card {
-        width: 280px;
-        height: 320px;
-        padding: 18px;
-    }
-
-    .games-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-    }
-
-    .legal-link {
-        font-size: 12px;
-        padding: 10px 18px;
-    }
-
-    .social-link-footer {
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
-    }
-
-    footer {
-        padding: 40px 15px 30px;
-    }
-
-    .modal-content {
-        padding: 35px 25px;
-        max-width: 90%;
-    }
-
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
-    }
-
-    .music-player {
-        width: 280px;
-        padding: 15px;
-        bottom: 20px;
-        right: 20px;
-    }
-
-    .music-player-toggle {
-        bottom: 20px;
-        right: 20px;
-        width: 55px;
-        height: 55px;
-        font-size: 22px;
-    }
-
     .hamburger {
         display: flex;
     }
-
+    
     .nav-menu {
-        position: fixed;
-        left: -100%;
+        position: absolute;
         top: 70px;
-        flex-direction: column;
-        background-color: rgba(10, 10, 10, 0.98);
-        width: 100%;
-        text-align: center;
-        transition: 0.3s;
-        gap: 0;
-        padding: 20px 0;
-        border-bottom: 2px solid rgba(168, 85, 247, 0.5);
-    }
-
-    .nav-menu.active {
         left: 0;
-    }
-
-    .nav-item {
-        padding: 15px 0;
-        border-bottom: 1px solid rgba(168, 85, 247, 0.2);
-    }
-
-    .navbar-container {
-        padding: 0 15px;
-    }
-
-    .nav-link::after {
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(10, 10, 10, 0.98);
+        border-bottom: 2px solid rgba(168, 85, 247, 0.5);
         display: none;
+        padding: 20px 0;
     }
-}
-
-@media (max-width: 480px) {
-    .username {
-        font-size: 22px;
+    
+    .nav-menu.active {
+        display: flex;
     }
-
-    .team-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 12px;
-    }
-
-    .avatar-wrapper {
-        width: 140px;
-        height: 140px;
-    }
-
-    .carousel-wrapper {
-        height: 300px;
-    }
-
-    .carousel-card {
-        width: 260px;
-        height: 290px;
-        padding: 15px;
-    }
-
-    .music-player {
-        width: 260px;
-        padding: 12px;
-        bottom: 15px;
-        right: 15px;
-    }
-
-    .music-player-header h3 {
-        font-size: 13px;
-    }
-
-    .music-control-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 12px;
-    }
-
-    .music-control-btn.play-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 14px;
-    }
-
-    .music-player-toggle {
-        bottom: 15px;
-        right: 15px;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-    }
-
-    .games-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .section-title {
-        font-size: 20px;
-    }
-
-    .nav-menu {
-        top: 70px;
+    
+    .nav-item {
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(168, 85, 247, 0.2);
     }
 }
