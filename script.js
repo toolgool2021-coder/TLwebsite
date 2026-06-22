@@ -104,6 +104,7 @@ const playlist = [
 let currentTrack = 0;
 let isPlaying = false;
 let playerMinimized = false;
+let isPlayerAnimating = false;
 
 // ЭЛЕМЕНТЫ ПЛЕЕРА
 const audioElement = document.getElementById('audioElement');
@@ -170,16 +171,30 @@ function prevTrack() {
 
 // МИНИМИЗИРОВАТЬ ПЛЕЕР
 function minimizePlayer() {
+    if (isPlayerAnimating) return;
+    
+    isPlayerAnimating = true;
     playerMinimized = true;
     musicPlayer.classList.add('minimized');
-    playerToggleBtn.style.display = 'flex';
+    
+    setTimeout(() => {
+        playerToggleBtn.style.display = 'flex';
+        isPlayerAnimating = false;
+    }, 400);
 }
 
 // РАЗВЕРНУТЬ ПЛЕЕР
 function maximizePlayer() {
+    if (isPlayerAnimating) return;
+    
+    isPlayerAnimating = true;
     playerMinimized = false;
-    musicPlayer.classList.remove('minimized');
     playerToggleBtn.style.display = 'none';
+    musicPlayer.classList.remove('minimized');
+    
+    setTimeout(() => {
+        isPlayerAnimating = false;
+    }, 400);
 }
 
 // ОБНОВЛЕНИЕ ПРОГРЕССА
@@ -655,16 +670,28 @@ const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
 if (hamburger) {
-    hamburger.addEventListener('click', () => {
+    hamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
         navMenu.classList.toggle('active');
         hamburger.classList.toggle('active');
     });
 
+    // Закрытие меню при нажатии на пункт меню
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             navMenu.classList.remove('active');
             hamburger.classList.remove('active');
         });
+    });
+
+    // Закрытие меню при нажатии вне его
+    document.addEventListener('click', (e) => {
+        if (navMenu.classList.contains('active') && 
+            !navMenu.contains(e.target) && 
+            !hamburger.contains(e.target)) {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
     });
 }
 
