@@ -6,6 +6,7 @@
 
 html, body {
     width: 100%;
+    height: 100%;
     min-height: 100vh;
     background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%);
     background-attachment: fixed;
@@ -13,6 +14,12 @@ html, body {
     color: #e0e0e0;
     overflow-x: hidden;
     line-height: 1.6;
+}
+
+body {
+    min-height: 100vh;
+    overflow-y: auto;
+    padding-top: 70px;
 }
 
 .container {
@@ -251,6 +258,7 @@ html, body {
     z-index: 990;
     animation: slideInPlayer 0.6s ease-out;
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: auto;
 }
 
 @keyframes slideInPlayer {
@@ -823,6 +831,8 @@ footer {
     flex-direction: column;
     cursor: pointer;
     gap: 6px;
+    position: relative;
+    z-index: 101;
 }
 
 .hamburger span {
@@ -833,22 +843,19 @@ footer {
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     border-radius: 2px;
     box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+    transform-origin: center;
 }
 
 .hamburger.active span:nth-child(1) {
-    transform: rotate(-45deg) translate(-10px, 10px);
+    transform: rotate(-45deg) translate(-12px, 11px);
 }
 
 .hamburger.active span:nth-child(2) {
-    opacity: 0;
+    transform: rotate(45deg);
 }
 
 .hamburger.active span:nth-child(3) {
-    transform: rotate(45deg) translate(-8px, -8px);
-}
-
-body {
-    padding-top: 70px;
+    transform: rotate(45deg) translate(-12px, -11px);
 }
 
 /* ===== СТРАНИЦЫ ===== */
@@ -999,133 +1006,139 @@ body {
     transform: translateY(-50%) scale(1.15);
 }
 
-.btn-left {
-    left: 20px;
+.nav-btn.prev {
+    left: -60px;
 }
 
-.btn-right {
-    right: 20px;
+.nav-btn.next {
+    right: -60px;
 }
 
-/* ===== КАРТОЧКИ ИГР ===== */
+/* ===== ИГРЫ ===== */
 .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 0 20px;
 }
 
 .game-card {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(0, 255, 200, 0.05) 100%);
-    border: 2px solid;
+    background: linear-gradient(135deg, 
+        rgba(168, 85, 247, 0.1) 0%, 
+        rgba(0, 255, 200, 0.05) 100%);
+    border: 2px solid rgba(168, 85, 247, 0.5);
     border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
+    padding: 20px;
+    text-align: center;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
     backdrop-filter: blur(10px);
     position: relative;
-    --game-color: #a855f7;
+    overflow: hidden;
 }
 
-.game-card {
-    border-color: var(--game-color);
+.game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 100%);
+    transition: left 0.6s ease;
+    pointer-events: none;
 }
 
 .game-card:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 12px 40px var(--game-color);
+    transform: translateY(-8px);
     border-color: #00ffff;
-}
-
-.game-card-image {
-    width: 100%;
-    height: 250px;
-    overflow: hidden;
-    position: relative;
-}
-
-.game-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.game-card:hover .game-card-image img {
-    transform: scale(1.1);
-}
-
-.game-card-content {
-    padding: 20px;
+    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.5), 
+                inset 0 0 20px rgba(168, 85, 247, 0.1);
     background: linear-gradient(135deg, 
-        rgba(168, 85, 247, 0.05) 0%, 
-        rgba(0, 255, 200, 0.02) 100%);
+        rgba(168, 85, 247, 0.15) 0%, 
+        rgba(0, 255, 200, 0.08) 100%);
 }
 
-.game-card-title {
-    font-size: 18px;
+.game-card:hover::before {
+    left: 100%;
+}
+
+.game-card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #fff;
     font-weight: 700;
-    color: #fff;
-    margin-bottom: 12px;
 }
 
-.game-card-description {
-    color: #8b949e;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.game-detail {
-    text-align: center;
-    padding: 20px;
-}
-
-.game-detail-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 3px solid;
-    object-fit: cover;
-    margin-bottom: 20px;
-    box-shadow: 0 0 30px currentColor;
-}
-
-.game-detail h2 {
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #fff;
-}
-
-.game-detail p {
+.game-card p {
+    font-size: 13px;
     color: #b0b0b0;
-    line-height: 1.7;
-    font-size: 15px;
+    margin-bottom: 15px;
 }
 
+.game-card a {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 255, 200, 0.1));
+    border: 2px solid rgba(168, 85, 247, 0.6);
+    border-radius: 8px;
+    color: #a855f7;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.game-card a:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.5), rgba(0, 255, 200, 0.2));
+    border-color: #00ffff;
+    color: #00ffff;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+}
+
+/* ===== МЕДИА ЗАПРОСЫ ===== */
 @media (max-width: 768px) {
     .container {
-        padding: 30px 15px;
+        padding: 20px;
     }
 
     .username {
-        font-size: 26px;
+        font-size: 24px;
+    }
+
+    .social-links {
+        max-width: 300px;
+        gap: 10px;
+        margin-bottom: 30px;
+        padding: 15px;
+    }
+
+    .social-link {
+        width: 45px;
+        height: 45px;
+    }
+
+    .team-section {
+        margin-top: 50px;
+        padding: 30px 20px;
+    }
+
+    .team-section h2 {
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+
+    .team-grid {
+        gap: 15px;
     }
 
     .section-title {
         font-size: 24px;
         margin-bottom: 30px;
-    }
-
-    .team-grid {
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-        gap: 18px;
-    }
-
-    .team-section {
-        padding: 35px 20px;
-        margin-top: 60px;
     }
 
     .carousel-wrapper {
@@ -1135,37 +1148,47 @@ body {
     .carousel-card {
         width: 280px;
         height: 320px;
-        padding: 18px;
+        padding: 20px;
+    }
+
+    .carousel-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .carousel-card h2 {
+        font-size: 18px;
+    }
+
+    .carousel-card p {
+        font-size: 13px;
+    }
+
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .nav-btn.prev {
+        left: -40px;
+    }
+
+    .nav-btn.next {
+        right: -40px;
     }
 
     .games-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
     }
 
-    .legal-link {
-        font-size: 12px;
-        padding: 10px 18px;
+    .game-card {
+        padding: 15px;
     }
 
-    .social-link-footer {
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
-    }
-
-    footer {
-        padding: 40px 15px 30px;
-    }
-
-    .modal-content {
-        padding: 35px 25px;
-        max-width: 90%;
-    }
-
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
+    .game-card h3 {
+        font-size: 16px;
     }
 
     .music-player {
@@ -1199,6 +1222,7 @@ body {
         gap: 0;
         padding: 20px 0;
         border-bottom: 2px solid rgba(168, 85, 247, 0.5);
+        z-index: 99;
     }
 
     .nav-menu.active {
