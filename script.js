@@ -1,3 +1,6 @@
+// НИЗКИЙ РЕЖИМ (LOW DETAIL)
+let lowDetailMode = localStorage.getItem('lowDetailMode') === 'true';
+
 // ДАННЫЕ ЛЮДЕЙ - РЕДАКТИРУЙ ЗДЕСЬ!
 const teamMembers = [
     {
@@ -209,6 +212,8 @@ function maximizePlayer() {
 
 // ПАРТИКЛЫ ДЛЯ ПЛЕЕРА
 function createPlayerParticles() {
+    if (lowDetailMode) return;
+    
     const rect = musicPlayer.getBoundingClientRect();
     const particleCount = 4;
     const centerX = rect.left + rect.width / 2;
@@ -279,6 +284,8 @@ playerToggleBtn.addEventListener('click', maximizePlayer);
 
 // ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
 function createModalParticles(color) {
+    if (lowDetailMode) return;
+    
     const particleCount = 8;
     const modal = document.getElementById('profileModal');
     const modalContent = modal.querySelector('.modal-content');
@@ -416,7 +423,7 @@ window.addEventListener('resize', () => {
 });
 
 const snowflakes = [];
-const maxFlakes = 50;
+const maxFlakes = lowDetailMode ? 20 : 50;
 
 for (let i = 0; i < maxFlakes; i++) {
     snowflakes.push({
@@ -468,6 +475,8 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function createMouseParticles(x, y) {
+    if (lowDetailMode) return;
+    
     if (Math.random() > 0.85) {
         const particle = document.createElement('div');
         particle.style.position = 'fixed';
@@ -557,6 +566,17 @@ style.textContent = `
             opacity: 0;
         }
     }
+
+    @keyframes clickParticleBurst {
+        0% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
+        }
+    }
 `;
 document.head.appendChild(style);
 
@@ -565,7 +585,8 @@ function createStars() {
     starsContainer.className = 'stars';
     document.body.insertBefore(starsContainer, document.body.firstChild);
     
-    for (let i = 0; i < 30; i++) {
+    const starCount = lowDetailMode ? 15 : 30;
+    for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.style.position = 'fixed';
         star.style.width = Math.random() * 2 + 'px';
@@ -604,6 +625,7 @@ socialLinks.forEach((link) => {
         const href = link.getAttribute('data-href');
         
         createClickWave(e.clientX, e.clientY);
+        createClickParticles(e.clientX, e.clientY);
         
         setTimeout(() => {
             if (href.startsWith('mailto:')) {
@@ -623,8 +645,44 @@ socialLinks.forEach((link) => {
     });
 });
 
+// СОЗДАНИЕ ЧАСТИЦ ПРИ КЛИКЕ
+function createClickParticles(x, y) {
+    if (lowDetailMode) return;
+    
+    const particleCount = 6;
+    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607'];
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const angle = (i / particleCount) * Math.PI * 2;
+        const distance = 50;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+
+        particle.style.position = 'fixed';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.width = '5px';
+        particle.style.height = '5px';
+        particle.style.borderRadius = '50%';
+        particle.style.backgroundColor = colors[i];
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '999';
+        particle.style.boxShadow = `0 0 8px ${colors[i]}`;
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+        particle.style.animation = 'clickParticleBurst 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+        particle.style.transform = 'translate(-50%, -50%)';
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 800);
+    }
+}
+
 // СОЗДАНИЕ ЧАСТИЦ ВОКРУГ ИКОНКИ
 function createIconParticles(iconElement) {
+    if (lowDetailMode) return;
+    
     const rect = iconElement.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -659,6 +717,8 @@ function createIconParticles(iconElement) {
 }
 
 function createClickWave(x, y) {
+    if (lowDetailMode) return;
+    
     const wave = document.createElement('div');
     wave.style.position = 'fixed';
     wave.style.left = x + 'px';
@@ -687,6 +747,7 @@ socialLinksFooter.forEach((link) => {
         const href = link.getAttribute('data-href');
         
         createClickWave(e.clientX, e.clientY);
+        createClickParticles(e.clientX, e.clientY);
         
         setTimeout(() => {
             window.open(href, '_blank');
@@ -704,6 +765,7 @@ legalLinks.forEach((link) => {
         const href = link.getAttribute('data-href');
         
         createClickWave(e.clientX, e.clientY);
+        createClickParticles(e.clientX, e.clientY);
         
         setTimeout(() => {
             window.open(href, '_blank');
@@ -750,8 +812,27 @@ if (hamburger) {
     });
 }
 
-// ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
+// TOGGLE LOW DETAIL MODE
+function toggleLowDetail() {
+    lowDetailMode = !lowDetailMode;
+    localStorage.setItem('lowDetailMode', lowDetailMode);
+    
+    // Перезагружаем страницу для применения изменений
+    location.reload();
+}
+
+// Добавляем кнопку LOW DETAIL в навбар
 document.addEventListener('DOMContentLoaded', () => {
+    const navbar = document.querySelector('.navbar-container');
+    if (navbar) {
+        const lowDetailBtn = document.createElement('button');
+        lowDetailBtn.className = 'low-detail-btn';
+        lowDetailBtn.title = 'Низкий уровень деталей';
+        lowDetailBtn.innerHTML = lowDetailMode ? '⚡ NORMAL' : '⚡ LOW';
+        lowDetailBtn.addEventListener('click', toggleLowDetail);
+        navbar.appendChild(lowDetailBtn);
+    }
+    
     initializeTeam();
     initMusicPlayer();
 });
