@@ -72,30 +72,38 @@ const teamMembers = [
     }
 ];
 
-// ПЛЕЙЛИСТ ПЕСЕН - ОБНОВЛЕНО!
+// ПЛЕЙЛИСТ ПЕСЕН - ВСЕ ПЕСНИ ИЗ ПАПКИ!
 const playlist = [
     {
         title: "Montagem Uranium (Super Slowed) - ZAYLO",
         url: "./Music/Montagem Uranium (Super Slowed) - ZAYLO.mp3"
     },
     {
-        title: "Track 2",
-        url: "./Music/2_5190803538715904020.m4a"
+        title: "MONTAGEM ENIGMA (Ultra Slowed)",
+        url: "./Music/MONTAGEM ENIGMA (Ultra Slowed).mp3"
     },
     {
-        title: "Track 3",
-        url: "./Music/2_5226618940284779690.m4a"
+        title: "ЭКСПОНАТ",
+        url: "./Music/ЭКСПОНАТ.mp3"
     },
     {
         title: "Track 4",
-        url: "./Music/2_5235580346598202344.m4a"
+        url: "./Music/2_5190803538715904020.m4a"
     },
     {
         title: "Track 5",
-        url: "./Music/2_5346101906802504103.m4a"
+        url: "./Music/2_5226618940284779690.m4a"
     },
     {
         title: "Track 6",
+        url: "./Music/2_5235580346598202344.m4a"
+    },
+    {
+        title: "Track 7",
+        url: "./Music/2_5346101906802504103.m4a"
+    },
+    {
+        title: "Track 8",
         url: "./Music/2_5397758474903915744.m4a"
     }
 ];
@@ -160,6 +168,7 @@ function nextTrack() {
     currentTrack = (currentTrack + 1) % playlist.length;
     loadTrack(currentTrack);
     if (isPlaying) audioElement.play().catch(() => {});
+    createPlayerParticles();
 }
 
 // ПРЕДЫДУЩИЙ ТРЕК
@@ -167,6 +176,7 @@ function prevTrack() {
     currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
     loadTrack(currentTrack);
     if (isPlaying) audioElement.play().catch(() => {});
+    createPlayerParticles();
 }
 
 // МИНИМИЗИРОВАТЬ ПЛЕЕР
@@ -180,7 +190,7 @@ function minimizePlayer() {
     setTimeout(() => {
         playerToggleBtn.style.display = 'flex';
         isPlayerAnimating = false;
-    }, 400);
+    }, 500);
 }
 
 // РАЗВЕРНУТЬ ПЛЕЕР
@@ -194,7 +204,41 @@ function maximizePlayer() {
     
     setTimeout(() => {
         isPlayerAnimating = false;
-    }, 400);
+    }, 500);
+}
+
+// ПАРТИКЛЫ ДЛЯ ПЛЕЕРА
+function createPlayerParticles() {
+    const rect = musicPlayer.getBoundingClientRect();
+    const particleCount = 4;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const angle = (i / particleCount) * Math.PI * 2;
+        const distance = 40;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+
+        particle.style.position = 'fixed';
+        particle.style.left = centerX + 'px';
+        particle.style.top = centerY + 'px';
+        particle.style.width = '4px';
+        particle.style.height = '4px';
+        particle.style.borderRadius = '50%';
+        particle.style.backgroundColor = '#a855f7';
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '989';
+        particle.style.boxShadow = '0 0 8px #a855f7';
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+        particle.style.animation = 'playerParticleBurst 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+        particle.style.transform = 'translate(-50%, -50%)';
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 800);
+    }
 }
 
 // ОБНОВЛЕНИЕ ПРОГРЕССА
@@ -235,7 +279,7 @@ playerToggleBtn.addEventListener('click', maximizePlayer);
 
 // ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
 function createModalParticles(color) {
-    const particleCount = 15;
+    const particleCount = 8;
     const modal = document.getElementById('profileModal');
     const modalContent = modal.querySelector('.modal-content');
     const rect = modalContent.getBoundingClientRect();
@@ -244,28 +288,28 @@ function createModalParticles(color) {
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
-        const angle = (Math.random() * Math.PI * 2);
-        const distance = Math.random() * 200 + 50;
+        const angle = (i / particleCount) * Math.PI * 2;
+        const distance = Math.random() * 150 + 50;
         const tx = Math.cos(angle) * distance;
         const ty = Math.sin(angle) * distance;
         
         particle.style.position = 'fixed';
         particle.style.left = centerX + 'px';
         particle.style.top = centerY + 'px';
-        particle.style.width = Math.random() * 8 + 4 + 'px';
+        particle.style.width = Math.random() * 6 + 3 + 'px';
         particle.style.height = particle.style.width;
         particle.style.borderRadius = '50%';
         particle.style.backgroundColor = color;
         particle.style.pointerEvents = 'none';
         particle.style.zIndex = '999';
-        particle.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px ${color}`;
+        particle.style.boxShadow = `0 0 ${Math.random() * 8 + 4}px ${color}`;
         particle.style.setProperty('--tx', tx + 'px');
         particle.style.setProperty('--ty', ty + 'px');
-        particle.style.animation = 'modalParticleBurst 1s ease-out forwards';
+        particle.style.animation = 'modalParticleBurst 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
         particle.style.transform = 'translate(-50%, -50%)';
 
         document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 1000);
+        setTimeout(() => particle.remove(), 1200);
     }
 }
 
@@ -335,7 +379,7 @@ function openProfile(member) {
     modal.style.setProperty('--card-color', member.color || '#a855f7');
     modal.style.display = 'flex';
     
-    setTimeout(() => createModalParticles(member.color || '#a855f7'), 100);
+    setTimeout(() => createModalParticles(member.color || '#a855f7'), 150);
 }
 
 // Закрытие модального окна
@@ -435,7 +479,7 @@ function createMouseParticles(x, y) {
         particle.style.pointerEvents = 'none';
         particle.style.zIndex = '3';
         particle.style.boxShadow = '0 0 10px #a855f7';
-        particle.style.animation = 'particleFloat 1s ease-out forwards';
+        particle.style.animation = 'particleFloat 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
         
         document.body.appendChild(particle);
         
@@ -480,6 +524,17 @@ style.textContent = `
     }
 
     @keyframes modalParticleBurst {
+        0% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
+        }
+    }
+
+    @keyframes playerParticleBurst {
         0% {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
@@ -573,8 +628,8 @@ function createIconParticles(iconElement) {
     const rect = iconElement.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const particleCount = 6;
-    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607'];
+    const particleCount = 4;
+    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88'];
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -586,20 +641,20 @@ function createIconParticles(iconElement) {
         particle.style.position = 'fixed';
         particle.style.left = centerX + 'px';
         particle.style.top = centerY + 'px';
-        particle.style.width = '8px';
-        particle.style.height = '8px';
+        particle.style.width = '6px';
+        particle.style.height = '6px';
         particle.style.borderRadius = '50%';
         particle.style.backgroundColor = colors[i];
         particle.style.pointerEvents = 'none';
         particle.style.zIndex = '999';
-        particle.style.boxShadow = `0 0 10px ${colors[i]}`;
+        particle.style.boxShadow = `0 0 8px ${colors[i]}`;
         particle.style.setProperty('--tx', tx + 'px');
         particle.style.setProperty('--ty', ty + 'px');
-        particle.style.animation = 'iconParticleDrift 0.8s ease-out forwards';
+        particle.style.animation = 'iconParticleDrift 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
         particle.style.transform = 'translate(-50%, -50%)';
 
         document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 800);
+        setTimeout(() => particle.remove(), 900);
     }
 }
 
@@ -615,11 +670,11 @@ function createClickWave(x, y) {
     wave.style.pointerEvents = 'none';
     wave.style.zIndex = '3';
     wave.style.transform = 'translate(-50%, -50%)';
-    wave.style.animation = 'ripple 0.6s ease-out forwards';
+    wave.style.animation = 'ripple 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
     
     document.body.appendChild(wave);
     
-    setTimeout(() => wave.remove(), 600);
+    setTimeout(() => wave.remove(), 700);
 }
 
 // FOOTER SOCIAL LINKS
