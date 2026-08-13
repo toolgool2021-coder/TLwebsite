@@ -12,25 +12,6 @@
 
 <canvas id="snowCanvas"></canvas>
 
-<!-- НАВИГАЦИЯ -->
-<nav class="navbar">
-    <div class="navbar-container">
-        <div class="navbar-logo">
-            <a href="index.html">@Toolgool</a>
-        </div>
-        <ul class="nav-menu">
-            <li class="nav-item"><a href="index.html" class="nav-link active">🏠 Home</a></li>
-            <li class="nav-item"><a href="friends.html" class="nav-link">👥 Friends</a></li>
-            <li class="nav-item"><a href="games.html" class="nav-link">🎮 Games</a></li>
-        </ul>
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-</nav>
-
 <div class="container">
     <div class="profile-section">
 
@@ -44,51 +25,51 @@
 
         <div class="social-links">
 
-            <a href="#" class="social-link" data-href="https://t.me/Toolgool" title="Telegram">
+            <a href="javascript:void(0)" data-href="https://t.me/Toolgool" target="_blank" class="social-link" title="Telegram">
                 <img src="./images/Telegram.jpg" alt="Telegram">
             </a>
 
-            <a href="#" class="social-link" data-href="https://www.tiktok.com/@Toolgool2023" title="TikTok">
+            <a href="javascript:void(0)" data-href="https://www.tiktok.com/@Toolgool2023" target="_blank" class="social-link" title="TikTok">
                 <img src="./images/Tiktok.jpg" alt="TikTok">
             </a>
 
-            <a href="#" class="social-link" data-href="https://www.instagram.com/Toolgool2023" title="Instagram">
+            <a href="javascript:void(0)" data-href="https://www.instagram.com/Toolgool2023" target="_blank" class="social-link" title="Instagram">
                 <img src="./images/Instagram.jpg" alt="Instagram">
             </a>
 
-            <a href="#" class="social-link" data-href="https://www.youtube.com/@Toolgool2023" title="YouTube">
+            <a href="javascript:void(0)" data-href="https://www.youtube.com/@Toolgool2023" target="_blank" class="social-link" title="YouTube">
                 <img src="./images/YouTube.jpg" alt="YouTube">
             </a>
 
-            <a href="#" class="social-link" data-href="https://vk.com/Toolgool" title="VK">
+            <a href="javascript:void(0)" data-href="https://vk.com/Toolgool" target="_blank" class="social-link" title="VK">
                 <img src="./images/VK.jpg" alt="VK">
             </a>
 
-            <a href="#" class="social-link" data-href="https://discord.com/users/Toolgool2023" title="Discord">
+            <a href="javascript:void(0)" data-href="https://discord.com/users/Toolgool2023" target="_blank" class="social-link" title="Discord">
                 <img src="./images/Discord.jpg" alt="Discord">
             </a>
 
-            <a href="#" class="social-link" data-href="https://www.twitch.tv/Toolgool2023" title="Twitch">
+            <a href="javascript:void(0)" data-href="https://www.twitch.tv/Toolgool2023" target="_blank" class="social-link" title="Twitch">
                 <img src="./images/Twitch.jpg" alt="Twitch">
             </a>
 
-            <a href="#" class="social-link" data-href="https://x.com/Toolgool2023" title="X">
+            <a href="javascript:void(0)" data-href="https://x.com/Toolgool2023" target="_blank" class="social-link" title="X">
                 <img src="./images/X.jpg" alt="X">
             </a>
 
-            <a href="#" class="social-link" data-href="https://www.facebook.com/Toolgool2023" title="Facebook">
+            <a href="javascript:void(0)" data-href="https://www.facebook.com/Toolgool2023" target="_blank" class="social-link" title="Facebook">
                 <img src="./images/Facebook.jpg" alt="Facebook">
             </a>
 
-            <a href="#" class="social-link" data-href="https://www.snapchat.com/add/Toolgool2023" title="Snapchat">
+            <a href="javascript:void(0)" data-href="https://www.snapchat.com/add/Toolgool2023" target="_blank" class="social-link" title="Snapchat">
                 <img src="./images/Snapchat.jpg" alt="Snapchat">
             </a>
 
-            <a href="#" class="social-link" data-href="https://github.com/Toolgool" title="GitHub">
+            <a href="javascript:void(0)" data-href="https://github.com/Toolgool" target="_blank" class="social-link" title="GitHub">
                 <img src="./images/GitHub.jpg" alt="GitHub">
             </a>
 
-            <a href="#" class="social-link" data-href="mailto:Toolgool2021@gmail.com" title="Gmail">
+            <a href="javascript:void(0)" data-href="mailto:Toolgool2021@gmail.com" class="social-link" title="Gmail">
                 <img src="./images/Gmail.jpg" alt="Gmail">
             </a>
 
@@ -108,7 +89,7 @@
     <div class="music-player-content">
         <div class="music-player-header">
             <h3 id="songTitle">Загрузка...</h3>
-            <button class="music-player-minimize" id="minimizeBtn" aria-label="Свернуть плеер">
+            <button class="music-player-minimize" id="minimizeBtn">
                 <i class="fas fa-chevron-down"></i>
             </button>
         </div>
@@ -122,13 +103,13 @@
             </div>
         </div>
         <div class="music-player-controls">
-            <button class="music-control-btn" id="prevBtn" title="Назад" aria-label="Предыдущий трек">
+            <button class="music-control-btn" id="prevBtn" title="Назад">
                 <i class="fas fa-step-backward"></i>
             </button>
-            <button class="music-control-btn play-btn" id="playBtn" title="Играть/Пауза" aria-label="Воспроизвести">
+            <button class="music-control-btn play-btn" id="playBtn" title="Играть/Пауза">
                 <i class="fas fa-play"></i>
             </button>
-            <button class="music-control-btn" id="nextBtn" title="Далее" aria-label="Следующий трек">
+            <button class="music-control-btn" id="nextBtn" title="Далее">
                 <i class="fas fa-step-forward"></i>
             </button>
         </div>
@@ -136,7 +117,7 @@
 </div>
 
 <!-- КНОПКА ДЛЯ ВЫЗОВА ПЛЕЕРА -->
-<button class="music-player-toggle" id="playerToggleBtn" title="Открыть плеер" aria-label="Открыть плеер">
+<button class="music-player-toggle" id="playerToggleBtn" title="Открыть плеер">
     <i class="fas fa-music"></i>
 </button>
 
@@ -146,31 +127,31 @@
 <footer class="footer">
     <div class="footer-container">
         <div class="social-links-footer">
-            <a href="#" data-href="https://t.me/Toolgool" class="social-link-footer" title="Telegram">
+            <a href="javascript:void(0)" data-href="https://t.me/Toolgool" class="social-link-footer" title="Telegram" target="_blank">
                 <i class="fab fa-telegram"></i>
             </a>
-            <a href="#" data-href="https://www.tiktok.com/@Toolgool2023" class="social-link-footer" title="TikTok">
+            <a href="javascript:void(0)" data-href="https://www.tiktok.com/@Toolgool2023" class="social-link-footer" title="TikTok" target="_blank">
                 <i class="fab fa-tiktok"></i>
             </a>
-            <a href="#" data-href="https://www.instagram.com/Toolgool2023" class="social-link-footer" title="Instagram">
+            <a href="javascript:void(0)" data-href="https://www.instagram.com/Toolgool2023" class="social-link-footer" title="Instagram" target="_blank">
                 <i class="fab fa-instagram"></i>
             </a>
-            <a href="#" data-href="https://www.youtube.com/@Toolgool2023" class="social-link-footer" title="YouTube">
+            <a href="javascript:void(0)" data-href="https://www.youtube.com/@Toolgool2023" class="social-link-footer" title="YouTube" target="_blank">
                 <i class="fab fa-youtube"></i>
             </a>
         </div>
 
         <div class="legal-links">
-            <a href="#" data-href="https://telegra.ph/%E4%BA%97-ZAKON-O-KONFIDENCIALNOSTI-I-ZASHCHITE-LICHNOSTI-%E4%BA%97-08-09-2" class="legal-link">
+            <a href="javascript:void(0)" data-href="https://telegra.ph/%E4%BA%97-ZAKON-O-KONFIDENCIALNOSTI-I-ZASHCHITE-LICHNOSTI-%E4%BA%97-08-09-2" class="legal-link" target="_blank">
                 ‼️ IMPORTANT ‼️
             </a>
-            <a href="#" data-href="https://telegra.ph/Avtorskoe-pravo--Zashchita-kontenta-Toolgool2023-07-24" class="legal-link">
+            <a href="javascript:void(0)" data-href="https://telegra.ph/Avtorskoe-pravo--Zashchita-kontenta-Toolgool2023-07-24" class="legal-link" target="_blank">
                 🔰 COPYRIGHT 🔰
             </a>
-            <a href="#" data-href="https://telegra.ph/Oficialnaya-poziciya-po-povodu-doksa-02-10" class="legal-link">
+            <a href="javascript:void(0)" data-href="https://telegra.ph/Oficialnaya-poziciya-po-povodu-doksa-02-10" class="legal-link" target="_blank">
                 💀 My Position on Doxxing 💀
             </a>
-            <a href="#" data-href="https://telegra.ph/%E4%BA%97-OFFICIAL-NOTICE--ANTI-IMPERSONATION--SECURITY-%E4%BA%97-03-06" class="legal-link">
+            <a href="javascript:void(0)" data-href="https://telegra.ph/%E4%BA%97-OFFICIAL-NOTICE--ANTI-IMPERSONATION--SECURITY-%E4%BA%97-03-06" class="legal-link" target="_blank">
                 ⚖️ Official Legal Notice ⚖️
             </a>
         </div>
@@ -182,13 +163,13 @@
 </footer>
 
 <!-- МОДАЛЬНОЕ ОКНО ДЛЯ ПРОФИЛЯ -->
-<div class="modal" id="profileModal" role="dialog" aria-hidden="true">
+<div class="modal" id="profileModal">
     <div class="modal-content">
-        <span class="modal-close" role="button" tabindex="0" aria-label="Закрыть">&times;</span>
+        <span class="modal-close">&times;</span>
         <div id="modalBody"></div>
     </div>
 </div>
 
 <script src="script.js"></script>
 </body>
-</html>
+                </html>
