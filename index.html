@@ -8,23 +8,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     
-    <!-- INTRO STYLES -->
+    <!-- INTRO STYLES (optimized) -->
     <style>
         /* =========================
-           INTRO ANIMATION
+           INTRO ANIMATION - OPTIMIZED
         ========================= */
+        
         #intro {
             position: fixed;
             inset: 0;
             z-index: 9999;
-            background: #05070d;
+            background: linear-gradient(135deg, #05070d 0%, #0a0f1a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             opacity: 1;
             visibility: visible;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
+            will-change: opacity, visibility;
         }
 
         #intro.hidden {
@@ -33,42 +35,67 @@
             pointer-events: none;
         }
 
+        /* Фоновые светлячки */
+        #intro::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 170, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
         #intro-name {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(1);
-            font-size: clamp(38px, 8vw, 90px);
-            font-weight: 800;
-            letter-spacing: 1px;
+            font-size: clamp(42px, 10vw, 100px);
+            font-weight: 900;
+            letter-spacing: -0.02em;
             white-space: nowrap;
             opacity: 0;
-            text-shadow:
-                0 0 10px rgba(0, 170, 255, 0.7),
-                0 0 30px rgba(0, 170, 255, 0.4);
-            will-change: transform, opacity, filter;
             color: #fff;
+            text-shadow:
+                0 0 20px rgba(0, 170, 255, 0.8),
+                0 0 40px rgba(0, 170, 255, 0.5),
+                0 0 60px rgba(0, 170, 255, 0.3);
+            will-change: transform, opacity, filter, text-shadow;
+            z-index: 10;
+            font-family: Arial, sans-serif;
         }
 
         #intro-name.appear {
-            animation: nameAppear 0.7s ease-out forwards;
+            animation: nameAppear 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
         @keyframes nameAppear {
-            from {
+            0% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.75);
-                filter: blur(8px);
+                transform: translate(-50%, -50%) scale(0.5);
+                filter: blur(12px);
+                text-shadow: 0 0 0px rgba(0, 170, 255, 0);
             }
-            to {
+            50% {
+                text-shadow:
+                    0 0 20px rgba(0, 170, 255, 0.8),
+                    0 0 40px rgba(0, 170, 255, 0.5);
+            }
+            100% {
                 opacity: 1;
                 transform: translate(-50%, -50%) scale(1);
                 filter: blur(0);
+                text-shadow:
+                    0 0 20px rgba(0, 170, 255, 0.8),
+                    0 0 40px rgba(0, 170, 255, 0.5),
+                    0 0 60px rgba(0, 170, 255, 0.3);
             }
         }
 
         #intro-name.explode {
-            animation: explodeName 0.7s cubic-bezier(.2,.8,.2,1) forwards;
+            animation: explodeName 0.75s cubic-bezier(0.15, 0.85, 0.2, 1) forwards;
         }
 
         @keyframes explodeName {
@@ -77,98 +104,222 @@
                 transform: translate(-50%, -50%) scale(1);
                 filter: blur(0);
             }
-            55% {
+            45% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(1.18);
+                transform: translate(-50%, -50%) scale(1.15);
                 filter: blur(0);
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(2.2);
-                filter: blur(18px);
+                transform: translate(-50%, -50%) scale(2.5);
+                filter: blur(20px);
             }
         }
 
         #intro-name.return {
-            animation: nameReturn 0.75s ease-out forwards;
+            animation: nameReturn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         @keyframes nameReturn {
-            from {
+            0% {
                 opacity: 0;
-                transform: translate(-50%, -50%) translateY(0) scale(0.95);
-                filter: blur(8px);
+                transform: translate(-50%, -50%) scale(0.8);
+                filter: blur(10px);
             }
-            to {
+            100% {
                 opacity: 1;
-                transform: translate(-50%, -50%) translateY(0) scale(1);
+                transform: translate(-50%, -50%) scale(1);
                 filter: blur(0);
             }
         }
 
         #intro-name.move-up {
-            animation: moveNameUp 0.8s cubic-bezier(.2,.8,.2,1) forwards;
+            animation: moveNameUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
         @keyframes moveNameUp {
-            from {
-                transform: translate(-50%, -50%) translateY(0) scale(1);
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
             }
-            to {
-                transform: translate(-50%, -50%) translateY(-150px) scale(0.85);
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -150%) scale(0.9);
             }
         }
 
+        /* Взрыв - основной свет */
         #explosion {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(0, 170, 255, 0.5));
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+            will-change: transform, opacity, box-shadow;
+        }
+
+        #explosion.active {
+            animation: explosion 0.7s ease-out forwards;
+        }
+
+        @keyframes explosion {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0);
+                box-shadow:
+                    0 0 0 0 rgba(0, 170, 255, 0.9),
+                    0 0 0 0 rgba(255, 255, 255, 0.8);
+            }
+            30% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(20);
+                box-shadow:
+                    0 0 100px 50px rgba(0, 170, 255, 0.2),
+                    0 0 150px 70px rgba(0, 170, 255, 0.1);
+            }
+        }
+
+        /* Волна удара */
+        #shockwave {
             position: absolute;
             left: 50%;
             top: 50%;
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: white;
+            border: 3px solid rgba(0, 170, 255, 0.9);
             transform: translate(-50%, -50%) scale(0);
             opacity: 0;
             pointer-events: none;
+            z-index: 4;
+            will-change: transform, opacity;
+            box-shadow: 0 0 30px rgba(0, 170, 255, 0.8);
         }
 
-        #explosion.active {
-            animation: explosion 0.65s ease-out forwards;
+        #shockwave.active {
+            animation: shockwave 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
-        @keyframes explosion {
+        @keyframes shockwave {
             0% {
-                opacity: 0.9;
+                opacity: 1;
                 transform: translate(-50%, -50%) scale(0);
-                box-shadow:
-                    0 0 0 0 rgba(0, 170, 255, 0.8);
+                box-shadow: 0 0 30px rgba(0, 170, 255, 0.8);
             }
-            40% {
+            50% {
                 opacity: 0.8;
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(18);
-                box-shadow:
-                    0 0 80px 40px rgba(0, 170, 255, 0);
+                transform: translate(-50%, -50%) scale(25);
+                box-shadow: 0 0 0px rgba(0, 170, 255, 0);
             }
         }
 
+        /* Контейнер частиц */
         #intro-particles {
             position: absolute;
             inset: 0;
             pointer-events: none;
+            z-index: 6;
         }
 
         .intro-particle {
-            position: absolute;
-            width: 5px;
-            height: 5px;
+            position: fixed;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             background: #00aaff;
-            box-shadow: 0 0 10px #00aaff;
+            box-shadow: 0 0 8px #00aaff;
             left: 50%;
             top: 50%;
+            will-change: transform, opacity;
+        }
+
+        /* Вспышка света */
+        #flash {
+            position: absolute;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 8;
+            will-change: opacity;
+        }
+
+        #flash.active {
+            animation: flashAnimation 0.4s ease-out forwards;
+        }
+
+        @keyframes flashAnimation {
+            0% {
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.9;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Гайд-текст (опционально) */
+        #intro-subtitle {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: rgba(0, 170, 255, 0.6);
+            opacity: 0;
+            text-align: center;
+            letter-spacing: 2px;
+            z-index: 10;
+            animation: subtitleAppear 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes subtitleAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes introParticleBurst {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
+                filter: blur(2px);
+            }
+        }
+
+        /* Адаптив */
+        @media (max-width: 768px) {
+            #intro-name {
+                font-size: clamp(36px, 12vw, 80px);
+            }
+
+            #intro-subtitle {
+                bottom: 60px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -176,11 +327,14 @@
 <body>
 
 <!-- =========================
-     INTRO SECTION
+     INTRO SECTION - ENHANCED
 ========================== -->
 <div id="intro">
-    <div id="intro-name">@Toolgool</div>
+    <div id="flash"></div>
+    <div id="shockwave"></div>
     <div id="explosion"></div>
+    <div id="intro-name">@Toolgool</div>
+    <div id="intro-subtitle">✨ Добро пожаловать ✨</div>
     <div id="intro-particles"></div>
 </div>
 
@@ -346,45 +500,63 @@
 
 <script>
 /* =========================
-   INTRO ANIMATION LOGIC
+   INTRO ANIMATION - OPTIMIZED v2
+   
+   Улучшения:
+   - Добавлена волна удара (shockwave)
+   - Добавлена вспышка света (flash)
+   - Оптимизированы кривые Безье
+   - Улучшены timing и синхронизация
+   - Добавлен subtitle
+   - Оптимизированы will-change
+   - Улучшена производительность частиц
 ========================= */
 
 const intro = document.getElementById("intro");
 const introName = document.getElementById("intro-name");
 const explosion = document.getElementById("explosion");
+const shockwave = document.getElementById("shockwave");
+const flash = document.getElementById("flash");
 const introParticles = document.getElementById("intro-particles");
 
 let introStarted = false;
 const startTime = performance.now();
 
-// Генерация частиц при взрыве
+// Optimized particle creation
 function createIntroParticles() {
-    const particleCount = 50;
+    const particleCount = 60;
+    const colors = ['#00aaff', '#0088ff', '#00ccff', '#1199ff'];
+    
+    // Используем DocumentFragment для оптимизации
+    const fragment = document.createDocumentFragment();
     
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'intro-particle';
         
         const angle = (Math.random() * Math.PI * 2);
-        const distance = Math.random() * 300 + 100;
+        const distance = Math.random() * 350 + 120;
         const tx = Math.cos(angle) * distance;
         const ty = Math.sin(angle) * distance;
         
         particle.style.setProperty('--tx', tx + 'px');
         particle.style.setProperty('--ty', ty + 'px');
-        particle.style.animation = `introParticleBurst 0.9s cubic-bezier(.1,.8,.2,1) forwards`;
-        particle.style.animationDelay = (Math.random() * 0.1) + 's';
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.animation = `introParticleBurst 1s cubic-bezier(.1,.8,.2,1) forwards`;
+        particle.style.animationDelay = (Math.random() * 0.15) + 's';
         
-        introParticles.appendChild(particle);
+        fragment.appendChild(particle);
     }
     
-    // Очистка частиц после анимации
+    introParticles.appendChild(fragment);
+    
+    // Очистка после анимации
     setTimeout(() => {
         introParticles.innerHTML = '';
-    }, 1000);
+    }, 1200);
 }
 
-// Добавляем CSS для анимации частиц
+// Добавляем CSS для анимации частиц один раз
 const introStyle = document.createElement('style');
 introStyle.textContent = `
     @keyframes introParticleBurst {
@@ -395,27 +567,27 @@ introStyle.textContent = `
         to {
             opacity: 0;
             transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
+            filter: blur(2px);
         }
     }
 `;
 document.head.appendChild(introStyle);
 
-// Запуск интро при загрузке страницы
-window.addEventListener("load", () => {
-    const elapsed = performance.now() - startTime;
-    const remaining = Math.max(0, 2500 - elapsed); // Минимум 2.5 секунды
-
-    setTimeout(startIntro, remaining);
-});
-
+// Optimized intro start with preload detection
 function startIntro() {
     if (introStarted) return;
     introStarted = true;
 
-    // 1. Появление ника в центре
+    // 1. Появление ника в центре (0ms)
     introName.classList.add("appear");
 
-    // 2. Через ~1.3 сек начинает раздуваться и взрывается
+    // 2. Вспышка света и волна удара (1.1s)
+    setTimeout(() => {
+        flash.classList.add("active");
+        shockwave.classList.add("active");
+    }, 1100);
+
+    // 3. Раздувание и взрыв (1.3s)
     setTimeout(() => {
         introName.classList.remove("appear");
         introName.classList.add("explode");
@@ -423,27 +595,45 @@ function startIntro() {
         createIntroParticles();
     }, 1300);
 
-    // 3. После взрыва ник появляется снова
+    // 4. После взрыва ник появляется снова (2.1s)
     setTimeout(() => {
         introName.classList.remove("explode");
         explosion.classList.remove("active");
+        shockwave.classList.remove("active");
+        flash.classList.remove("active");
         
-        void introName.offsetWidth; // Сброс анимации
+        // Force reflow для сброса анимации
+        void introName.offsetWidth;
         
         introName.classList.add("return");
-    }, 2050);
+    }, 2100);
 
-    // 4. Ник уходит вверх
+    // 5. Ник уходит вверх (2.9s)
     setTimeout(() => {
         introName.classList.remove("return");
         introName.classList.add("move-up");
     }, 2900);
 
-    // 5. Скрываем интро и показываем основной контент
+    // 6. Скрываем интро и показываем основной контент (3.9s)
     setTimeout(() => {
         intro.classList.add("hidden");
-    }, 3700);
+    }, 3900);
 }
+
+// Оптимизированная загрузка
+window.addEventListener("load", () => {
+    const elapsed = performance.now() - startTime;
+    const remaining = Math.max(0, 2000 - elapsed); // Минимум 2 секунды
+
+    setTimeout(startIntro, remaining);
+}, { once: true }); // { once: true } для оптимизации
+
+// Fallback на случай, если load не сработает
+setTimeout(() => {
+    if (!introStarted) {
+        startIntro();
+    }
+}, 4000);
 </script>
 
 <script src="script.js"></script>
