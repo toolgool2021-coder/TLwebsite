@@ -999,168 +999,78 @@ footer {
     white-space: nowrap;
 }
 
-.legal-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(168, 85, 247, 0.4), 
-        transparent);
-    transition: left 0.6s;
-    z-index: -1;
-    pointer-events: none;
+/* --- Appended extracted keyframes from script.js --- */
+
+@keyframes particleFloat {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(${Math.random() * 100 - 50}px, -50px) scale(0);
+    }
 }
 
-.legal-link:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 25px rgba(168, 85, 247, 0.8), 
-                inset 0 0 15px rgba(168, 85, 247, 0.6),
-                0 0 40px rgba(0, 255, 255, 0.4);
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 255, 255, 0.2));
-    border-color: #00ffff;
-    color: #fff;
-    text-shadow: 0 0 10px #a855f7;
-}
-
-.legal-link:hover::before {
-    left: 100%;
-}
-
-.legal-link:active {
-    transform: translateY(-1px);
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(168, 85, 247, 0.4);
-}
-
-@keyframes neonPulse {
-    0%, 100% {
-        box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), inset 0 0 10px rgba(168, 85, 247, 0.1);
+@keyframes floatingGradient {
+    0% {
+        background-position: 0% 50%;
     }
     50% {
-        box-shadow: 0 0 25px rgba(168, 85, 247, 0.6), inset 0 0 15px rgba(168, 85, 247, 0.3);
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
     }
 }
 
-.legal-link:not(:hover) {
-    animation: neonPulse 2s ease-in-out infinite;
-}
-
-.footer-text {
-    text-align: center;
-    color: rgba(168, 85, 247, 0.6);
-    font-size: 12px;
-    border-top: 1px solid rgba(168, 85, 247, 0.2);
-    padding-top: 25px;
-    position: relative;
-    z-index: 10;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 30px 15px;
+@keyframes iconParticleDrift {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
     }
-
-    .username {
-        font-size: 26px;
-    }
-
-    .team-grid {
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-        gap: 18px;
-    }
-
-    .team-section {
-        padding: 35px 20px;
-        margin-top: 60px;
-    }
-
-    .legal-link {
-        font-size: 12px;
-        padding: 10px 18px;
-    }
-
-    .social-link-footer {
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
-    }
-
-    footer {
-        padding: 40px 15px 30px;
-    }
-
-    .modal-content {
-        padding: 35px 25px;
-        max-width: 90%;
-    }
-
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
-    }
-
-    .music-player {
-        width: 280px;
-        padding: 15px;
-        bottom: 20px;
-        right: 20px;
-    }
-
-    .music-player-toggle {
-        bottom: 20px;
-        right: 20px;
-        width: 55px;
-        height: 55px;
-        font-size: 22px;
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
     }
 }
 
-@media (max-width: 480px) {
-    .username {
-        font-size: 22px;
+@keyframes modalParticleBurst {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
     }
-
-    .team-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 12px;
+    100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
     }
+}
 
-    .avatar-wrapper {
-        width: 140px;
-        height: 140px;
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+@keyframes ripple {
+    0% {
+        width: 10px;
+        height: 10px;
+        opacity: 1;
     }
-
-    .music-player {
-        width: 260px;
-        padding: 12px;
-        bottom: 15px;
-        right: 15px;
+    100% {
+        width: 100px;
+        height: 100px;
+        opacity: 0;
     }
+}
 
-    .music-player-header h3 {
-        font-size: 13px;
+@keyframes scrollParticleFloat {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
     }
-
-    .music-control-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 12px;
-    }
-
-    .music-control-btn.play-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 14px;
-    }
-
-    .music-player-toggle {
-        bottom: 15px;
-        right: 15px;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+    100% {
+        opacity: 0;
+        transform: translateY(-100px);
     }
 }
