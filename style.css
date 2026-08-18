@@ -15,6 +15,322 @@ html, body {
     line-height: 1.6;
 }
 
+/* =========================
+   INTRO ANIMATION - OPTIMIZED
+========================= */
+
+#intro {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: linear-gradient(135deg, #05070d 0%, #0a0f1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
+    will-change: opacity, visibility;
+}
+
+#intro.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Фоновые светлячки */
+#intro::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 170, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+#intro-name {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: clamp(42px, 10vw, 100px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    opacity: 0;
+    color: #fff;
+    text-shadow:
+        0 0 20px rgba(0, 170, 255, 0.8),
+        0 0 40px rgba(0, 170, 255, 0.5),
+        0 0 60px rgba(0, 170, 255, 0.3);
+    will-change: transform, opacity, filter, text-shadow;
+    z-index: 10;
+    font-family: Arial, sans-serif;
+}
+
+#intro-name.appear {
+    animation: nameAppear 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes nameAppear {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+        filter: blur(12px);
+        text-shadow: 0 0 0px rgba(0, 170, 255, 0);
+    }
+    50% {
+        text-shadow:
+            0 0 20px rgba(0, 170, 255, 0.8),
+            0 0 40px rgba(0, 170, 255, 0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        filter: blur(0);
+        text-shadow:
+            0 0 20px rgba(0, 170, 255, 0.8),
+            0 0 40px rgba(0, 170, 255, 0.5),
+            0 0 60px rgba(0, 170, 255, 0.3);
+    }
+}
+
+#intro-name.explode {
+    animation: explodeName 0.75s cubic-bezier(0.15, 0.85, 0.2, 1) forwards;
+}
+
+@keyframes explodeName {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        filter: blur(0);
+    }
+    45% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2.5);
+        filter: blur(20px);
+    }
+}
+
+#intro-name.return {
+    animation: nameReturn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes nameReturn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+        filter: blur(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        filter: blur(0);
+    }
+}
+
+#intro-name.move-up {
+    animation: moveNameUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes moveNameUp {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -150%) scale(0.9);
+    }
+}
+
+/* Взрыв - основной свет */
+#explosion {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(0, 170, 255, 0.5));
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+    will-change: transform, opacity, box-shadow;
+}
+
+#explosion.active {
+    animation: explosion 0.7s ease-out forwards;
+}
+
+@keyframes explosion {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0);
+        box-shadow:
+            0 0 0 0 rgba(0, 170, 255, 0.9),
+            0 0 0 0 rgba(255, 255, 255, 0.8);
+    }
+    30% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(20);
+        box-shadow:
+            0 0 100px 50px rgba(0, 170, 255, 0.2),
+            0 0 150px 70px rgba(0, 170, 255, 0.1);
+    }
+}
+
+/* Волна удара */
+#shockwave {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 170, 255, 0.9);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+    will-change: transform, opacity;
+    box-shadow: 0 0 30px rgba(0, 170, 255, 0.8);
+}
+
+#shockwave.active {
+    animation: shockwave 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes shockwave {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0);
+        box-shadow: 0 0 30px rgba(0, 170, 255, 0.8);
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(25);
+        box-shadow: 0 0 0px rgba(0, 170, 255, 0);
+    }
+}
+
+/* Контейнер частиц */
+#intro-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
+}
+
+.intro-particle {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #00aaff;
+    box-shadow: 0 0 8px #00aaff;
+    left: 50%;
+    top: 50%;
+    will-change: transform, opacity;
+}
+
+/* Вспышка света */
+#flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 8;
+    will-change: opacity;
+}
+
+#flash.active {
+    animation: flashAnimation 0.4s ease-out forwards;
+}
+
+@keyframes flashAnimation {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.9;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Гайд-текст */
+#intro-subtitle {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: rgba(0, 170, 255, 0.6);
+    opacity: 0;
+    text-align: center;
+    letter-spacing: 2px;
+    z-index: 10;
+    animation: subtitleAppear 1s ease-out 0.5s forwards;
+}
+
+@keyframes subtitleAppear {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes introParticleBurst {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
+        filter: blur(2px);
+    }
+}
+
+/* Адаптив интро */
+@media (max-width: 768px) {
+    #intro-name {
+        font-size: clamp(36px, 12vw, 80px);
+    }
+
+    #intro-subtitle {
+        bottom: 60px;
+        font-size: 12px;
+    }
+}
+
+/* =========================
+   MAIN SITE STYLES
+========================= */
+
 .container {
     display: flex;
     justify-content: center;
