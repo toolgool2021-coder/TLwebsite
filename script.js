@@ -411,55 +411,6 @@ function createMouseParticles(x, y) {
     }
 }
 
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes particleFloat {
-        0% {
-            opacity: 1;
-            transform: translate(0, 0) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(${Math.random() * 100 - 50}px, -50px) scale(0);
-        }
-    }
-
-    @keyframes floatingGradient {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-
-    @keyframes iconParticleDrift {
-        0% {
-            opacity: 1;
-            transform: translate(0, 0) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(var(--tx), var(--ty)) scale(0);
-        }
-    }
-
-    @keyframes modalParticleBurst {
-        0% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
-        }
-    }
-`;
-document.head.appendChild(style);
-
 function createStars() {
     const starsContainer = document.createElement('div');
     starsContainer.className = 'stars';
@@ -482,15 +433,6 @@ function createStars() {
         starsContainer.appendChild(star);
     }
 }
-
-const twinkleStyle = document.createElement('style');
-twinkleStyle.textContent = `
-    @keyframes twinkle {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 1; }
-    }
-`;
-document.head.appendChild(twinkleStyle);
 
 createStars();
 
@@ -579,23 +521,6 @@ function createClickWave(x, y) {
     setTimeout(() => wave.remove(), 600);
 }
 
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        0% {
-            width: 10px;
-            height: 10px;
-            opacity: 1;
-        }
-        100% {
-            width: 100px;
-            height: 100px;
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(rippleStyle);
-
 let mouseX = 0;
 let mouseY = 0;
 
@@ -646,21 +571,6 @@ window.addEventListener('scroll', () => {
     
     setTimeout(() => scrollParticle.remove(), 2000);
 });
-
-const scrollParticleStyle = document.createElement('style');
-scrollParticleStyle.textContent = `
-    @keyframes scrollParticleFloat {
-        0% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        100% {
-            opacity: 0;
-            transform: translateY(-100px);
-        }
-    }
-`;
-document.head.appendChild(scrollParticleStyle);
 
 const legalLinks = document.querySelectorAll('.legal-link');
 
