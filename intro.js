@@ -1,5 +1,5 @@
 /* =========================
-   INTRO ANIMATION LOGIC
+   INTRO ANIMATION LOGIC - OPTIMIZED
 ========================= */
 
 const intro = document.getElementById("intro");
@@ -12,9 +12,9 @@ const introParticles = document.getElementById("intro-particles");
 let introStarted = false;
 const startTime = performance.now();
 
-// Create particles on explosion
+// Create particles on explosion - OPTIMIZED
 function createIntroParticles() {
-    const particleCount = 50;
+    const particleCount = 25; // Reduced from 50 for better performance
     
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -35,7 +35,7 @@ function createIntroParticles() {
     // Clean up particles after animation
     setTimeout(() => {
         introParticles.innerHTML = '';
-    }, 1000);
+    }, 800); // Reduced from 1000
 }
 
 // Start intro on page load
