@@ -193,9 +193,103 @@ prevBtn.addEventListener('click', prevTrack);
 minimizeBtn.addEventListener('click', minimizePlayer);
 playerToggleBtn.addEventListener('click', maximizePlayer);
 
+// ==================== СИСТЕМА ПОСТОВ ====================
+
+// Функция для парсирования и форматирования постов
+function parsePostText(text) {
+    let html = text;
+    
+    // Защита от XSS - экранирование HTML символов
+    html = html.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;');
+    
+    // Вернуть обратно для дальнейшей обработки
+    html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+    
+    // Изображения ![alt](url) - ДОЛЖНЫ БЫТЬ ПЕРВЫМИ
+    html = html.replace(/!\[([^\]]*)\]\(([^)]+\.png|\.jpg|\.jpeg|\.gif|\.webp)\)/gi, 
+        (match, alt, url) => `<img src="${url}" alt="${alt}" class="post-image" onerror="this.style.display='none'">`);
+    
+    // Кликабельные ссылки [текст](url)
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, 
+        (match, text, url) => `<a href="${url}" target="_blank" class="post-link">${text}</a>`);
+    
+    // Жирный + подчёркнутый + курсив **__***текст***__**
+    html = html.replace(/\*\*__\*\*\*([^*]+)\*\*\*__\*\*/g, 
+        '<span class="bold underline italic">$1</span>');
+    
+    // Жирный + подчёркнутый __**текст**__
+    html = html.replace(/__\*\*([^*]+)\*\*__/g, 
+        '<span class="bold underline">$1</span>');
+    
+    // Жирный + курсив ***текст***
+    html = html.replace(/\*\*\*([^*]+)\*\*\*/g, 
+        '<span class="bold italic">$1</span>');
+    
+    // Жирный текст **текст**
+    html = html.replace(/\*\*([^*]+)\*\*/g, 
+        '<strong>$1</strong>');
+    
+    // Подчёркнутый текст __текст__
+    html = html.replace(/__([^_]+)__/g, 
+        '<span class="underline">$1</span>');
+    
+    // Курсив ***текст*** (если не обработано выше)
+    html = html.replace(/\*\*\*([^*]+)\*\*\*/g, 
+        '<em>$1</em>');
+    
+    // Код `текст`
+    html = html.replace(/`([^`]+)`/g, 
+        '<code>$1</code>');
+    
+    // Зачёркнутый текст ~~текст~~
+    html = html.replace(/~~([^~]+)~~/g, 
+        '<strike>$1</strike>');
+    
+    // Жирный код **`текст`**
+    html = html.replace(/\*\*`([^`]+)`\*\*/g, 
+        '<strong><code>$1</code></strong>');
+    
+    return html;
+}
+
+// Загрузка и отображение постов
+async function loadPosts() {
+    try {
+        const response = await fetch('./posts.txt');
+        const text = await response.text();
+        
+        // Разделяем посты по "---"
+        const posts = text.split('---').map(p => p.trim()).filter(p => p.length > 0);
+        
+        const postsContainer = document.getElementById('postsContainer');
+        postsContainer.innerHTML = '';
+        
+        if (posts.length === 0) {
+            postsContainer.innerHTML = '<div class="no-posts">Постов пока нет 😔</div>';
+            return;
+        }
+        
+        posts.forEach((postText, index) => {
+            const postElement = document.createElement('div');
+            postElement.className = 'post-item';
+            postElement.innerHTML = parsePostText(postText);
+            postsContainer.appendChild(postElement);
+        });
+        
+    } catch (error) {
+        console.error('Ошибка загрузки постов:', error);
+        const postsContainer = document.getElementById('postsContainer');
+        postsContainer.innerHTML = '<div class="error-posts">Ошибка загрузки постов</div>';
+    }
+}
+
+// ==================== КОНЕЦ СИСТЕМЫ ПОСТОВ ====================
+
 // ФУНКЦИЯ СОЗДАНИЯ ПАРТИКЛЕЙ ПРИ ОТКРЫТИИ
 function createModalParticles(color) {
-    const particleCount = 30;
+    const particleCount = 20; // Оптимизировано
     const modal = document.getElementById('profileModal');
     const modalContent = modal.querySelector('.modal-content');
     const rect = modalContent.getBoundingClientRect();
@@ -346,7 +440,7 @@ window.addEventListener('resize', () => {
 });
 
 const snowflakes = [];
-const maxFlakes = 120;
+const maxFlakes = 80; // Уменьшено для оптимизации
 
 for (let i = 0; i < maxFlakes; i++) {
     snowflakes.push({
@@ -392,7 +486,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function createMouseParticles(x, y) {
-    if (Math.random() > 0.8) {
+    if (Math.random() > 0.9) { // Реже создавать частицы
         const particle = document.createElement('div');
         particle.style.position = 'fixed';
         particle.style.left = x + 'px';
@@ -416,7 +510,7 @@ function createStars() {
     starsContainer.className = 'stars';
     document.body.insertBefore(starsContainer, document.body.firstChild);
     
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 30; i++) { // Уменьшено
         const star = document.createElement('div');
         star.style.position = 'fixed';
         star.style.width = Math.random() * 2 + 'px';
@@ -472,8 +566,8 @@ function createIconParticles(iconElement) {
     const rect = iconElement.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const particleCount = 8;
-    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607', '#3a86ff', '#8338ec'];
+    const particleCount = 6; // Оптимизировано
+    const colors = ['#a855f7', '#00ffff', '#ff006e', '#00ff88', '#ffbe0b', '#fb5607'];
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -597,8 +691,9 @@ legalLinks.forEach((link) => {
     });
 });
 
-// ИНИЦИАЛИЗАЦИЯ КОМАНДЫ И ПЛЕЕРА ПРИ ЗАГРУЗКЕ
+// ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
 document.addEventListener('DOMContentLoaded', () => {
     initializeTeam();
     initMusicPlayer();
+    loadPosts(); // Загрузка постов
 });
