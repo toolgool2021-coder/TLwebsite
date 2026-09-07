@@ -649,8 +649,7 @@ setInterval(createCursorAura, 50);
 
 window.addEventListener('scroll', () => {
     const scrollParticle = document.createElement('div');
-    scrollParticle.style.position = 'fixed';
-    scrollParticle.style.left = Math.random() * width + 'px';
+    scrollParticle.style.position = 'fixed';n    scrollParticle.style.left = Math.random() * width + 'px';
     scrollParticle.style.top = Math.random() * height + 'px';
     scrollParticle.style.width = '3px';
     scrollParticle.style.height = '3px';
@@ -691,9 +690,31 @@ legalLinks.forEach((link) => {
     });
 });
 
+// СДЕЛАТЬ НИК КЛИКАБЕЛЬНЫМ — ОТКРЫТЬ TELEGRAM @toolgool
+function setupUsernameClick() {
+    const usernameEl = document.querySelector('.username');
+    if (!usernameEl) return;
+
+    usernameEl.style.cursor = 'pointer';
+
+    usernameEl.addEventListener('click', (e) => {
+        // ripple + particles
+        createClickWave(e.clientX, e.clientY);
+        createIconParticles(usernameEl);
+        setTimeout(() => {
+            window.open('https://t.me/toolgool', '_blank');
+        }, 600);
+    });
+
+    usernameEl.addEventListener('mouseenter', () => {
+        createIconParticles(usernameEl);
+    });
+}
+
 // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
 document.addEventListener('DOMContentLoaded', () => {
     initializeTeam();
     initMusicPlayer();
     loadPosts(); // Загрузка постов
+    setupUsernameClick();
 });
