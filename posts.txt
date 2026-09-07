@@ -20,7 +20,7 @@
 
 ~~Старый текст~~ → __новый текст__ очень кутеный
 
-Вот маленькая картинка: ![icon](https://via.placeholder.com/50)
+Вот маленькая картинка: ![icon](https://i.postimg.cc/W4xXFtJx/5f3cf7b0ebca1695a163a84c1ff5e2fa-(1).png)
 
 ---
 
