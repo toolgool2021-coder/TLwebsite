@@ -649,7 +649,8 @@ setInterval(createCursorAura, 50);
 
 window.addEventListener('scroll', () => {
     const scrollParticle = document.createElement('div');
-    scrollParticle.style.position = 'fixed';n    scrollParticle.style.left = Math.random() * width + 'px';
+    scrollParticle.style.position = 'fixed';
+    scrollParticle.style.left = Math.random() * width + 'px';
     scrollParticle.style.top = Math.random() * height + 'px';
     scrollParticle.style.width = '3px';
     scrollParticle.style.height = '3px';
