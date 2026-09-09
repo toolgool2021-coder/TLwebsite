@@ -1,42 +1,120 @@
-// ФОРМАТ ПОСТОВ:
-// **bold** = жирный текст
-// `code` = монолог/код
-// ***italic*** = курсив
-// ~~strikethrough~~ = зачёркнутый текст
-// __underline__ = подчёркнутый текст
-// **__bold-underline__** = жирный + подчёркнутый
-// [текст](ссылка) = кликабельная ссылка
-// ![текст](URL_PNG) = изображение (PNG по прямой ссылке)
-//Вот маленькая картинка: ![icon](https://via.placeholder.com/50)
-Текст со **ссылкой** внутри
-// --- = разделитель между постами
-
-Привет! 👋 Это **мой крутой** сайт с `красивыми эффектами`
-Добавляй `код`, __подчёркивание__ и ***жирный курсив***
-
-[Кликни сюда](https://github.com) - вот кликабельная ссылка!
-
----
-
-~~Старый текст~~ → __новый текст__ очень кутеный
-
-Вот маленькая картинка: ![icon](https://i.postimg.cc/W4xXFtJx/5f3cf7b0ebca1695a163a84c1ff5e2fa-(1).png)
-
----
-
-**Сложное форматирование:**
-- **Жирный текст**
-- `const x = 10;`
-- ***Жирный курсив***
-- __Подчёркнутый__
-- ~~Зачёркнутый~~
-
-[Переход на Google](https://google.com)
-
----
-
-Комбинируй форматы! **`Жирный код`** и __***жирный подчёркнутый курсив***__
-
-![Картинка](https://via.placeholder.com/100)
-
----
+▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒
+╭━━━━━━〔 👾 BIO 〕━━━━━━━╮
+┃                     @Toolgool
+┃                   B/D: 27.06.09
+┃                  🚷 No Meta 🚷
+┃                      🏛️ Pay 🏛️
+┃                 🗯  Reviews  🗯
+┃       🧧 Stories/Publications 🧧
+┃       📶 toolgool.duckdns.org 📶
+┃              ♻️ About twinks ♻️ ┃────────────────────
+┃   Before contacting me, please read 
+┃  the information below.
+┃  
+┃               ‼️ IMPORTANT ‼️
+┃  
+┃               🔰 COPYRIGHT 🔰
+┃  
+┃            🔱 Official opinion 🔱
+┃  
+┃      💀 My Position on Doxxing 💀
+┃
+┃         ⚖ Official Legal Notice ⚖
+┃ 
+┃           ⚠️ Addiction Stance ⚠️
+┃  
+┃  
+╰━━━━━━╾───────╼━━━━━━╯
+▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒
+╭━━━〔 🎮 CHANNELS 〕━━━╮
+┃
+┃   👤 Bio TL
+┃
+┃   ⚙ Plugins | Toolgool [Ayu/Extra]
+┃
+┃ GD Channel [🇷🇺] | GD Channel [🇺🇲]
+┃   ┣─ GDPS TL | GDPS TL [new]
+┃   ┣─ Server Live | TL,CPMK,DenGD
+┃   ┣─ FAQ | Server GDPS
+┃   ┣─ GDPS ToolDash
+┃   ┗─ ALL GDPS
+┃
+┃  🧩 Geometry Dash 
+┃   ┣─ ⸻
+┃   ┣─ ⸻
+┃   ┗─ ⸻
+┃
+┃  ⚙ Other
+┃   ┣─ ⸻
+┃   ┣─ ⸻
+┃   ┗─ ⸻
+┃   
+┃   📣 Sad Channel:
+┃    ┗─ Sad Channel
+┃   
+╰━━━╾───────────╼━━━╯
+▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒
+╭━━━〔 🌐 NETWORK 〕━━━╮
+┃
+┃  📢 Channel Groups 
+┃   ┣─ Chat Toolgool [GD]
+┃   ┣─ Chat
+┃   ┗─ Chat [Sad Channel]
+┃   
+╰━━━╾───────────╼━━━╯
+▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒
+╭━━━〔 🤖 MY BOTS 〕━━━╮
+┃  ┣─ TL 
+┃  ┣─ Toolgool [Server]
+┃  ┣─ TL FAQ
+┃  ┣─ TL Test
+┃  ┣─ Demon List | Bot's
+┃  ┗─ Entertainment bot
+┃   
+╰━━━╾───────────╼━━━╯
+▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒
+╭━━━〔 🔰 CLAN'S 🔰 〕━━━╮
+┃  ┣─ ⟦ TL ⟧ [@Toolgool]
+┃  ┣─ ⟦ TL ⟧ [@Toolgool2022]
+┃  ┣─ ⟦ TL ⟧ [@Toolgool2023]
+┃  ┣─ ⟦ TL ⟧ [@Toolgool2024]
+┃  ┗─ ⟦ TL ⟧ [@Toolgool2025]
+┃   
+╰━━━╾───────────╼━━━╯
+▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒
+╭━━━━〔 ⭐ SAVE USER 〕━━━━╮
+┃   
+┃  👤 User's 
+┃   ┣─ @Toolgool2020
+┃   ┣─ @Toolgool2021
+┃   ┣─ @Toolgool2022
+┃   ┣─ @Toolgool2023
+┃   ┣─ @Toolgool2024
+┃   ┣─ @Toolgool2025
+┃   ┣─ @Toolgool2026
+┃   ┣─ @Toolgool2027
+┃   ┣─ @Toolgool2028
+┃   ┣─ @Toolgool2029
+┃   ┗─ @Toolgool2030
+┃   
+╰━━━╾─────────────╼━━━╯
+▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒
+╭━━〔 🛡 MANAGED BY ME 〕━━╮
+┃
+┃  Channels / Groups
+┃  under my moderation
+┃   ┣─ @QuantaCrestGMD
+┃   ┣─  ⸻
+┃   ┣─  ⸻
+┃   ┗─  ⸻
+┃
+╰━━━╾─────────────╼━━━╯
+▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒░▐▓▒
+╭━━━━━〔 💤 Website 〕━━━━━╮
+┃   ┣─ Toolgool.duckdns.org
+┃   ┣─ TLGDPS.ru
+┃   ┣─ orbit-ai.duckdns.org
+┃   ┣─ PayTL.duckdns.org
+┃   ┗─ TLschool.duckdns.org
+┃   
+╰━━━━━━〔 ✦ END ✦ 〕━━━━━╯
