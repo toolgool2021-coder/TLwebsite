@@ -48,27 +48,23 @@ const teamMembers = [
     },
     {
         id: 5,
-        name: "أوكسي",
-        relationship: "🫠 Female friend",
-        emoji: "🎭",
+        name: "",
+        relationship: "",
+        emoji: "",
         avatar: "./images/icon_6.jpg",
-        description: "Весёлая и немного хаотичная, но в этом весь кайф. С ней не бывает скучно 😅",
+        description: "",
         color: "#c110bc",
-        socials: {
-            telegram: "https://t.me/Ok_si112"
-        }
+        socials: {}
     },
     {
         id: 6,
-        name: "✿",
-        relationship: "✨ Female friend",
-        emoji: "⚜️",
+        name: "",
+        relationship: "",
+        emoji: "",
         avatar: "./images/icon_7.jpg",
-        description: "Лёгкая в общении и уютная. Идеальный напарник для Minecraft и ламповых вечеров 🎮",
+        description: "",
         color: "#827382",
-        socials: {
-            telegram: "https://t.me/Fl0rlet"
-        }
+        socials: {}
     }
 ];
 
