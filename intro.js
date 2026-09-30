@@ -1,195 +1,335 @@
-const intro = document.getElementById("intro");
-const introTerminal = document.getElementById("intro-terminal");
-const leftDoor = document.querySelector(".intro-door-left");
-const rightDoor = document.querySelector(".intro-door-right");
+const intro =
+    document.getElementById("intro");
 
-let introStarted = false;
-let introComplete = false;
+const lines =
+    document.getElementById("lines");
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+const left =
+    document.getElementById("leftDoor");
+
+const right =
+    document.getElementById("rightDoor");
+
+let started = false;
+
+
+/* задержка */
+
+const sleep = ms =>
+    new Promise(resolve =>
+        setTimeout(resolve, ms)
+    );
+
+
+/* новая строка */
+
+function line(className = "line") {
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        className;
+
+    lines.appendChild(element);
+
+    return element;
 }
 
-function createLine(className = "terminal-line") {
-    const line = document.createElement("p");
-    line.className = className;
-    introTerminal.appendChild(line);
-    return line;
-}
 
-async function typeLine(text, className = "terminal-line", speed = 28) {
-    const line = createLine(className);
+/* печать текста */
 
-    for (let i = 0; i <= text.length; i++) {
-        line.textContent = text.slice(0, i);
+async function type(
+    text,
+    className = "line",
+    speed = 13
+) {
+
+    const element =
+        line(className);
+
+    for (const character of text) {
+
+        element.textContent +=
+            character;
+
         await sleep(speed);
     }
 
-    return line;
+    return element;
 }
 
-async function showLoader(label, duration = 900) {
-    const line = createLine("terminal-line");
-    const frames = ["\\", "|", "/", "—"];
+
+/* загрузка \ | / — */
+
+async function loader(
+    text,
+    duration = 260
+) {
+
+    const element =
+        line();
+
+    const frames = [
+        "\\",
+        "|",
+        "/",
+        "—"
+    ];
+
     let index = 0;
 
-    const interval = setInterval(() => {
-        line.textContent = `${label} ${frames[index]}`;
-        index = (index + 1) % frames.length;
-    }, 60);
+    const interval =
+        setInterval(() => {
+
+            element.textContent =
+                text + " " +
+                frames[index];
+
+            index =
+                (index + 1) %
+                frames.length;
+
+        }, 55);
+
 
     await sleep(duration);
+
     clearInterval(interval);
-    line.textContent = `${label} OK`;
-    return line;
+
+    element.textContent =
+        text + " ✓";
 }
 
-async function showAccountCorrection() {
-    const line = createLine("terminal-line");
-    const variants = [
-        "account: Toolgo0l",
-        "account: Toolg0ol",
-        "account: Toolgo0l",
-        "account: Toolgool",
-        "account: Toolgool"
-    ];
 
-    for (const variant of variants) {
-        line.textContent = variant;
-        line.style.color = "#ff5d5d";
-        line.style.textShadow = "0 0 12px rgba(255, 93, 93, 0.9)";
-        await sleep(120);
-    }
+/* исправление ника */
 
-    line.style.color = "#39ff88";
-    line.style.textShadow = "0 0 12px rgba(57, 255, 136, 0.9)";
-    line.textContent = "account: Toolgool";
-    return line;
-}
+async function correction() {
 
-async function showPasswordCorrection() {
-    const line = createLine("terminal-line");
-    const variants = [
-        "Password: ********",
-        "Password: *******",
-        "Password: ********",
-        "Password: *********",
-        "Password: *********"
-    ];
+    const element =
+        line("line error");
 
-    for (const variant of variants) {
-        line.textContent = variant;
-        line.style.color = "#ff5d5d";
-        line.style.textShadow = "0 0 12px rgba(255, 93, 93, 0.9)";
-        await sleep(120);
-    }
+    element.textContent =
+        "account: Toolgo0l";
 
-    line.style.color = "#39ff88";
-    line.style.textShadow = "0 0 12px rgba(57, 255, 136, 0.9)";
-    line.textContent = "Password: *********";
-    return line;
-}
-
-async function revealIp() {
-    const line = createLine("terminal-line");
-    const ip = "192:168:0:24";
-
-    for (let i = 0; i <= ip.length; i++) {
-        line.textContent = `IP-address: ${ip.slice(0, i)}`;
-        await sleep(80);
-    }
-
-    return line;
-}
-
-async function startIntro() {
-    if (introStarted || introComplete) return;
-    introStarted = true;
-
-    const sequence = [
-        { text: "[ TOOLGOOL SECURITY SYSTEM ]", className: "terminal-line header", speed: 22 },
-        { text: "BOOT SEQUENCE // START", className: "terminal-line", speed: 24 },
-        { text: "Loading secure kernel", className: "terminal-line", speed: 28 },
-        { text: "Checking access modules", className: "terminal-line", speed: 28 },
-        { text: "", className: "terminal-line", speed: 10 },
-        { text: "account: Toolgo0l", className: "terminal-line error", speed: 18 },
-        { text: "", className: "terminal-line", speed: 10 }
-    ];
-
-    for (const item of sequence) {
-        if (!item.text) {
-            createLine("terminal-line blank");
-            await sleep(180);
-            continue;
-        }
-
-        await typeLine(item.text, item.className, item.speed);
-        await sleep(140);
-    }
-
-    await showAccountCorrection();
-    await sleep(380);
-
-    const passwordLine = await typeLine("Password: ********", "terminal-line error", 18);
-    await sleep(220);
-    passwordLine.textContent = "Password: *******";
-    await sleep(110);
-    passwordLine.textContent = "Password: *********";
-    passwordLine.style.color = "#39ff88";
-    passwordLine.style.textShadow = "0 0 12px rgba(57, 255, 136, 0.9)";
-    await sleep(280);
-
-    await typeLine("IP-address: 0", "terminal-line", 25);
-    await sleep(200);
-    await revealIp();
     await sleep(180);
 
-    await typeLine("Resolving network identity", "terminal-line", 24);
-    await sleep(140);
-    await typeLine("Encrypting connection", "terminal-line", 24);
-    await sleep(140);
-    await typeLine("Verifying credentials", "terminal-line", 24);
-    await sleep(260);
 
-    await showLoader("Loading interfaces", 900);
-    await sleep(240);
+    element.textContent =
+        "account: Toolgo";
 
-    const deniedLine = createLine("terminal-line error");
-    deniedLine.textContent = "Access denied: 1 invalid attempt";
-    await sleep(820);
+    await sleep(110);
 
-    await typeLine("Retrying authentication", "terminal-line", 18);
-    await sleep(260);
-    await typeLine("Credentials accepted", "terminal-line success", 18);
-    await sleep(300);
 
-    await typeLine("Loading interface", "terminal-line", 22);
-    await sleep(140);
-    await typeLine("Mounting user environment", "terminal-line", 22);
-    await sleep(140);
-    await typeLine("Starting TLwebsite", "terminal-line", 22);
-    await sleep(360);
+    element.textContent =
+        "account: Toolg";
 
-    const grantedLine = createLine("terminal-line granted");
-    grantedLine.textContent = "ACCESS GRANTED // WELCOME, TOOLGOOL";
-    await sleep(900);
+    await sleep(100);
 
-    leftDoor.classList.add("open");
-    rightDoor.classList.add("open");
 
-    setTimeout(() => {
-        intro.classList.add("hidden");
-    }, 750);
+    element.textContent =
+        "account: Toolgo";
 
-    introComplete = true;
+    await sleep(100);
+
+
+    element.textContent =
+        "account: Toolgool";
+
+    await sleep(180);
+
+
+    element.className =
+        "line ok";
 }
 
-window.addEventListener("load", () => {
-    setTimeout(startIntro, 200);
-});
 
-document.addEventListener("keydown", () => {
-    if (!introStarted && !introComplete) {
-        startIntro();
+/* исправление пароля */
+
+async function password() {
+
+    const element =
+        await type(
+            "Password: ********",
+            "line error",
+            12
+        );
+
+    await sleep(160);
+
+
+    element.textContent =
+        "Password: *****";
+
+    await sleep(100);
+
+
+    element.textContent =
+        "Password: ***";
+
+    await sleep(120);
+
+
+    element.textContent =
+        "Password: ******";
+
+    element.className =
+        "line ok";
+}
+
+
+/* ввод IP */
+
+async function ip() {
+
+    const element =
+        line();
+
+    const value =
+        "192:168:0:24";
+
+    for (const character of value) {
+
+        element.textContent +=
+            character;
+
+        await sleep(48);
     }
-}, { once: true });
+
+    element.textContent =
+        "IP-address: " + value;
+}
+
+
+/* =========================
+   ГЛАВНАЯ ПОСЛЕДОВАТЕЛЬНОСТЬ
+========================= */
+
+async function startIntro() {
+
+    if (started)
+        return;
+
+    started = true;
+
+
+    await sleep(180);
+
+
+    await type(
+        "BOOT SEQUENCE // START"
+    );
+
+
+    await loader(
+        "Loading secure kernel"
+    );
+
+
+    await loader(
+        "Checking access modules"
+    );
+
+
+    await correction();
+
+
+    await password();
+
+
+    await ip();
+
+
+    await loader(
+        "Resolving network identity"
+    );
+
+
+    await loader(
+        "Encrypting connection"
+    );
+
+
+    await loader(
+        "Verifying credentials"
+    );
+
+
+    await type(
+        "Access denied: 1 invalid attempt",
+        "line error",
+        9
+    );
+
+
+    await sleep(260);
+
+
+    await loader(
+        "Retrying authentication"
+    );
+
+
+    await type(
+        "Credentials accepted",
+        "line ok",
+        10
+    );
+
+
+    await loader(
+        "Loading interface"
+    );
+
+
+    await loader(
+        "Mounting user environment"
+    );
+
+
+    await loader(
+        "Starting TLwebsite"
+    );
+
+
+    await type(
+        "ACCESS GRANTED // WELCOME, TOOLGOOL",
+        "line ok",
+        10
+    );
+
+
+    await sleep(300);
+
+
+    /*
+       СНАЧАЛА скрываем терминал
+       ПОТОМ открываем двери
+    */
+
+    intro.classList.add("done");
+
+
+    left.classList.add("open");
+
+    right.classList.add("open");
+
+
+    /*
+       После полной анимации
+       intro исчезает полностью
+    */
+
+    await sleep(1150);
+
+    intro.classList.add("hide");
+}
+
+
+/* запускаем только один раз */
+
+window.addEventListener(
+    "load",
+    startIntro,
+    { once: true }
+);
