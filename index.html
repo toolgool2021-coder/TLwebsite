@@ -7,16 +7,35 @@
     <title>Toolgool - Bio Site</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="intro-style.css">
 </head>
 
 <body>
 
     <div id="intro" aria-live="polite">
-        <div id="intro-doors-container">
-            <div class="intro-door intro-door-left"></div>
-            <div class="intro-door intro-door-right"></div>
+
+        <div
+            class="door left"
+            id="leftDoor">
         </div>
-        <div id="intro-terminal" aria-live="polite"></div>
+
+        <div
+            class="door right"
+            id="rightDoor">
+        </div>
+
+        <div class="scan"></div>
+
+        <div id="terminal">
+
+            <div class="header">
+                [ TOOLGOOL SECURITY SYSTEM ]
+            </div>
+
+            <div id="lines"></div>
+
+        </div>
+
     </div>
 
     <canvas id="snowCanvas"></canvas>
