@@ -8,7 +8,7 @@ let introStarted = false;
 let introComplete = false;
 
 // tuning - faster typing
-const TYPING_SPEED = 28; // was 48
+const TYPING_SPEED = 20; // was 48
 const SLOW_SPEED = 50;
 const LOADER_SPEED = 60;
 
@@ -125,7 +125,7 @@ async function showLoader(label, duration = 800) {
 }
 
 async function revealIp() {
-    const ip = "192:168:0:24";
+    const ip = "132:197:0:24";
     const line = createLine("terminal-line");
     for (let i = 0; i <= ip.length; i++) {
         line.textContent = `IP-address: ${ip.slice(0, i)}`;
