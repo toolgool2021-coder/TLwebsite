@@ -12,13 +12,11 @@
 <body>
 
     <div id="intro" aria-live="polite">
-        <div class="intro-noise"></div>
-        <div class="intro-scanline"></div>
-        <div class="intro-doors" aria-hidden="true">
-            <div id="left-door" class="door left-door"></div>
-            <div id="right-door" class="door right-door"></div>
+        <div id="intro-doors-container">
+            <div class="intro-door intro-door-left"></div>
+            <div class="intro-door intro-door-right"></div>
         </div>
-        <div id="terminal-content" class="terminal-content"></div>
+        <div id="intro-terminal" aria-live="polite"></div>
     </div>
 
     <canvas id="snowCanvas"></canvas>
