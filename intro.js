@@ -6,9 +6,10 @@ const rightDoor = document.querySelector(".intro-door-right") || document.getEle
 let introStarted = false;
 let introComplete = false;
 
-const TYPING_SPEED = 68;
-const SLOW_SPEED = 90;
-const LOADER_SPEED = 80;
+// tuning
+const TYPING_SPEED = 48; // чуть быстрее
+const SLOW_SPEED = 80;
+const LOADER_SPEED = 70;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -17,12 +18,14 @@ function sleep(ms) {
 function createLine(className = "terminal-line") {
     const line = document.createElement("p");
     line.className = className;
+
     if (introTerminal) {
         introTerminal.appendChild(line);
     } else {
         const fallback = document.querySelector("#lines");
         (fallback || document.body).appendChild(line);
     }
+
     return line;
 }
 
@@ -36,22 +39,28 @@ async function typeLine(text, className = "terminal-line", speed = TYPING_SPEED)
 }
 
 async function typeWithMistakes(correct, className = "terminal-line", speed = TYPING_SPEED, mistakes = []) {
-    const line = createLine(className);
+    // start green
+    const line = createLine(className + " success");
+
     for (let i = 0; i < correct.length; i++) {
         const m = mistakes.find(item => item.pos === i);
         if (m) {
+            // show mistake in red, then remove it
             line.className = "terminal-line error";
             line.textContent += m.wrong;
-            await sleep(speed + 60);
+            await sleep(speed + 40);
             line.textContent = line.textContent.slice(0, -1);
-            await sleep(speed - 10);
+            await sleep(speed - 8);
+            // restore green before continuing
+            line.className = className + " success";
         }
 
         line.textContent += correct[i];
-        await sleep(speed + 18);
+        await sleep(speed);
     }
 
-    line.className = className === "terminal-line" ? "terminal-line success" : className + " success";
+    // final ensure green success
+    line.className = className + " success";
     return line;
 }
 
@@ -86,105 +95,140 @@ async function startIntro() {
     if (introStarted || introComplete) return;
     introStarted = true;
 
-    await sleep(350);
-
-    await typeLine("[ TOOLGOOL SECURITY SYSTEM ]", "terminal-line header", 60);
-    await sleep(220);
-
-    await typeLine("BOOT SEQUENCE // START", "terminal-line", 60);
-    await sleep(170);
-    await showLoader("Loading secure kernel", 1100);
-    await sleep(140);
-    await showLoader("Checking access modules", 1100);
-    await sleep(200);
-
-    await typeWithMistakes("account: Toolgool", "terminal-line", 80, [
-        { pos: 9, wrong: "0" },
-        { pos: 10, wrong: "0" },
-        { pos: 11, wrong: "0" },
-        { pos: 12, wrong: "0" },
-        { pos: 13, wrong: "0" }
-    ]);
     await sleep(300);
 
+    await typeLine("[ TOOLGOOL SECURITY SYSTEM ]", "terminal-line header", 50);
+    await sleep(160);
+
+    await typeLine("BOOT SEQUENCE // START", "terminal-line", 50);
+    await sleep(140);
+
+    await showLoader("Loading secure kernel", 1000);
+    await sleep(120);
+    await showLoader("Checking access modules", 1000);
+    await sleep(160);
+
+    // account: show with mistakes (green -> red during mistakes)
+    await typeWithMistakes("account: Toolgool", "terminal-line", 60, [
+        { pos: 9, wrong: "0" },
+        { pos: 11, wrong: "0" },
+        { pos: 12, wrong: "0" }
+    ]);
+
+    await sleep(220);
+
+    // password: show attempts but remove failed attempts to simulate retry
     const passwordAttempts = [
         "Password: ********",
         "Password: *******",
-        "Password: ******",
         "Password: *****",
+        "Password: ***",
         "Password: ******",
-        "Password: *********"
+        "Password: *********" // final - accepted
     ];
 
+    let prevLine = null;
     for (let i = 0; i < passwordAttempts.length; i++) {
-        const line = createLine(i === passwordAttempts.length - 1 ? "terminal-line success" : "terminal-line error");
-        line.textContent = passwordAttempts[i];
-        await sleep(320 + i * 90);
+        const text = passwordAttempts[i];
+        const cls = (i === passwordAttempts.length - 1) ? "terminal-line success" : "terminal-line error";
+
+        // create the attempt
+        const attemptLine = createLine(cls);
+        attemptLine.textContent = text;
+        await sleep(300 + i * 80);
+
+        // if failed attempt, remove it before next try to simulate fresh typing
+        if (i < passwordAttempts.length - 1) {
+            try { attemptLine.parentNode && attemptLine.parentNode.removeChild(attemptLine); } catch (e) {}
+        } else {
+            // final accepted - keep it
+        }
+
+        prevLine = attemptLine;
     }
 
-    await sleep(260);
+    await sleep(200);
     await revealIp();
     await sleep(200);
 
-    await showLoader("Resolving network identity", 1100);
+    await showLoader("Resolving network identity", 1000);
     await sleep(120);
-    await showLoader("Encrypting connection", 1100);
+    await showLoader("Encrypting connection", 1000);
     await sleep(120);
-    await showLoader("Verifying credentials", 1100);
-    await sleep(180);
+    await showLoader("Verifying credentials", 1000);
+    await sleep(160);
 
     const denied = createLine("terminal-line error");
     denied.textContent = "Access denied: 5 invalid attempts";
-    await sleep(1100);
+    await sleep(900);
 
-    await showLoader("Retrying authentication", 1100);
-    await sleep(260);
-
-    await typeLine("Credentials accepted", "terminal-line success", 65);
+    await showLoader("Retrying authentication", 1000);
     await sleep(220);
 
-    await showLoader("Loading interface", 1100);
+    await typeLine("Credentials accepted", "terminal-line success", 55);
+    await sleep(200);
+
+    await showLoader("Loading interface", 1000);
     await sleep(120);
-    await showLoader("Mounting user environment", 1100);
+    await showLoader("Mounting user environment", 1000);
     await sleep(120);
-    await showLoader("Starting TLwebsite", 1100);
+    await showLoader("Starting TLwebsite", 1000);
     await sleep(200);
 
     const granted = createLine("terminal-line granted");
     granted.textContent = "ACCESS GRANTED // WELCOME, TOOLGOOL";
-    await sleep(900);
+    await sleep(700);
 
     if (leftDoor) leftDoor.classList.add("open");
     if (rightDoor) rightDoor.classList.add("open");
 
-    await sleep(1400);
+    await sleep(1200);
 
+    // remove overlay and explicitly restore visibility for site icons
     try {
-        intro && (intro.style.display = "none");
-        intro && intro.parentNode && intro.parentNode.removeChild(intro);
-    } catch (error) {
-        // no-op
-    }
+        if (intro) {
+            intro.style.display = "none";
+            if (intro.parentNode) intro.parentNode.removeChild(intro);
+        }
+    } catch (e) {}
 
-    try {
-        document.body.style.overflow = "";
-    } catch (error) {
-        // no-op
-    }
+    try { document.body.style.overflow = ""; } catch (e) {}
 
-    document.querySelectorAll('.social-link, .social-link img, .social-link-footer').forEach(el => {
-        el.style.visibility = "";
-        el.style.display = "";
-        el.style.opacity = "";
+    // restore a broad set of elements — make them visible and bring to front
+    const selectors = [
+        '.social-link',
+        '.social-link img',
+        '.social-link-footer',
+        '.music-player',
+        '.music-player-toggle',
+        '.avatar-wrapper',
+        '.username',
+        '.posts-section',
+        '.team-section',
+        '.footer',
+        '.modal'
+    ];
+
+    document.querySelectorAll(selectors.join(',')).forEach(el => {
+        try {
+            el.style.visibility = 'visible';
+            // prefer to restore display to inline-flex or block depending on tag
+            const tag = (el.tagName || '').toLowerCase();
+            if (tag === 'img' || el.classList.contains('social-link')) el.style.display = 'inline-flex';
+            else el.style.display = '';
+            el.style.opacity = '1';
+            el.style.zIndex = '';
+        } catch (e) {}
     });
+
+    // also ensure font awesome icons are visible (sometimes font-load glitch)
+    document.querySelectorAll('i.fab, i.fas').forEach(i => { i.style.opacity = '1'; i.style.visibility = 'visible'; });
 
     introComplete = true;
 }
 
-window.addEventListener("load", () => setTimeout(startIntro, 400));
+window.addEventListener("load", () => setTimeout(startIntro, 300));
 
 document.addEventListener("keydown", () => {
-    if (!introStarted && !introComplete) {
-        startIntro();
-    }
+    if (!introStarted && !introComplete) startIntro();
 }, { once: true });
