@@ -1,246 +1,195 @@
-/* =========================
-   INTRO ANIMATION LOGIC - CYBERPUNK NEON TERMINAL
-   MOBILE OPTIMIZED & WORKING TEXT ANIMATION
-========================= */
+const intro = document.getElementById("intro");
+const introTerminal = document.getElementById("intro-terminal");
+const leftDoor = document.querySelector(".intro-door-left");
+const rightDoor = document.querySelector(".intro-door-right");
 
 let introStarted = false;
-const loaderSymbols = ["\\", "|", "/", "—"];
-let loaderIndex = 0;
+let introComplete = false;
 
-async function typeLine(text, className = "terminal-default", delay = 20) {
-    return new Promise((resolve) => {
-        const terminalContent = document.getElementById("terminal-content");
-        if (!terminalContent) {
-            resolve(null);
-            return;
-        }
-
-        const line = document.createElement("div");
-        line.className = `terminal-line ${className}`;
-        terminalContent.appendChild(line);
-        terminalContent.scrollTop = terminalContent.scrollHeight;
-
-        let index = 0;
-        const typeChar = () => {
-            if (index < text.length) {
-                line.textContent += text[index];
-                index++;
-                terminalContent.scrollTop = terminalContent.scrollHeight;
-                setTimeout(typeChar, delay);
-            } else {
-                resolve(line);
-            }
-        };
-        typeChar();
-    });
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function addBlankLine() {
-    const terminalContent = document.getElementById("terminal-content");
-    if (!terminalContent) return;
-
-    const line = document.createElement("div");
-    line.className = "terminal-line terminal-default";
-    line.textContent = " ";
-    line.style.minHeight = "0.6em";
-    terminalContent.appendChild(line);
-    terminalContent.scrollTop = terminalContent.scrollHeight;
+function createLine(className = "terminal-line") {
+    const line = document.createElement("p");
+    line.className = className;
+    introTerminal.appendChild(line);
+    return line;
 }
 
-async function fixAccountError(line) {
-    if (!line) return;
+async function typeLine(text, className = "terminal-line", speed = 28) {
+    const line = createLine(className);
 
-    // Show error state for a moment
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    // Backspace
-    line.textContent = "account: Toolgo0";
-    await new Promise(resolve => setTimeout(resolve, 80));
-    line.textContent = "account: Toolgo";
-    await new Promise(resolve => setTimeout(resolve, 80));
-
-    // Type correct version
-    line.classList.remove("terminal-error");
-    line.classList.add("terminal-success");
-    line.textContent = "account: Toolgool";
-}
-
-async function fixPasswordError(line) {
-    if (!line) return;
-
-    // Show error state for a moment
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    // Backspace
-    line.textContent = "Password: •••••••";
-    await new Promise(resolve => setTimeout(resolve, 80));
-    line.textContent = "Password: ••••••";
-    await new Promise(resolve => setTimeout(resolve, 80));
-
-    // Type correct version
-    line.classList.remove("terminal-error");
-    line.classList.add("terminal-success");
-    line.textContent = "Password: ••••••••";
-}
-
-async function typeIPAddress() {
-    const terminalContent = document.getElementById("terminal-content");
-    if (!terminalContent) return;
-
-    const line = document.createElement("div");
-    line.className = "terminal-line terminal-default";
-    terminalContent.appendChild(line);
-
-    // Type "IP-address: " first
-    let text = "IP-address: ";
-    let index = 0;
-    
-    await new Promise(resolve => {
-        const typeFirst = () => {
-            if (index < text.length) {
-                line.textContent += text[index];
-                index++;
-                terminalContent.scrollTop = terminalContent.scrollHeight;
-                setTimeout(typeFirst, 16);
-            } else {
-                resolve();
-            }
-        };
-        typeFirst();
-    });
-
-    // Type IP address numbers
-    const ipChars = ["1", "9", "2", ":", "1", "6", "8", ":", "0", ":", "2", "4"];
-    for (const char of ipChars) {
-        line.textContent += char;
-        terminalContent.scrollTop = terminalContent.scrollHeight;
-        await new Promise(resolve => setTimeout(resolve, 70));
+    for (let i = 0; i <= text.length; i++) {
+        line.textContent = text.slice(0, i);
+        await sleep(speed);
     }
+
+    return line;
 }
 
-async function showLoader() {
-    const terminalContent = document.getElementById("terminal-content");
-    if (!terminalContent) return null;
+async function showLoader(label, duration = 900) {
+    const line = createLine("terminal-line");
+    const frames = ["\\", "|", "/", "—"];
+    let index = 0;
 
-    const line = document.createElement("div");
-    line.className = "terminal-line terminal-default";
-    terminalContent.appendChild(line);
+    const interval = setInterval(() => {
+        line.textContent = `${label} ${frames[index]}`;
+        index = (index + 1) % frames.length;
+    }, 60);
 
-    loaderIndex = 0;
-    for (let i = 0; i < 10; i++) {
-        line.textContent = `Loading ${loaderSymbols[loaderIndex % loaderSymbols.length]}`;
-        loaderIndex++;
-        terminalContent.scrollTop = terminalContent.scrollHeight;
-        await new Promise(resolve => setTimeout(resolve, 60));
+    await sleep(duration);
+    clearInterval(interval);
+    line.textContent = `${label} OK`;
+    return line;
+}
+
+async function showAccountCorrection() {
+    const line = createLine("terminal-line");
+    const variants = [
+        "account: Toolgo0l",
+        "account: Toolg0ol",
+        "account: Toolgo0l",
+        "account: Toolgool",
+        "account: Toolgool"
+    ];
+
+    for (const variant of variants) {
+        line.textContent = variant;
+        line.style.color = "#ff5d5d";
+        line.style.textShadow = "0 0 12px rgba(255, 93, 93, 0.9)";
+        await sleep(120);
+    }
+
+    line.style.color = "#39ff88";
+    line.style.textShadow = "0 0 12px rgba(57, 255, 136, 0.9)";
+    line.textContent = "account: Toolgool";
+    return line;
+}
+
+async function showPasswordCorrection() {
+    const line = createLine("terminal-line");
+    const variants = [
+        "Password: ********",
+        "Password: *******",
+        "Password: ********",
+        "Password: *********",
+        "Password: *********"
+    ];
+
+    for (const variant of variants) {
+        line.textContent = variant;
+        line.style.color = "#ff5d5d";
+        line.style.textShadow = "0 0 12px rgba(255, 93, 93, 0.9)";
+        await sleep(120);
+    }
+
+    line.style.color = "#39ff88";
+    line.style.textShadow = "0 0 12px rgba(57, 255, 136, 0.9)";
+    line.textContent = "Password: *********";
+    return line;
+}
+
+async function revealIp() {
+    const line = createLine("terminal-line");
+    const ip = "192:168:0:24";
+
+    for (let i = 0; i <= ip.length; i++) {
+        line.textContent = `IP-address: ${ip.slice(0, i)}`;
+        await sleep(80);
     }
 
     return line;
 }
 
 async function startIntro() {
-    if (introStarted) return;
+    if (introStarted || introComplete) return;
     introStarted = true;
 
-    const terminalContent = document.getElementById("terminal-content");
-    const leftDoor = document.getElementById("left-door");
-    const rightDoor = document.getElementById("right-door");
-    const intro = document.getElementById("intro");
+    const sequence = [
+        { text: "[ TOOLGOOL SECURITY SYSTEM ]", className: "terminal-line header", speed: 22 },
+        { text: "BOOT SEQUENCE // START", className: "terminal-line", speed: 24 },
+        { text: "Loading secure kernel", className: "terminal-line", speed: 28 },
+        { text: "Checking access modules", className: "terminal-line", speed: 28 },
+        { text: "", className: "terminal-line", speed: 10 },
+        { text: "account: Toolgo0l", className: "terminal-line error", speed: 18 },
+        { text: "", className: "terminal-line", speed: 10 }
+    ];
 
-    if (!terminalContent || !leftDoor || !rightDoor || !intro) {
-        console.error("Required intro elements missing");
-        return;
+    for (const item of sequence) {
+        if (!item.text) {
+            createLine("terminal-line blank");
+            await sleep(180);
+            continue;
+        }
+
+        await typeLine(item.text, item.className, item.speed);
+        await sleep(140);
     }
 
-    terminalContent.innerHTML = "";
-    loaderIndex = 0;
+    await showAccountCorrection();
+    await sleep(380);
 
-    // Sequence of terminal output
-    await typeLine("[ TOOLGOOL SECURITY SYSTEM ]", "terminal-header", 15);
-    addBlankLine();
-    
-    await typeLine("BOOT SEQUENCE // START", "terminal-default", 22);
-    await new Promise(r => setTimeout(r, 100));
-    
-    await typeLine("Loading secure kernel", "terminal-default", 20);
-    await new Promise(r => setTimeout(r, 100));
-    
-    await typeLine("Checking access modules", "terminal-default", 20);
-    addBlankLine();
-    
-    const accountLine = await typeLine("account: Toolgo0l", "terminal-error", 20);
-    await fixAccountError(accountLine);
-    await new Promise(r => setTimeout(r, 150));
-    
-    const passLine = await typeLine("Password: ••••••••", "terminal-error", 20);
-    await fixPasswordError(passLine);
-    await new Promise(r => setTimeout(r, 150));
-    
-    await typeIPAddress();
-    addBlankLine();
-    
-    await typeLine("Resolving network identity", "terminal-default", 18);
-    await new Promise(r => setTimeout(r, 100));
-    
-    await typeLine("Encrypting connection", "terminal-default", 18);
-    await new Promise(r => setTimeout(r, 100));
-    
-    await typeLine("Verifying credentials", "terminal-default", 18);
-    await new Promise(r => setTimeout(r, 200));
-    
-    await showLoader();
-    await new Promise(r => setTimeout(r, 100));
-    
-    await typeLine("Access denied: 1 invalid attempt", "terminal-error", 16);
-    addBlankLine();
-    await new Promise(r => setTimeout(r, 300));
-    
-    await typeLine("Retrying authentication", "terminal-default", 18);
-    await new Promise(r => setTimeout(r, 100));
-    
-    await typeLine("Credentials accepted", "terminal-success", 18);
-    addBlankLine();
-    
-    await typeLine("Loading interface", "terminal-default", 18);
-    await new Promise(r => setTimeout(r, 80));
-    
-    await typeLine("Mounting user environment", "terminal-default", 18);
-    await new Promise(r => setTimeout(r, 80));
-    
-    await typeLine("Starting TLwebsite", "terminal-default", 18);
-    addBlankLine();
-    
-    await typeLine("ACCESS GRANTED // WELCOME, TOOLGOOL", "terminal-access-granted", 16);
-    
-    // Wait before doors open
-    await new Promise(r => setTimeout(r, 800));
-    
-    // Open doors
+    const passwordLine = await typeLine("Password: ********", "terminal-line error", 18);
+    await sleep(220);
+    passwordLine.textContent = "Password: *******";
+    await sleep(110);
+    passwordLine.textContent = "Password: *********";
+    passwordLine.style.color = "#39ff88";
+    passwordLine.style.textShadow = "0 0 12px rgba(57, 255, 136, 0.9)";
+    await sleep(280);
+
+    await typeLine("IP-address: 0", "terminal-line", 25);
+    await sleep(200);
+    await revealIp();
+    await sleep(180);
+
+    await typeLine("Resolving network identity", "terminal-line", 24);
+    await sleep(140);
+    await typeLine("Encrypting connection", "terminal-line", 24);
+    await sleep(140);
+    await typeLine("Verifying credentials", "terminal-line", 24);
+    await sleep(260);
+
+    await showLoader("Loading interfaces", 900);
+    await sleep(240);
+
+    const deniedLine = createLine("terminal-line error");
+    deniedLine.textContent = "Access denied: 1 invalid attempt";
+    await sleep(820);
+
+    await typeLine("Retrying authentication", "terminal-line", 18);
+    await sleep(260);
+    await typeLine("Credentials accepted", "terminal-line success", 18);
+    await sleep(300);
+
+    await typeLine("Loading interface", "terminal-line", 22);
+    await sleep(140);
+    await typeLine("Mounting user environment", "terminal-line", 22);
+    await sleep(140);
+    await typeLine("Starting TLwebsite", "terminal-line", 22);
+    await sleep(360);
+
+    const grantedLine = createLine("terminal-line granted");
+    grantedLine.textContent = "ACCESS GRANTED // WELCOME, TOOLGOOL";
+    await sleep(900);
+
     leftDoor.classList.add("open");
     rightDoor.classList.add("open");
-    
-    // Hide intro
-    await new Promise(r => setTimeout(r, 1200));
-    intro.classList.add("hidden");
+
+    setTimeout(() => {
+        intro.classList.add("hidden");
+    }, 750);
+
+    introComplete = true;
 }
 
-// Start on page load
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-        setTimeout(startIntro, 200);
-    });
-} else {
+window.addEventListener("load", () => {
     setTimeout(startIntro, 200);
-}
+});
 
-// Skip with keyboard or touch
 document.addEventListener("keydown", () => {
-    if (!introStarted) {
-        startIntro();
-    }
-}, { once: true });
-
-document.addEventListener("touchstart", () => {
-    if (!introStarted) {
+    if (!introStarted && !introComplete) {
         startIntro();
     }
 }, { once: true });
