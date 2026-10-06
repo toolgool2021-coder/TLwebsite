@@ -920,17 +920,72 @@ body {
     justify-content: center;
     gap: 20px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .social-link-footer {
     color: #a855f7;
     font-size: 24px;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    background: rgba(168, 85, 247, 0.06);
+    text-decoration: none;
 }
 
 .social-link-footer:hover {
     color: #00ffff;
-    transform: translateY(-4px);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 18px rgba(168, 85, 247, 0.25);
+}
+
+.telegram-btn {
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.7);
+    background: rgba(56, 189, 248, 0.08);
+}
+
+.telegram-btn:hover {
+    color: #dff7ff;
+    box-shadow: 0 8px 22px rgba(56, 189, 248, 0.35);
+}
+
+.tiktok-btn {
+    color: #f472b6;
+    border-color: rgba(244, 114, 182, 0.7);
+    background: rgba(244, 114, 182, 0.08);
+}
+
+.tiktok-btn:hover {
+    color: #ffe3f2;
+    box-shadow: 0 8px 22px rgba(244, 114, 182, 0.35);
+}
+
+.instagram-btn {
+    color: #f97316;
+    border-color: rgba(249, 115, 22, 0.7);
+    background: rgba(249, 115, 22, 0.08);
+}
+
+.instagram-btn:hover {
+    color: #fff0e2;
+    box-shadow: 0 8px 22px rgba(249, 115, 22, 0.35);
+}
+
+.youtube-btn {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.7);
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.youtube-btn:hover {
+    color: #ffe4e6;
+    box-shadow: 0 8px 22px rgba(239, 68, 68, 0.35);
 }
 
 .legal-links {
@@ -944,11 +999,64 @@ body {
 .legal-link {
     color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .legal-link:hover {
     color: #00ffff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px rgba(0, 255, 200, 0.12);
+}
+
+.support-btn {
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.5);
+    background: rgba(251, 191, 36, 0.06);
+}
+
+.support-btn:hover {
+    color: #fff4d2;
+    box-shadow: 0 10px 20px rgba(251, 191, 36, 0.2);
+}
+
+.license-btn {
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.5);
+    background: rgba(74, 222, 128, 0.06);
+}
+
+.license-btn:hover {
+    color: #dcfce7;
+    box-shadow: 0 10px 20px rgba(74, 222, 128, 0.2);
+}
+
+.doxxing-btn {
+    color: #f87171;
+    border-color: rgba(248, 113, 113, 0.5);
+    background: rgba(248, 113, 113, 0.06);
+}
+
+.doxxing-btn:hover {
+    color: #fee2e2;
+    box-shadow: 0 10px 20px rgba(248, 113, 113, 0.2);
+}
+
+.notice-btn {
+    color: #a78bfa;
+    border-color: rgba(167, 139, 250, 0.5);
+    background: rgba(167, 139, 250, 0.06);
+}
+
+.notice-btn:hover {
+    color: #ede9fe;
+    box-shadow: 0 10px 20px rgba(167, 139, 250, 0.2);
 }
 
 .footer-text {
@@ -998,10 +1106,15 @@ body {
     .music-control-btn {
         width: 32px;
         height: 32px;
-        font-size: 12px;
     }
 
-    .footer {
-        padding: 30px 15px;
+    .social-links-footer {
+        gap: 12px;
+    }
+
+    .social-link-footer {
+        width: 46px;
+        height: 46px;
+        font-size: 20px;
     }
 }
