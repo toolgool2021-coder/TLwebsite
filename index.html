@@ -26,24 +26,13 @@
 <div class="container">
     <div class="profile-section">
 
-        <div class="avatars-container">
-            <div class="secondary-avatar-wrapper">
-                <a href="https://t.me/Olitiks" target="_blank" class="avatar-link">
-                    <div class="avatar-wrapper secondary-avatar">
-                        <div class="heart-particles" id="heartParticles"></div>
-                        <img src="./images/icon-Orig.jpg" alt="Avatar" class="avatar">
-                    </div>
-                </a>
-                <h2 class="secondary-username">@Olitiks</h2>
-            </div>
-
-            <div class="avatar-container">
-                <div class="avatar-wrapper">
-                    <img src="./images/icon.jpg" alt="Avatar" class="avatar">
-                </div>
-                <h1 class="username">@Toolgool</h1>
+        <div class="avatar-container">
+            <div class="avatar-wrapper">
+                <img src="./images/icon.jpg" alt="Avatar" class="avatar">
             </div>
         </div>
+
+        <h1 class="username">@Toolgool</h1>
 
         <div class="social-links">
             <a href="javascript:void(0)" data-href="https://t.me/Toolgool" target="_blank" class="social-link" title="Telegram">
@@ -189,31 +178,5 @@
 
 <script src="intro.js"></script>
 <script src="script.js"></script>
-<script>
-    // Heart particles animation for Olitiks avatar
-    function createHeartParticles() {
-        const container = document.getElementById('heartParticles');
-        if (!container) return;
-
-        // Generate hearts periodically
-        setInterval(() => {
-            const heart = document.createElement('div');
-            heart.className = 'heart-particle';
-            heart.innerHTML = '♥';
-            
-            // Random horizontal position
-            const randomX = Math.random() * 80 - 40; // -40 to 40
-            
-            heart.style.setProperty('--x', randomX + 'px');
-            container.appendChild(heart);
-            
-            // Remove after animation
-            setTimeout(() => heart.remove(), 2000);
-        }, 800);
-    }
-
-    // Initialize heart particles when page loads
-    document.addEventListener('DOMContentLoaded', createHeartParticles);
-</script>
 </body>
 </html>
