@@ -1,182 +1,545 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Toolgool - Personal Bio Site">
-    <title>Toolgool - Bio Site</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d12">
+  <meta name="description" content="Личное пространство Toolgool: проекты, соцсети, музыка и близкие люди.">
+
+  <meta property="og:title" content="Toolgool · Личное пространство">
+  <meta property="og:description" content="Идеи становятся проектами. Все мои ссылки в одном месте.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://toolgool.duckdns.org/images/icon.jpg">
+
+  <title>Toolgool · Личное пространство</title>
+
+  <link rel="icon" href="images/icon.jpg">
+  <link rel="stylesheet" href="style.css?v=3">
+
+  <script src="data.js?v=3" defer></script>
+  <script src="script.js?v=3" defer></script>
+  <script src="intro.js?v=3" defer></script>
 </head>
 
 <body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
 
-<!-- INTRO SECTION -->
-<div id="intro">
-    <div id="flash"></div>
-    <div id="shockwave"></div>
-    <div id="explosion"></div>
-    <div id="intro-name">@Toolgool</div>
-    <div id="intro-subtitle">✨ Добро пожаловать ✨</div>
-    <div id="intro-particles"></div>
-</div>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="0"
+    height="0"
+    aria-hidden="true"
+    style="position:absolute;pointer-events:none"
+  >
+    <symbol id="icon-arrow" viewBox="0 0 24 24">
+      <path
+        d="M5 19 19 5M5 5h14v14"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+      />
+    </symbol>
+  </svg>
 
-<canvas id="snowCanvas"></canvas>
+  <canvas id="snowCanvas" aria-hidden="true"></canvas>
+  <div class="ambient" aria-hidden="true"></div>
 
-<div class="container">
-    <div class="profile-section">
+  <header class="header wrap">
+    <a href="#" class="brand" aria-label="Toolgool, на главную">
+      TL
+      <span>
+        TOOLGOOL
+        <small>PERSONAL SPACE</small>
+      </span>
+    </a>
 
-        <div class="avatar-container">
-            <div class="avatar-wrapper">
-                <img src="./images/icon.jpg" alt="Avatar" class="avatar">
-            </div>
+    <nav aria-label="Главная навигация">
+      <a href="#projects">Проекты</a>
+      <a href="#socials">Соцсети</a>
+      <a href="#people">Мои люди</a>
+    </nav>
+
+    <button
+      id="effects"
+      class="effects"
+      aria-label="Включить или отключить эффекты"
+      aria-pressed="true"
+    >
+      ✦ <span>Эффекты</span>
+    </button>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow">
+          <span class="dot"></span>
+          МОЙ УГОЛОК ИНТЕРНЕТА
         </div>
 
-        <h1 class="username">@Toolgool</h1>
+        <h1 id="hero-title">
+          Просто я.<br>
+          <span>Toolgool.</span>
+        </h1>
 
-        <div class="social-links">
-            <a href="javascript:void(0)" data-href="https://t.me/Toolgool" target="_blank" class="social-link" title="Telegram">
-                <img src="./images/Telegram.jpg" alt="Telegram">
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.tiktok.com/@Toolgool2023" target="_blank" class="social-link" title="TikTok">
-                <img src="./images/Tiktok.jpg" alt="TikTok">
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.instagram.com/Toolgool2023" target="_blank" class="social-link" title="Instagram">
-                <img src="./images/Instagram.jpg" alt="Instagram">
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.youtube.com/@Toolgool2023" target="_blank" class="social-link" title="YouTube">
-                <img src="./images/YouTube.jpg" alt="YouTube">
-            </a>
-            <a href="javascript:void(0)" data-href="https://vk.com/Toolgool" target="_blank" class="social-link" title="VK">
-                <img src="./images/VK.jpg" alt="VK">
-            </a>
-            <a href="javascript:void(0)" data-href="https://discord.com/users/Toolgool2023" target="_blank" class="social-link" title="Discord">
-                <img src="./images/Discord.jpg" alt="Discord">
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.twitch.tv/Toolgool2023" target="_blank" class="social-link" title="Twitch">
-                <img src="./images/Twitch.jpg" alt="Twitch">
-            </a>
-            <a href="javascript:void(0)" data-href="https://x.com/Toolgool2023" target="_blank" class="social-link" title="X">
-                <img src="./images/X.jpg" alt="X">
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.facebook.com/Toolgool2023" target="_blank" class="social-link" title="Facebook">
-                <img src="./images/Facebook.jpg" alt="Facebook">
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.snapchat.com/add/Toolgool2023" target="_blank" class="social-link" title="Snapchat">
-                <img src="./images/Snapchat.jpg" alt="Snapchat">
-            </a>
-            <a href="javascript:void(0)" data-href="https://github.com/Toolgool" target="_blank" class="social-link" title="GitHub">
-                <img src="./images/GitHub.jpg" alt="GitHub">
-            </a>
-            <a href="javascript:void(0)" data-href="mailto:Toolgool2021@gmail.com" class="social-link" title="Gmail">
-                <img src="./images/Gmail.jpg" alt="Gmail">
-            </a>
+        <p class="hero-description">
+          Создаю своё. Оставляю след.<br>
+          Проекты, люди и немного моей атмосферы.
+        </p>
+
+        <div class="hero-actions">
+          <a
+            class="button primary"
+            href="https://t.me/Toolgool"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Написать в Telegram
+            <svg class="external-icon" width="16" height="16" aria-hidden="true">
+              <use href="#icon-arrow"></use>
+            </svg>
+          </a>
+
+          <a class="button secondary" href="#projects">
+            Мои проекты <span>↓</span>
+          </a>
         </div>
 
-        <!-- POSTS SECTION -->
-        <div class="posts-section">
-            <h2>📮 Посты</h2>
-            <div class="posts-container" id="postsContainer">
-                <div class="loading-posts">Загрузка постов...</div>
-            </div>
+        <button
+          class="handle"
+          id="copyHandle"
+          aria-label="Скопировать ник @Toolgool"
+        >
+          @Toolgool <span>⧉</span>
+        </button>
+      </div>
+
+      <div class="hero-art">
+        <div class="orbit orbit-one" aria-hidden="true"></div>
+        <div class="orbit orbit-two" aria-hidden="true"></div>
+
+        <span class="orbit-star star-one" aria-hidden="true">✦</span>
+        <span class="orbit-star star-two" aria-hidden="true">+</span>
+
+        <div class="portrait">
+          <img
+            src="images/icon.jpg"
+            alt="Аватар Toolgool"
+            width="340"
+            height="400"
+            fetchpriority="high"
+          >
+
+          <div class="portrait-caption">
+            <span>TL / 01</span>
+            <span>BE YOURSELF.</span>
+          </div>
         </div>
 
-        <!-- TEAM SECTION -->
-        <div class="team-section">
-            <h2>𓆩♡𓆪 𝖒𝖞 𝖇𝖊𝖘𝖙 𓆩♡𓆪</h2>
-            <div class="team-grid" id="teamGrid"></div>
+        <div class="floating-tag">
+          ✧ <span>В своём ритме</span>
         </div>
 
+        <span class="art-coordinate">PERSONAL UNIVERSE / 001</span>
+      </div>
+
+      <div class="hero-bottom">
+        <span>СОЗДАВАТЬ. ЧУВСТВОВАТЬ. БЫТЬ СОБОЙ.</span>
+        <a href="#projects">Листай дальше ↓</a>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">01 / DIGITAL WORLD</div>
+          <h2>Мои проекты<span>.</span></h2>
+        </div>
+
+        <span class="section-note">Из идеи в реальность</span>
+      </div>
+
+      <div class="project-grid">
+        <a
+          class="project project-featured"
+          href="https://orbit-ai.duckdns.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="project-top">
+            <span class="pill">ORBIT AI</span>
+            <span class="arrow">
+              <svg class="external-icon" width="16" height="16" aria-hidden="true">
+                <use href="#icon-arrow"></use>
+              </svg>
+            </span>
+          </div>
+
+          <div class="orbit-illustration" aria-hidden="true">
+            <div></div>
+            <i></i>
+            <b>✦</b>
+          </div>
+
+          <div class="project-copy">
+            <small>01 / AI PROJECT</small>
+            <h3>Своя орбита.</h3>
+            <p>ORBIT AI · мой AI-проект</p>
+          </div>
+        </a>
+
+        <a
+          class="project project-school"
+          href="https://tlschool.duckdns.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="project-top">
+            <span class="pill">TL SCHOOL</span>
+            <span class="arrow">
+              <svg class="external-icon" width="16" height="16" aria-hidden="true">
+                <use href="#icon-arrow"></use>
+              </svg>
+            </span>
+          </div>
+
+          <div class="school-illustration" aria-hidden="true">
+            <span>08:00</span>
+            <i></i>
+            <i></i>
+            <i></i>
+          </div>
+
+          <div class="project-copy">
+            <small>02 / EVERYDAY</small>
+            <h3>Всё по расписанию.</h3>
+            <p>Школьное расписание под рукой</p>
+          </div>
+        </a>
+
+        <a
+          class="project project-game"
+          href="https://tlmoomoo.duckdns.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="project-top">
+            <span class="pill">MOOMOO.IO</span>
+            <span class="arrow">
+              <svg class="external-icon" width="16" height="16" aria-hidden="true">
+                <use href="#icon-arrow"></use>
+              </svg>
+            </span>
+          </div>
+
+          <div class="game-illustration" aria-hidden="true">
+            ✳
+            <span>PLAY YOUR WAY</span>
+          </div>
+
+          <div class="project-copy">
+            <small>03 / GAMING</small>
+            <h3>Моя территория.</h3>
+            <p>Моя страница в мире MooMoo</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="posts-panel">
+        <div class="posts-heading">
+          <h3>Заметки и другие ссылки</h3>
+          <span>FROM MY FEED ↙</span>
+        </div>
+
+        <div id="postsContainer" aria-live="polite">
+          <p>Загружаем записи…</p>
+        </div>
+
+        <button id="retryPosts" hidden class="button secondary">
+          Попробовать снова
+        </button>
+      </div>
+    </section>
+
+    <section class="section" id="socials">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">02 / KEEP IN TOUCH</div>
+          <h2>На связи<span>.</span></h2>
+        </div>
+
+        <span class="section-note">Выбирай, где тебе удобнее</span>
+      </div>
+
+      <div class="social-grid">
+        <a class="social-card" href="https://t.me/Toolgool" target="_blank" rel="noopener noreferrer">
+          <img src="./images/Telegram.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>Telegram</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://www.tiktok.com/@Toolgool2023" target="_blank" rel="noopener noreferrer">
+          <img src="./images/Tiktok.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>TikTok</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://www.instagram.com/Toolgool2023" target="_blank" rel="noopener noreferrer">
+          <img src="./images/Instagram.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>Instagram</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://www.youtube.com/@Toolgool2023" target="_blank" rel="noopener noreferrer">
+          <img src="./images/YouTube.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>YouTube</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://vk.com/Toolgool" target="_blank" rel="noopener noreferrer">
+          <img src="./images/VK.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>VK</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://discord.com/users/Toolgool2023" target="_blank" rel="noopener noreferrer">
+          <img src="./images/Discord.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>Discord</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://www.twitch.tv/Toolgool2023" target="_blank" rel="noopener noreferrer">
+          <img src="./images/Twitch.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>Twitch</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://x.com/Toolgool2023" target="_blank" rel="noopener noreferrer">
+          <img src="./images/X.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>X</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://www.facebook.com/Toolgool2023" target="_blank" rel="noopener noreferrer">
+          <img src="./images/Facebook.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>Facebook</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://www.snapchat.com/add/Toolgool2023" target="_blank" rel="noopener noreferrer">
+          <img src="./images/Snapchat.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>Snapchat</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="https://github.com/Toolgool" target="_blank" rel="noopener noreferrer">
+          <img src="./images/GitHub.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>GitHub</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+
+        <a class="social-card" href="mailto:Toolgool2021@gmail.com">
+          <img src="./images/Gmail.jpg" alt="" width="36" height="36" loading="lazy">
+          <span>Gmail</span>
+          <span aria-hidden="true">
+            <svg class="external-icon" width="16" height="16"><use href="#icon-arrow"></use></svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="people">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">03 / INNER CIRCLE</div>
+          <h2>Мои люди<span>.</span></h2>
+        </div>
+
+        <span class="section-note">Те, кто на одной волне ♡</span>
+      </div>
+
+      <div class="team-grid" id="teamGrid"></div>
+
+      <noscript>
+        Для просмотра карточек друзей и записей включи JavaScript.
+        Соцсети и проекты доступны по ссылкам выше.
+      </noscript>
+    </section>
+
+    <section class="closing">
+      <span>ЕСТЬ ЧТО СКАЗАТЬ?</span>
+
+      <a href="https://t.me/Toolgool" target="_blank" rel="noopener noreferrer">
+        Давай на связи
+        <span>
+          <svg class="external-icon" width="16" height="16" aria-hidden="true">
+            <use href="#icon-arrow"></use>
+          </svg>
+        </span>
+      </a>
+
+      <p>Иногда всё начинается с одного сообщения.</p>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <div class="footer-top">
+      <a class="brand" href="#">TL</a>
+      <span>Личное пространство. Своя атмосфера.</span>
+      <a href="#">Наверх ↑</a>
     </div>
-</div>
 
-<!-- FLOATING MUSIC PLAYER -->
-<div class="music-player" id="musicPlayer">
-    <div class="music-player-content">
-        <div class="music-player-header">
-            <h3 id="songTitle">Загрузка...</h3>
-            <button class="music-player-minimize" id="minimizeBtn">
-                <i class="fas fa-chevron-down"></i>
-            </button>
-        </div>
-        <div class="music-player-body">
-            <div class="music-progress">
-                <div class="music-progress-bar" id="progressBar"></div>
-            </div>
-            <div class="music-time">
-                <span id="currentTime">0:00</span>
-                <span id="duration">0:00</span>
-            </div>
-        </div>
-        <div class="music-player-controls">
-            <button class="music-control-btn" id="prevBtn" title="Назад">
-                <i class="fas fa-step-backward"></i>
-            </button>
-            <button class="music-control-btn play-btn" id="playBtn" title="Играть/Пауза">
-                <i class="fas fa-play"></i>
-            </button>
-            <button class="music-control-btn" id="nextBtn" title="Далее">
-                <i class="fas fa-step-forward"></i>
-            </button>
-        </div>
+    <div class="legal-links">
+      <a
+        href="https://telegra.ph/%E4%BA%97-ZAKON-O-KONFIDENCIALNOSTI-I-ZASHCHITE-LICHNOSTI-%E4%BA%97-08-09-2"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ‼️ IMPORTANT ‼️
+        <svg class="external-icon" width="16" height="16" aria-hidden="true">
+          <use href="#icon-arrow"></use>
+        </svg>
+      </a>
+
+      <a
+        href="https://telegra.ph/Avtorskoe-pravo--Zashchita-kontenta-Toolgool2023-07-24"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🔰 COPYRIGHT 🔰
+        <svg class="external-icon" width="16" height="16" aria-hidden="true">
+          <use href="#icon-arrow"></use>
+        </svg>
+      </a>
+
+      <a
+        href="https://telegra.ph/Oficialnaya-poziciya-po-povodu-doksa-02-10"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        💀 My Position on Doxxing 💀
+        <svg class="external-icon" width="16" height="16" aria-hidden="true">
+          <use href="#icon-arrow"></use>
+        </svg>
+      </a>
+
+      <a
+        href="https://telegra.ph/%E4%BA%97-OFFICIAL-NOTICE--ANTI-IMPERSONATION--SECURITY-%E4%BA%97-03-06"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ⚖️ Official Legal Notice ⚖️
+        <svg class="external-icon" width="16" height="16" aria-hidden="true">
+          <use href="#icon-arrow"></use>
+        </svg>
+      </a>
     </div>
-</div>
 
-<!-- PLAYER TOGGLE BUTTON -->
-<button class="music-player-toggle" id="playerToggleBtn" title="Открыть плеер">
-    <i class="fas fa-music"></i>
-</button>
-
-<!-- AUDIO ELEMENT -->
-<audio id="audioElement"></audio>
-
-<footer class="footer">
-    <div class="footer-container">
-        <div class="social-links-footer">
-            <a href="javascript:void(0)" data-href="https://t.me/Toolgool" class="social-link-footer" title="Telegram" target="_blank">
-                <i class="fab fa-telegram"></i>
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.tiktok.com/@Toolgool2023" class="social-link-footer" title="TikTok" target="_blank">
-                <i class="fab fa-tiktok"></i>
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.instagram.com/Toolgool2023" class="social-link-footer" title="Instagram" target="_blank">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="javascript:void(0)" data-href="https://www.youtube.com/@Toolgool2023" class="social-link-footer" title="YouTube" target="_blank">
-                <i class="fab fa-youtube"></i>
-            </a>
-        </div>
-
-        <div class="legal-links">
-            <a href="javascript:void(0)" data-href="https://telegra.ph/%E4%BA%97-ZAKON-O-KONFIDENCIALNOSTI-I-ZASHCHITE-LICHNOSTI-%E4%BA%97-08-09-2" class="legal-link" target="_blank">
-                ‼️ IMPORTANT ‼️
-            </a>
-            <a href="javascript:void(0)" data-href="https://telegra.ph/Avtorskoe-pravo--Zashchita-kontenta-Toolgool2023-07-24" class="legal-link" target="_blank">
-                🔰 COPYRIGHT 🔰
-            </a>
-            <a href="javascript:void(0)" data-href="https://telegra.ph/Oficialnaya-poziciya-po-povodu-doksa-02-10" class="legal-link" target="_blank">
-                💀 My Position on Doxxing 💀
-            </a>
-            <a href="javascript:void(0)" data-href="https://telegra.ph/%E4%BA%97-OFFICIAL-NOTICE--ANTI-IMPERSONATION--SECURITY-%E4%BA%97-03-06" class="legal-link" target="_blank">
-                ⚖️ Official Legal Notice ⚖️
-            </a>
-        </div>
-
-        <div class="footer-text">
-            <p>&copy; 2024-2026 Toolgool. All rights reserved.</p>
-        </div>
+    <div class="footer-bottom">
+      <span>© 2024–<span id="year">2026</span> Toolgool</span>
+      <span>MADE WITH FEELING ✧</span>
     </div>
-</footer>
+  </footer>
 
-<!-- PROFILE MODAL -->
-<div class="modal" id="profileModal">
-    <div class="modal-content">
-        <span class="modal-close">&times;</span>
-        <div id="modalBody"></div>
+  <aside class="music-player" aria-label="Музыкальный плеер">
+    <button
+      id="playerToggleBtn"
+      class="player-toggle"
+      aria-expanded="false"
+      aria-controls="playerBody"
+    >
+      <span class="equalizer" aria-hidden="true">
+        <i></i><i></i><i></i><i></i>
+      </span>
+
+      <span>
+        Моя атмосфера
+        <small id="miniState">Включить музыку</small>
+      </span>
+
+      <span id="playerChevron">⌃</span>
+    </button>
+
+    <div id="playerBody" hidden>
+      <p id="songTitle"></p>
+
+      <div class="music-time">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+
+      <input
+        id="seek"
+        type="range"
+        min="0"
+        max="100"
+        step="0.1"
+        value="0"
+        aria-label="Позиция воспроизведения"
+        disabled
+      >
+
+      <div class="player-controls">
+        <button id="prevBtn" aria-label="Предыдущий трек">⏮</button>
+
+        <button id="playBtn" aria-label="Воспроизвести" aria-pressed="false">
+          ▶
+        </button>
+
+        <button id="nextBtn" aria-label="Следующий трек">⏭</button>
+
+        <label class="volume">
+          Звук
+          <input
+            id="volume"
+            aria-label="Громкость"
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value="0.6"
+          >
+        </label>
+      </div>
+
+      <p id="audioStatus" role="status"></p>
     </div>
-</div>
 
-<script src="intro.js"></script>
-<script src="script.js"></script>
+    <audio id="audioElement" preload="none"></audio>
+  </aside>
+
+  <dialog id="profileModal" aria-labelledby="profileName">
+    <button class="modal-close" aria-label="Закрыть профиль">×</button>
+    <div id="modalBody"></div>
+  </dialog>
+
+  <div id="toast" role="status"></div>
+
+  <div id="intro" hidden aria-hidden="true">
+    <span>TL</span>
+    <small>WELCOME TO MY SPACE</small>
+  </div>
 </body>
 </html>
