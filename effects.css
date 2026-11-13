@@ -1,0 +1,731 @@
+/* Подключается после style.css. */
+
+:root {
+  --fx-cyan: 105, 220, 255;
+  --fx-purple: 161, 132, 255;
+}
+
+body {
+  isolation: isolate;
+  background: #070b13;
+}
+
+.ambient {
+  display: none;
+}
+
+/* Живой фон */
+
+.fx-background,
+#tlSpaceCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.fx-background {
+  overflow: hidden;
+}
+
+.fx-background::before,
+.fx-background::after {
+  content: "";
+  position: absolute;
+  width: 85vw;
+  height: 85vh;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse,
+      #167d9945,
+      #19345618 45%,
+      transparent 70%
+    );
+  top: -20%;
+  right: -20%;
+  animation: fx-aurora 19s ease-in-out infinite alternate;
+}
+
+.fx-background::after {
+  background:
+    radial-gradient(
+      ellipse,
+      #7445ba38,
+      #293c7514 45%,
+      transparent 70%
+    );
+  top: 35%;
+  left: -30%;
+  animation-delay: -9s;
+  animation-duration: 24s;
+}
+
+.fx-grid {
+  position: absolute;
+  inset: 0;
+  opacity: .18;
+  background-image:
+    linear-gradient(#83b8dd25 1px, transparent 1px),
+    linear-gradient(90deg, #83b8dd25 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image:
+    linear-gradient(
+      transparent,
+      #000 25%,
+      transparent 85%
+    );
+}
+
+/* Прогресс прокрутки */
+
+.fx-scroll {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 3px;
+  background:
+    linear-gradient(
+      90deg,
+      #55cfff,
+      #ac85ff,
+      #8ef5d7
+    );
+  transform: scaleX(var(--page-progress, 0));
+  transform-origin: left;
+  box-shadow: 0 0 14px #75d9ff;
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* Навигация */
+
+.header {
+  position: sticky;
+  top: 0;
+  height: 86px;
+  z-index: 20;
+  background: #090f1ce8;
+  border: 1px solid #a7d9ff1c;
+  border-top: 0;
+  border-radius: 0 0 22px 22px;
+  padding: 0 24px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 50px #0003;
+}
+
+html {
+  scroll-padding-top: 110px;
+}
+
+.header nav a {
+  position: relative;
+  padding: 10px 0;
+}
+
+.header nav a::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  inset: auto 0 2px;
+  background: #79dbff;
+  transform: scaleX(0);
+  transition: transform .25s;
+}
+
+.header nav a:hover::after,
+.header nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Первый экран */
+
+.hero {
+  min-height: 650px;
+  gap: 28px;
+  padding-top: 45px;
+}
+
+.hero h1 > span {
+  background-image:
+    linear-gradient(
+      110deg,
+      #fff,
+      #78ddff 28%,
+      #b5a0ff 52%,
+      #fff 76%
+    );
+  background-size: 250% 100%;
+  animation: fx-title 9s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 24px #61cfff22);
+}
+
+.hero-art::before {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      #75d9ff29,
+      transparent 67%
+    );
+  box-shadow: inset 0 0 50px #72d4ff15;
+  animation: fx-breathe 6s ease-in-out infinite;
+  z-index: -1;
+}
+
+.portrait {
+  border-color: #9cdaff66;
+  box-shadow:
+    0 0 0 7px #83cfff07,
+    0 0 70px #34b6ff25,
+    24px 35px 70px #0007;
+}
+
+.portrait::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background:
+    linear-gradient(
+      110deg,
+      transparent 42%,
+      #d6f6ff22 49%,
+      transparent 56%
+    );
+  transform: translateX(-70%);
+  animation: fx-scan 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.orbit {
+  border-color: #76d6ff48;
+}
+
+.orbit::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #a9eaff;
+  border-radius: 50%;
+  left: 50%;
+  top: -4px;
+  box-shadow: 0 0 20px 5px #68cfff66;
+}
+
+.orbit-two {
+  border-color: #ac8dff38;
+}
+
+.orbit-two::after {
+  background: #c5acff;
+  box-shadow: 0 0 24px #ae83ff;
+}
+
+.floating-tag {
+  backdrop-filter: blur(12px);
+  box-shadow: 0 14px 30px #0004;
+}
+
+.hero-actions .button {
+  min-height: 49px;
+  border-radius: 12px;
+}
+
+.primary {
+  background: linear-gradient(115deg, #92edff, #70baff);
+  box-shadow: 0 0 28px #6bd8ff26;
+}
+
+.primary:hover {
+  box-shadow: 0 0 42px #6bd8ff55;
+}
+
+/* Быстрые переходы с количеством элементов */
+
+.fx-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.fx-summary a {
+  padding: 7px 12px;
+  border: 1px solid #9fd9ff26;
+  border-radius: 8px;
+  background: #102237a8;
+  color: #a6baca;
+  font-size: 11px;
+}
+
+.fx-summary strong {
+  margin-right: 5px;
+  color: #bef0ff;
+}
+
+/* Разделы */
+
+.section {
+  padding-top: 64px;
+}
+
+.section-heading {
+  padding-bottom: 17px;
+  border-bottom: 1px solid #a1caff17;
+}
+
+.section-heading h2 {
+  text-shadow: 0 0 35px #73cfff15;
+}
+
+.section-heading .eyebrow {
+  color: #8db6cc;
+}
+
+/* Наклон и подсветка карточек */
+
+.fx-card {
+  --accent: var(--fx-cyan);
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  border-color: rgba(var(--accent), .19);
+
+  transform:
+    perspective(900px)
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+
+  transition:
+    transform .22s ease-out,
+    border-color .25s,
+    box-shadow .25s;
+}
+
+.fx-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      350px circle
+      at var(--spot-x, 50%) var(--spot-y, 50%),
+      rgba(var(--accent), .17),
+      transparent 65%
+    );
+
+  opacity: .3;
+  transition: opacity .25s;
+  z-index: -1;
+}
+
+.fx-card:hover,
+.fx-card:focus-visible {
+  border-color: rgba(var(--accent), .65);
+  box-shadow:
+    0 14px 35px #0004,
+    0 0 25px rgba(var(--accent), .09);
+}
+
+.fx-card:hover::before,
+.fx-card:focus-visible::before {
+  opacity: 1;
+}
+
+/* Проекты */
+
+.project {
+  min-height: 330px;
+  border-radius: 20px;
+}
+
+.project-school {
+  --accent: var(--fx-purple);
+}
+
+.project-game {
+  --accent: 129, 235, 177;
+}
+
+.project-copy {
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--accent), .15);
+}
+
+.project .pill {
+  background: rgba(var(--accent), .08);
+  border-color: rgba(var(--accent), .25);
+}
+
+.orbit-illustration div {
+  animation: fx-orbit-a 12s linear infinite;
+}
+
+.orbit-illustration i {
+  animation: fx-orbit-b 16s linear infinite reverse;
+}
+
+.school-illustration i {
+  animation: fx-data 3s ease-in-out infinite;
+  transform-origin: left;
+}
+
+.school-illustration i:nth-child(3) {
+  animation-delay: -.7s;
+}
+
+.school-illustration i:nth-child(4) {
+  animation-delay: -1.4s;
+}
+
+.game-illustration {
+  animation: fx-game 7s ease-in-out infinite;
+}
+
+/* Соцсети */
+
+.social-grid {
+  gap: 14px;
+}
+
+.social-card {
+  min-height: 92px;
+  border-radius: 16px;
+  background: #111d2bd9;
+}
+
+.social-card img {
+  box-shadow: 0 0 0 5px #ffffff05;
+  transition: transform .3s;
+}
+
+.social-card:hover img {
+  transform: rotate(-8deg) scale(1.12);
+}
+
+.social-card:nth-child(3n + 2) {
+  --accent: 177, 141, 255;
+}
+
+.social-card:nth-child(3n) {
+  --accent: 255, 157, 190;
+}
+
+.social-card .external-icon {
+  color: rgba(var(--accent), .85);
+  transition: transform .3s;
+}
+
+.social-card:hover .external-icon {
+  transform: translate(3px, -3px);
+}
+
+/* Люди */
+
+.team-card {
+  min-height: 112px;
+  border-radius: 18px;
+  background:
+    linear-gradient(
+      135deg,
+      #152437e8,
+      #10131fe8
+    );
+}
+
+.team-card:nth-child(2) {
+  --accent: 177, 141, 255;
+}
+
+.team-card:nth-child(3) {
+  --accent: 124, 239, 205;
+}
+
+.team-avatar {
+  border: 2px solid rgba(var(--accent), .6);
+  box-shadow: 0 0 22px rgba(var(--accent), .12);
+}
+
+.team-card h3 {
+  color: #e3f4ff;
+}
+
+/* Заметки */
+
+.posts-panel {
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      130deg,
+      #101e2ee8,
+      #141325e8
+    );
+}
+
+#postsContainer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#postsContainer > .post-item {
+  margin: 0;
+  padding: 16px;
+  border: 1px solid #a1cfff1c;
+  border-radius: 12px;
+  background: #06101a66;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+#postsContainer > .post-item:first-child {
+  grid-column: 1 / -1;
+}
+
+.link-list a {
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  text-decoration: none;
+}
+
+/* Нижний блок */
+
+.closing {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #96d9ff28;
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      ellipse at 50% 100%,
+      #16769630,
+      transparent 70%
+    ),
+    #10172788;
+}
+
+.closing > a:hover {
+  color: #92e0ff;
+}
+
+/* Музыка и профили */
+
+.music-player {
+  border-radius: 18px;
+  background: #0d1a2bf2;
+  box-shadow:
+    0 12px 45px #0007,
+    0 0 25px #56baff12;
+}
+
+.music-player.playing {
+  border-color: #71d6ff80;
+  box-shadow: 0 0 32px #65cfff26;
+}
+
+#playerBody:not([hidden]) {
+  animation: fx-panel .3s ease-out;
+}
+
+.profile-links {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.profile-links a {
+  padding: 9px 15px;
+  border: 1px solid #9bdcff44;
+  border-radius: 9px;
+  color: #9be4ff;
+}
+
+dialog[open] {
+  animation: fx-panel .3s ease-out;
+  box-shadow: 0 0 90px #49baff22;
+}
+
+/* Остановка эффектов */
+
+.fx-paused *,
+.fx-paused *::before,
+.fx-paused *::after {
+  animation-play-state: paused !important;
+}
+
+.fx-paused #tlSpaceCanvas {
+  visibility: hidden;
+}
+
+.no-effects .fx-card,
+.fx-paused .fx-card {
+  transform: none;
+}
+
+/* Анимации */
+
+@keyframes fx-aurora {
+  to {
+    transform: translate(-12%, 14%) rotate(15deg) scale(1.15);
+  }
+}
+
+@keyframes fx-title {
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fx-breathe {
+  50% {
+    transform: scale(1.08);
+    opacity: .6;
+  }
+}
+
+@keyframes fx-scan {
+  0%, 60% {
+    transform: translateX(-70%);
+  }
+
+  100% {
+    transform: translateX(70%);
+  }
+}
+
+@keyframes fx-orbit-a {
+  to {
+    transform: rotate(330deg);
+  }
+}
+
+@keyframes fx-orbit-b {
+  to {
+    transform: rotate(405deg);
+  }
+}
+
+@keyframes fx-data {
+  50% {
+    transform: scaleX(.55);
+    opacity: .5;
+  }
+}
+
+@keyframes fx-game {
+  50% {
+    transform: rotate(12deg) scale(1.1);
+  }
+}
+
+@keyframes fx-panel {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* Телефоны */
+
+@media (max-width: 700px) {
+  .header {
+    padding: 0 12px;
+    height: 74px;
+    gap: 10px;
+  }
+
+  .header .brand > span {
+    display: none;
+  }
+
+  .header nav {
+    gap: 15px;
+    font-size: 11px;
+  }
+
+  .header nav a:last-child {
+    display: inline;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 36px;
+    gap: 12px;
+  }
+
+  .hero h1 {
+    font-size: clamp(48px, 15vw, 65px);
+  }
+
+  .fx-summary {
+    justify-content: center;
+  }
+
+  .hero-art {
+    margin-top: -8px;
+  }
+
+  .section {
+    padding-top: 48px;
+  }
+
+  .social-card {
+    min-height: 83px;
+  }
+
+  .project {
+    min-height: 300px;
+    padding: 16px;
+  }
+
+  .project-featured {
+    min-height: 270px;
+  }
+
+  .project-featured .orbit-illustration {
+    right: 4px;
+    width: 145px;
+  }
+
+  #postsContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .posts-panel {
+    padding: 17px;
+  }
+
+  .fx-card {
+    transform: none;
+  }
+
+  .hero-bottom > span {
+    max-width: 65%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #tlSpaceCanvas {
+    display: none;
+  }
+
+  .fx-card {
+    transform: none !important;
+  }
+}
