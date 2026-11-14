@@ -729,3 +729,17 @@ dialog[open] {
     transform: none !important;
   }
 }
+
+
+/* NEXORA · featured project */
+.project-nexora{--accent:115,180,255;background:linear-gradient(145deg,#142239,#0b1020 68%,#111a35);border:1px solid #719dff55;position:relative;overflow:hidden}
+.project-nexora::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 36%,#658cff22,transparent 58%);pointer-events:none}
+.nexora-illustration{position:relative;display:grid;place-items:center;height:145px;isolation:isolate}
+.nexora-symbol{font-weight:800;font-size:76px;line-height:1;letter-spacing:-8px;color:#e5f0ff;text-shadow:0 0 35px #80aaff88;animation:nexora-float 5s ease-in-out infinite;z-index:1}
+.nexora-ring{position:absolute;width:145px;height:75px;border:1px solid #80b9ff77;border-radius:50%;transform:rotate(-25deg);animation:nexora-orbit 13s linear infinite}
+.nexora-ring.second{width:130px;height:115px;border-color:#b29dff55;animation-duration:18s;animation-direction:reverse}
+.project-nexora .pill{background:#729dff1a;border-color:#91b7ff66;color:#d9eaff}
+@keyframes nexora-float{50%{transform:translateY(-9px)}}
+@keyframes nexora-orbit{to{transform:rotate(335deg)}}
+@media(min-width:900px){.project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.project-nexora{grid-column:span 1}}
+@media(prefers-reduced-motion:reduce){.nexora-symbol,.nexora-ring{animation:none}}
