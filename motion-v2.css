@@ -1,0 +1,37 @@
+/* TL Motion Studio / v2 */
+.tl-ticker{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.tl-ticker-track.tl-ticker-loop{display:flex;width:max-content;gap:0;white-space:nowrap;animation:tl-seamless 32s linear infinite;will-change:transform}
+.tl-ticker-half{display:inline-flex;align-items:center;white-space:nowrap;flex:none;padding-right:32px}
+.tl-ticker-half span{display:inline-block}
+@keyframes tl-seamless{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tl-cinema-reveal{opacity:0;transform:translateY(38px);filter:blur(7px);transition:opacity .85s cubic-bezier(.18,.7,.25,1),transform 1s cubic-bezier(.16,1,.3,1),filter 1s}
+.tl-cinema-reveal.tl-cinema-visible{opacity:1;transform:translateY(0);filter:blur(0)}
+.tl-cinema-card{opacity:0;transform:translateY(26px) scale(.975);transition:opacity .8s ease,transform .85s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s;transition-delay:var(--tl-delay,0ms)}
+.tl-cinema-card.tl-card-visible{opacity:1;transform:translateY(0) scale(1)}
+.tl-cinema-card.tl-card-visible:hover{transform:translateY(-7px) scale(1.012);transition-delay:0ms}
+.project,.social-card,.team-card{isolation:isolate}
+.project:before,.social-card:before,.team-card:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(240px circle at var(--shine-x,50%) var(--shine-y,50%),rgba(195,251,101,.12),transparent 75%);opacity:0;transition:opacity .35s}
+.project:hover:before,.social-card:hover:before,.team-card:hover:before{opacity:1}
+.tl-cursor-glow{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(430px circle at var(--glow-x,50%) var(--glow-y,50%),rgba(195,251,101,.055),transparent 70%);mix-blend-mode:screen}
+.tl-hero .button{transform:translate(var(--magnet-x,0px),var(--magnet-y,0px));transition:transform .22s ease,background .3s,box-shadow .3s}
+.tl-hero h1 em{position:relative;text-shadow:0 0 35px rgba(195,251,101,.15)}
+.tl-hero h1 em:after{content:"";position:absolute;bottom:-3px;left:0;width:100%;height:3px;background:linear-gradient(90deg,#c3fb65,transparent);transform-origin:left;animation:tl-underline 1.3s cubic-bezier(.16,1,.3,1) both}
+@keyframes tl-underline{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.tl-hero .portrait{transition:box-shadow .4s;box-shadow:0 0 0 10px rgba(195,251,101,.025),0 25px 95px rgba(0,0,0,.65),0 0 65px rgba(195,251,101,.065)}
+.tl-hero .hero-art:hover .portrait{box-shadow:0 0 0 12px rgba(195,251,101,.06),0 30px 110px rgba(0,0,0,.65),0 0 95px rgba(195,251,101,.17)}
+.tl-art-chip{animation:tl-chip-float 6s ease-in-out infinite alternate}
+.tl-chip-bottom{animation-delay:-3s}
+@keyframes tl-chip-float{to{translate:0 -12px}}
+.tl-hero-metrics>a strong{transition:color .3s,transform .3s;display:inline-block}
+.tl-hero-metrics>a:hover strong{color:#c3fb65;transform:translateY(-3px)}
+.project .arrow,.social-card .external-icon{transition:transform .3s ease}
+.project:hover .arrow,.social-card:hover .external-icon{transform:rotate(45deg)}
+.header nav a{position:relative}
+.header nav a:after{content:"";position:absolute;bottom:-9px;left:0;width:100%;height:2px;background:#c3fb65;transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.header nav a:hover:after,.header nav a.tl-current:after{transform:scaleX(1)}
+.tl-ticker:hover .tl-ticker-track{animation-play-state:paused}
+@media(max-width:800px){.tl-cursor-glow{display:none}.tl-cinema-reveal{filter:none;transform:translateY(20px)}.tl-cinema-card{transform:translateY(15px)}}
+@media(prefers-reduced-motion:reduce){.tl-ticker-track.tl-ticker-loop,.tl-art-chip,.tl-hero h1 em:after{animation:none!important}.tl-cinema-reveal,.tl-cinema-card{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}.tl-cursor-glow{display:none!important}}
+html.no-effects .tl-ticker-track.tl-ticker-loop,html.no-effects .tl-art-chip,html.no-effects .tl-hero h1 em:after{animation:none!important}
+html.no-effects .tl-cinema-reveal,html.no-effects .tl-cinema-card{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
+html.no-effects .tl-cursor-glow{display:none!important}
