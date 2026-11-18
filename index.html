@@ -17,11 +17,13 @@
   <link rel="stylesheet" href="style.css?v=4">
 <link rel="stylesheet" href="effects.css?v=1">
 <link rel="stylesheet" href="premium.css?v=1">
+<link rel="stylesheet" href="rebuild.css?v=1">
 
 <script src="data.js?v=3" defer></script>
 <script src="script.js?v=4" defer></script>
 <script src="effects.js?v=1" defer></script>
 <script src="premium.js?v=1" defer></script>
+<script src="rebuild.js?v=1" defer></script>
 </head>
 
 <body>
@@ -73,84 +75,39 @@
   </header>
 
   <main id="main" class="wrap">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <div class="eyebrow">
-          <span class="dot"></span>
-          МОЙ УГОЛОК ИНТЕРНЕТА
-        </div>
-
-        <h1 id="hero-title">
-          Просто я.<br>
-          <span>Toolgool.</span>
-        </h1>
-
-        <p class="hero-description">
-          Независимый разработчик цифровых проектов.<br>
-          Создаю NEXORA, экспериментирую с AI и веб-технологиями.
-        </p>
-
-        <div class="hero-actions">
-          <a
-            class="button primary"
-            href="https://t.me/Toolgool"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Написать в Telegram
-            <svg class="external-icon" width="16" height="16" aria-hidden="true">
-              <use href="#icon-arrow"></use>
-            </svg>
-          </a>
-
-          <a class="button secondary" href="#projects">
-            Мои проекты <span>↓</span>
-          </a>
-        </div>
-
-        <button
-          class="handle"
-          id="copyHandle"
-          aria-label="Скопировать ник @Toolgool"
-        >
-          @Toolgool <span>⧉</span>
-        </button>
-      </div>
-
-      <div class="hero-art">
-        <div class="orbit orbit-one" aria-hidden="true"></div>
-        <div class="orbit orbit-two" aria-hidden="true"></div>
-
-        <span class="orbit-star star-one" aria-hidden="true">✦</span>
-        <span class="orbit-star star-two" aria-hidden="true">+</span>
-
-        <div class="portrait">
-          <img
-            src="images/icon.jpg"
-            alt="Аватар Toolgool"
-            width="340"
-            height="400"
-            fetchpriority="high"
-          >
-
-          <div class="portrait-caption">
-            <span>TL / 01</span>
-            <span>BE YOURSELF.</span>
+    <section class="hero tl-hero" aria-labelledby="hero-title">
+      <div class="tl-hero-kicker"><span class="tl-live-dot"></span> INDEPENDENT CREATOR <span class="tl-kicker-line"></span> EST. 2024 — NOW</div>
+      <div class="tl-hero-stage">
+        <div class="hero-copy">
+          <div class="tl-hero-overline">ПЕРСОНАЛЬНОЕ ПРОСТРАНСТВО / 001</div>
+          <h1 id="hero-title">Создаю<br><em>свою</em> <span>вселенную.</span></h1>
+          <p class="hero-description">Я — <strong>Toolgool.</strong> Разработчик независимых цифровых проектов. Превращаю идеи в продукты, экспериментирую с технологиями и делаю то, во что верю.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">Исследовать проекты <span aria-hidden="true">↗</span></a>
+            <a class="button secondary" href="https://t.me/Toolgool" target="_blank" rel="noopener noreferrer">Связаться со мной <span aria-hidden="true">↗</span></a>
           </div>
+          <button class="handle" id="copyHandle" aria-label="Скопировать ник @Toolgool"><span class="tl-handle-dot"></span> @Toolgool <span aria-hidden="true">⧉</span></button>
         </div>
-
-        <div class="floating-tag">
-          ✧ <span>В своём ритме</span>
+        <div class="hero-art">
+          <div class="tl-art-halo" aria-hidden="true"></div>
+          <div class="tl-art-ring tl-art-ring-a" aria-hidden="true"></div>
+          <div class="tl-art-ring tl-art-ring-b" aria-hidden="true"></div>
+          <div class="portrait"><img src="images/icon.jpg" alt="Аватар Toolgool" width="400" height="400" fetchpriority="high"><div class="portrait-caption"><span>TOOLGOOL / TL</span><span>01 — ∞</span></div></div>
+          <div class="tl-art-chip tl-chip-top">✳ &nbsp; ALWAYS BUILDING</div>
+          <div class="tl-art-chip tl-chip-bottom"><span class="tl-live-dot"></span> AVAILABLE ONLINE</div>
+          <div class="tl-art-coordinate">CREATIVE MIND · DIGITAL SOUL</div>
         </div>
-
-        <span class="art-coordinate">PERSONAL UNIVERSE / 001</span>
       </div>
-
-      <div class="hero-bottom">
-        <span>СОЗДАВАТЬ. ЧУВСТВОВАТЬ. БЫТЬ СОБОЙ.</span>
-        <a href="#projects">Листай дальше ↓</a>
+      <div class="tl-hero-metrics" aria-label="Разделы сайта">
+        <a href="#projects"><strong>04</strong><span>ЦИФРОВЫХ ПРОЕКТА</span><b>↗</b></a>
+        <a href="#socials"><strong>12</strong><span>СОЦИАЛЬНЫХ СЕТЕЙ</span><b>↗</b></a>
+        <a href="#people"><strong>03</strong><span>БЛИЗКИХ ЧЕЛОВЕКА</span><b>↗</b></a>
+        <div class="tl-metric-signature"><span>НЕ ПРОСТО САЙТ.</span><strong>Это мой мир.</strong></div>
       </div>
+      <div class="tl-hero-bottom"><span>SCROLL TO EXPLORE</span><span class="tl-scroll-line"></span><a href="#projects" aria-label="Прокрутить к проектам">↓</a></div>
     </section>
+
+    <div class="tl-ticker" aria-hidden="true"><div class="tl-ticker-track">DESIGN <span>✳</span> DEVELOPMENT <span>✳</span> CREATIVITY <span>✳</span> NEXORA <span>✳</span> DIGITAL EXPERIENCES <span>✳</span> DESIGN <span>✳</span> DEVELOPMENT <span>✳</span> CREATIVITY <span>✳</span> NEXORA <span>✳</span> DIGITAL EXPERIENCES <span>✳</span></div></div>
 
     <section class="section" id="projects">
       <div class="section-heading">
