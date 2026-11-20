@@ -26,6 +26,22 @@
 <script src="premium.js?v=1" defer></script>
 <script src="rebuild.js?v=1" defer></script>
 <script src="motion-v2.js?v=1" defer></script>
+<style>
+#tlAccounts{box-sizing:border-box;width:min(420px,calc(100% - 32px));max-height:85dvh;overflow:auto;padding:24px;border:1px solid #ffffff24;border-radius:24px;background:#111820;color:#f4f7fa;font-family:inherit;box-shadow:0 24px 90px #0008;margin:auto}
+#tlAccounts::backdrop{background:#05080cb8;backdrop-filter:blur(8px)}
+#tlAccounts[open]{animation:tlAccountsIn .26s ease-out}
+@keyframes tlAccountsIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+#tlAccounts h2{font-size:24px;margin:0 36px 8px 0}
+#tlAccounts p{color:#aab5c3;font-size:13px;margin-bottom:20px}
+#tlAccounts .tl-account{display:flex;align-items:center;gap:12px;padding:14px;margin:8px 0;border:1px solid #ffffff15;border-radius:14px;color:inherit;text-decoration:none;transition:background .2s,transform .2s}
+#tlAccounts .tl-account:hover{background:#ffffff12;transform:translateY(-2px)}
+#tlAccounts .tl-account img{border-radius:50%;width:36px;height:36px}
+#tlAccounts .tl-account small{display:block;color:#aab5c3}
+#tlAccounts .tl-account svg{margin-left:auto}
+#tlAccounts .tl-account-close{position:absolute;right:16px;top:16px;background:none;color:inherit;border:0;font-size:24px;cursor:pointer}
+#tlAccountsOpen{margin-bottom:12px;cursor:pointer}
+@media(prefers-reduced-motion:reduce){#tlAccounts[open]{animation:none}#tlAccounts .tl-account{transition:none}}
+</style>
 </head>
 
 <body>
@@ -88,6 +104,7 @@
             <a class="button primary" href="#projects">Исследовать проекты <span aria-hidden="true">↗</span></a>
             <a class="button secondary" href="https://t.me/Toolgool" target="_blank" rel="noopener noreferrer">Связаться со мной <span aria-hidden="true">↗</span></a>
           </div>
+          <button type="button" class="button secondary" id="tlAccountsOpen" aria-haspopup="dialog" onclick="document.getElementById('tlAccounts').showModal()">Мои аккаунты <span aria-hidden="true">↗</span></button>
           <button class="handle" id="copyHandle" aria-label="Скопировать ник @Toolgool"><span class="tl-handle-dot"></span> @Toolgool <span aria-hidden="true">⧉</span></button>
         </div>
         <div class="hero-art">
@@ -508,5 +525,13 @@
     <span>TL</span>
     <small>WELCOME TO MY SPACE</small>
   </div>
+<dialog id="tlAccounts" aria-labelledby="tlAccountsTitle" onclick="if(event.target===this){const r=this.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)this.close()}">
+<form method="dialog"><button class="tl-account-close" aria-label="Закрыть">×</button></form>
+<h2 id="tlAccountsTitle">Мои аккаунты</h2><p>Дополнительные Telegram-профили · 04</p>
+<a class="tl-account" href="https://t.me/toolgool2022" target="_blank" rel="noopener noreferrer"><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2022</strong><small>@toolgool2022</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+<a class="tl-account" href="https://t.me/toolgool2023" target="_blank" rel="noopener noreferrer"><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2023</strong><small>@toolgool2023</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+<a class="tl-account" href="https://t.me/toolgool2024" target="_blank" rel="noopener noreferrer"><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2024</strong><small>@toolgool2024</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+<a class="tl-account" href="https://t.me/toolgool2025" target="_blank" rel="noopener noreferrer"><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2025</strong><small>@toolgool2025</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+</dialog>
 </body>
 </html>
