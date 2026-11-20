@@ -27,31 +27,39 @@
 <script src="rebuild.js?v=1" defer></script>
 <script src="motion-v2.js?v=1" defer></script>
 <style>
-#tlAccountsOpen{position:relative;display:inline-flex;align-items:center;gap:11px;isolation:isolate;overflow:hidden;padding:13px 17px;margin:0 8px 12px 0;border:1px solid #8abaff55;border-radius:16px;background:linear-gradient(120deg,#14283e,#18202e);color:#e6f1ff;cursor:pointer;transition:transform .25s,box-shadow .25s}
-#tlAccountsOpen:hover{transform:translateY(-3px);box-shadow:0 8px 32px #559dff35}
-#tlAccountsOpen:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 30%,#a3d0ff26 50%,transparent 70%);transform:translateX(-100%);animation:tlAccountShine 5s infinite}
-@keyframes tlAccountShine{0%,65%{transform:translateX(-110%)}90%,100%{transform:translateX(110%)}}
-#tlAccountsOpen .tl-count{font-size:10px;padding:4px 7px;border-radius:8px;background:#a5ceff20;color:#b9d8ff}
-#tlAccounts{box-sizing:border-box;width:min(450px,calc(100% - 28px));max-height:85dvh;overflow:auto;padding:26px;border:1px solid #a0c8ff33;border-radius:28px;background:radial-gradient(ellipse at top right,#223852 0,transparent 55%),#10151e;color:#f4f7fa;font-family:inherit;box-shadow:0 30px 100px #000b;margin:auto}
-#tlAccounts::backdrop{background:#05080caa;backdrop-filter:blur(12px)}
-#tlAccounts[open]{animation:tlAccountsIn .42s cubic-bezier(.2,.8,.2,1)}
-#tlAccounts[open]::backdrop{animation:tlBackdrop .3s ease-out}
-@keyframes tlBackdrop{from{opacity:0}to{opacity:1}}
-@keyframes tlAccountsIn{from{opacity:0;transform:translateY(24px) scale(.94);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
-#tlAccounts .tl-eyebrow{font-size:10px;letter-spacing:.19em;color:#8ebaff;text-transform:uppercase;margin-bottom:14px}
-#tlAccounts h2{font-size:30px;letter-spacing:-.05em;margin:0 36px 8px 0}
-#tlAccounts p{color:#aab5c3;font-size:13px;margin:0 0 24px}
-#tlAccounts .tl-account{display:flex;align-items:center;gap:14px;padding:15px;margin:9px 0;border:1px solid #ffffff13;border-radius:17px;background:#ffffff06;color:inherit;text-decoration:none;transition:background .25s,transform .25s,border-color .25s;animation:tlAccountRow .45s both;animation-delay:calc(var(--i)*65ms + 80ms)}
-@keyframes tlAccountRow{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-#tlAccounts .tl-account:hover,#tlAccounts .tl-account:focus-visible{background:#86baff18;transform:translateX(3px);border-color:#86baff66}
-#tlAccounts .tl-account img{border-radius:14px;width:44px;height:44px;box-shadow:0 0 18px #36a4e52b}
-#tlAccounts .tl-account small{display:block;color:#aab5c3;font-size:12px;margin-top:4px}
-#tlAccounts .tl-account svg{margin-left:auto;color:#9ec8ff;transition:transform .25s}
+.tl-hero #tlAccountsOpen{gap:14px;margin:0;padding:14px 18px;border-radius:9px;min-height:56px;background:transparent;border:1px solid var(--tl-line);color:#f1f3f4;position:relative;overflow:hidden}
+.tl-hero #tlAccountsOpen:hover{border-color:var(--tl-acid);background:#c3fb6509}
+#tlAccountsOpen .tl-count{font:600 11px "Space Grotesk",sans-serif;color:var(--tl-acid);border-left:1px solid var(--tl-line);padding-left:12px}
+#tlAccountsOpen svg{color:var(--tl-acid);transition:rotate .4s}
+#tlAccountsOpen:hover svg{rotate:90deg}
+#tlAccounts{box-sizing:border-box;width:min(520px,calc(100% - 28px));max-height:85dvh;overflow:auto;padding:clamp(18px,5vw,36px);border:1px solid var(--tl-line);border-radius:12px;background:#11161c;color:#f1f3f4;margin:auto;box-shadow:0 30px 100px #0009;transform:none}
+#tlAccounts::backdrop{background:#090c11b8;backdrop-filter:blur(10px)}
+#tlAccounts[open]{animation:tlDirectoryIn .48s cubic-bezier(.16,1,.3,1) both}
+#tlAccounts[open]::backdrop{animation:tlDirectoryFade .35s both}
+#tlAccounts.tl-exit{animation:tlDirectoryOut .23s ease both}
+#tlAccounts.tl-exit::backdrop{animation:tlDirectoryFade .23s reverse both}
+@keyframes tlDirectoryFade{from{opacity:0}to{opacity:1}}
+@keyframes tlDirectoryIn{from{opacity:0;transform:translateY(24px) scale(.97);clip-path:inset(0 0 18% 0)}to{opacity:1;transform:none;clip-path:inset(0)}}
+@keyframes tlDirectoryOut{to{opacity:0;transform:translateY(16px) scale(.98)}}
+#tlAccounts .tl-eyebrow{font:700 10px "Space Grotesk",sans-serif;letter-spacing:.2em;color:var(--tl-acid);margin-bottom:15px}
+#tlAccounts h2{font:700 clamp(30px,7vw,48px)/1.05 "Space Grotesk",sans-serif;letter-spacing:-.075em;margin:0 40px 12px 0}
+#tlAccounts h2 span{color:var(--tl-acid)!important}
+#tlAccounts p{color:var(--tl-muted);font-size:13px;margin:0 0 24px}
+#tlAccounts .tl-account{display:grid;grid-template-columns:28px 38px minmax(0,1fr) 20px;align-items:center;gap:12px;padding:18px 8px;border-top:1px solid var(--tl-line);color:inherit;text-decoration:none;position:relative;transition:background .25s,padding .25s;animation:tlDirectoryRow .55s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i)*65ms + 60ms)}
+@keyframes tlDirectoryRow{from{opacity:0;translate:0 15px}to{opacity:1;translate:0 0}}
+#tlAccounts .tl-account:hover,#tlAccounts .tl-account:focus-visible{background:#c3fb6509;padding-left:13px}
+#tlAccounts .tl-index{font:600 11px "Space Grotesk",sans-serif;color:var(--tl-muted)}
+#tlAccounts .tl-account img{width:38px;height:38px;border-radius:8px;filter:grayscale(1);transition:filter .25s}
+#tlAccounts .tl-account:hover img{filter:none}
+#tlAccounts .tl-account strong{font-size:15px;font-weight:700}
+#tlAccounts .tl-account small{display:block;color:var(--tl-muted);font-size:12px}
+#tlAccounts .tl-account svg{color:var(--tl-acid);transition:transform .25s}
 #tlAccounts .tl-account:hover svg{transform:translate(3px,-3px)}
-#tlAccounts .tl-account-close{position:absolute;right:19px;top:19px;background:#ffffff0c;color:inherit;border:1px solid #ffffff18;border-radius:12px;width:36px;height:36px;display:grid;place-items:center;cursor:pointer}
-#tlAccounts .tl-account-close:hover{background:#ffffff20}
-#tlAccounts .tl-account-footer{display:flex;justify-content:space-between;color:#8593a6;font-size:10px;letter-spacing:.08em;margin-top:20px}
-@media(prefers-reduced-motion:reduce){#tlAccounts[open],#tlAccounts[open]::backdrop,#tlAccounts .tl-account,#tlAccountsOpen:before{animation:none}#tlAccounts .tl-account,#tlAccountsOpen{transition:none}}
+#tlAccounts .tl-account-close{position:absolute;right:20px;top:20px;background:transparent;color:#f1f3f4;border:1px solid var(--tl-line);border-radius:8px;width:36px;height:36px;display:grid;place-items:center;cursor:pointer}
+#tlAccounts .tl-account-close:hover{color:var(--tl-acid);border-color:var(--tl-acid)}
+#tlAccounts .tl-account-footer{display:flex;justify-content:space-between;border-top:1px solid var(--tl-line);padding-top:20px;color:var(--tl-muted);font:600 10px "Space Grotesk",sans-serif;letter-spacing:.12em}
+html.no-effects #tlAccounts,html.no-effects #tlAccounts::backdrop,html.no-effects #tlAccounts .tl-account{animation:none!important}
+@media(prefers-reduced-motion:reduce){#tlAccounts,#tlAccounts::backdrop,#tlAccounts .tl-account{animation:none!important}#tlAccounts *{transition:none!important}}
 </style>
 </head>
 
@@ -114,8 +122,8 @@
           <div class="hero-actions">
             <a class="button primary" href="#projects">Исследовать проекты <span aria-hidden="true">↗</span></a>
             <a class="button secondary" href="https://t.me/Toolgool" target="_blank" rel="noopener noreferrer">Связаться со мной <span aria-hidden="true">↗</span></a>
+            <button type="button" class="button secondary" id="tlAccountsOpen" aria-haspopup="dialog" onclick="document.getElementById('tlAccounts').showModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg> Мои аккаунты <span class="tl-count">04</span></button>
           </div>
-          <button type="button" class="button secondary" id="tlAccountsOpen" aria-haspopup="dialog" onclick="document.getElementById('tlAccounts').showModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg> Мои аккаунты <span class="tl-count">04</span></button>
           <button class="handle" id="copyHandle" aria-label="Скопировать ник @Toolgool"><span class="tl-handle-dot"></span> @Toolgool <span aria-hidden="true">⧉</span></button>
         </div>
         <div class="hero-art">
@@ -536,14 +544,18 @@
     <span>TL</span>
     <small>WELCOME TO MY SPACE</small>
   </div>
-<dialog id="tlAccounts" aria-labelledby="tlAccountsTitle" onclick="if(event.target===this){const r=this.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)this.close()}">
-<form method="dialog"><button class="tl-account-close" aria-label="Закрыть"><svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></form>
-<div class="tl-eyebrow">TL / Telegram directory</div><h2 id="tlAccountsTitle">Мои аккаунты<span style="color:#8ebaff">.</span></h2><p>Выбери профиль для перехода в Telegram.</p>
-<a class="tl-account" style="--i:0" href="https://t.me/toolgool2022" target="_blank" rel="noopener noreferrer"><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2022</strong><small>@toolgool2022</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
-<a class="tl-account" style="--i:1" href="https://t.me/toolgool2023" target="_blank" rel="noopener noreferrer"><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2023</strong><small>@toolgool2023</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
-<a class="tl-account" style="--i:2" href="https://t.me/toolgool2024" target="_blank" rel="noopener noreferrer"><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2024</strong><small>@toolgool2024</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
-<a class="tl-account" style="--i:3" href="https://t.me/toolgool2025" target="_blank" rel="noopener noreferrer"><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2025</strong><small>@toolgool2025</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+<dialog id="tlAccounts" aria-labelledby="tlAccountsTitle" onclick="if(event.target===this){const r=this.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)tlCloseDirectory()}">
+<form method="dialog" onsubmit="event.preventDefault();tlCloseDirectory()"><button class="tl-account-close" aria-label="Закрыть"><svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></form>
+<div class="tl-eyebrow">TL / Telegram directory</div><h2 id="tlAccountsTitle">Мои аккаунты<span >.</span></h2><p>Выбери профиль для перехода в Telegram.</p>
+<a class="tl-account" style="--i:0" href="https://t.me/toolgool2022" target="_blank" rel="noopener noreferrer"><span class="tl-index">01</span><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2022</strong><small>@toolgool2022</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+<a class="tl-account" style="--i:1" href="https://t.me/toolgool2023" target="_blank" rel="noopener noreferrer"><span class="tl-index">02</span><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2023</strong><small>@toolgool2023</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+<a class="tl-account" style="--i:2" href="https://t.me/toolgool2024" target="_blank" rel="noopener noreferrer"><span class="tl-index">03</span><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2024</strong><small>@toolgool2024</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+<a class="tl-account" style="--i:3" href="https://t.me/toolgool2025" target="_blank" rel="noopener noreferrer"><span class="tl-index">04</span><img src="./images/Telegram.jpg" alt=""><span><strong>Toolgool 2025</strong><small>@toolgool2025</small></span><svg width="18" height="18" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
 <div class="tl-account-footer"><span>TOOLGOOL / TL</span><span>04 PROFILES</span></div>
 </dialog>
+<script>
+function tlCloseDirectory(){const d=document.getElementById('tlAccounts');if(!d.open||d.classList.contains('tl-exit'))return;const finish=()=>{d.close();d.classList.remove('tl-exit');document.getElementById('tlAccountsOpen').focus()};if(matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.classList.contains('no-effects')){finish();return}d.classList.add('tl-exit');setTimeout(finish,230)}
+document.getElementById('tlAccounts').addEventListener('cancel',e=>{e.preventDefault();tlCloseDirectory()});
+</script>
 </body>
 </html>
