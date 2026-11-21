@@ -1545,3 +1545,15 @@ dialog::backdrop {
     display: none !important;
   }
 }
+
+
+/* TL polish: tactile UI and mobile stability */
+:where(.button,.project,.social-card,.tl-domain-card,.team-card,.tl-account){-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:where(.button,.project,.social-card,.tl-domain-card,.team-card,.tl-account):focus-visible{outline:2px solid var(--tl-acid,#c3fb65);outline-offset:4px}
+:where(.button,.project,.social-card,.tl-domain-card,.team-card,.tl-account):active{transform:scale(.985);transition-duration:.12s}
+:where(.project,.social-card,.tl-domain-card,.team-card){will-change:auto}
+@media(hover:none){:where(.button,.project,.social-card,.tl-domain-card,.team-card):hover{translate:none;transform:none}}
+@media(max-width:600px){.wrap{width:calc(100% - 32px)}.header{gap:12px}.hero-actions .button{min-width:0}.tl-domain-card{min-width:0}.tl-domain-copy{overflow-wrap:anywhere}button,a{touch-action:manipulation}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+#tl-polish-toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translate(-50%,12px);background:#19221c;border:1px solid #c3fb6570;border-radius:10px;color:#f1f3f4;padding:12px 18px;box-shadow:0 14px 35px #0008;z-index:99999;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;font:600 13px system-ui,sans-serif;max-width:calc(100vw - 32px);text-align:center}
+#tl-polish-toast.is-visible{opacity:1;transform:translate(-50%,0)}
