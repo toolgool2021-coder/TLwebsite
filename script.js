@@ -406,3 +406,53 @@
   initYear();
   initMusicPlayer();
 })();
+
+
+/* TL polish: non-invasive interaction improvements */
+(() => {
+  if (window.__tlPolishLoaded) return;
+  window.__tlPolishLoaded = true;
+  const ready = () => {
+    const toast = document.createElement('div');
+    toast.id = 'tl-polish-toast';
+    toast.setAttribute('role','status');
+    toast.setAttribute('aria-live','polite');
+    document.body.append(toast);
+    let timeout;
+    const notify = message => {
+      toast.textContent = message;
+      toast.classList.add('is-visible');
+      clearTimeout(timeout);
+      timeout = setTimeout(() => toast.classList.remove('is-visible'), 2000);
+    };
+    document.querySelectorAll('a[target="_blank"]').forEach(a => {
+      a.rel = [...new Set((a.rel + ' noopener noreferrer').trim().split(/\s+/))].join(' ');
+    });
+    document.querySelectorAll('img:not([loading])').forEach(img => {
+      if (!img.closest('.hero,.tl-hero')) img.loading = 'lazy';
+      img.decoding = 'async';
+    });
+    document.querySelectorAll('a[href^="http"]').forEach(link => {
+      if (link.hasAttribute('data-tl-copy')) return;
+      link.addEventListener('contextmenu', event => {
+        if (!event.shiftKey) return;
+        event.preventDefault();
+        navigator.clipboard?.writeText(link.href).then(() => notify('Ссылка скопирована')).catch(() => {});
+      });
+    });
+    const accounts = document.getElementById('tlAccounts');
+    const open = document.getElementById('tlAccountsOpen');
+    if (accounts && open) {
+      open.setAttribute('aria-controls','tlAccounts');
+      open.setAttribute('aria-expanded',String(accounts.open));
+      accounts.addEventListener('close',() => open.setAttribute('aria-expanded','false'));
+      open.addEventListener('click',() => open.setAttribute('aria-expanded','true'));
+      accounts.addEventListener('click', event => {
+        if (event.target !== accounts) return;
+        const rect = accounts.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) accounts.close();
+      });
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',ready,{once:true}); else ready();
+})();
