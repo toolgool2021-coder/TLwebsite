@@ -7,6 +7,6 @@ tllist.duckdns.org
 notslop.duckdns.org
 paytl.duckdns.org
 orbit-ai.duckdns.org
-toolgool.duckdns.org
+Toolgool.site
 tlschool.duckdns.org
 tlmoomoo.duckdns.org
