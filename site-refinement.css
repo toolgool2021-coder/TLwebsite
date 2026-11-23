@@ -77,3 +77,20 @@ html.no-effects{scroll-behavior:auto}
  .tl-hero .hero-actions .button>span:not(.tl-count){font-size:11px}
  .header nav a{font-size:10px!important;padding:10px 4px}
 }
+
+/* Developer portfolio: capability cards and contact CTA */
+.tl-capability-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.tl-capability{position:relative;display:flex;flex-direction:column;min-height:255px;padding:28px;border:1px solid var(--tl-line);border-radius:12px;background:linear-gradient(145deg,#151c1e,#10151a);transition:border-color .25s,transform .25s}
+.tl-capability:hover{border-color:rgba(195,251,101,.45);transform:translateY(-4px)}
+.tl-capability-num{font:700 10px "Space Grotesk",sans-serif;letter-spacing:.17em;color:var(--tl-acid);margin-bottom:32px}
+.tl-capability h3{font:700 clamp(21px,2.1vw,29px)/1.15 "Space Grotesk",sans-serif;letter-spacing:-.05em;margin:0 0 12px}
+.tl-capability p{font-size:13px;line-height:1.7;color:var(--tl-muted);margin:0 0 24px}
+.tl-capability-tech{margin-top:auto;font:600 10px "Space Grotesk",sans-serif;letter-spacing:.08em;color:#d6e6d1}
+.tl-work-contact{display:flex;justify-content:space-between;align-items:center;gap:28px;margin-top:16px;padding:32px;border:1px solid rgba(195,251,101,.23);border-radius:12px;background:radial-gradient(circle at 85% 15%,rgba(195,251,101,.1),transparent 50%),#121a17}
+.tl-work-contact h3{font:700 clamp(25px,3vw,38px) "Space Grotesk",sans-serif;letter-spacing:-.055em;margin:12px 0}
+.tl-work-contact p{font-size:13px;color:var(--tl-muted);line-height:1.6;margin:0}
+.tl-work-cta{display:inline-flex;justify-content:space-between;align-items:center;gap:26px;flex:none;padding:17px 20px;border-radius:9px;background:var(--tl-acid);color:#11180c;font:700 13px "Space Grotesk",sans-serif;text-decoration:none;transition:transform .2s,background .2s}
+.tl-work-cta:hover{transform:translateY(-2px);background:#ddffa4}
+@media(max-width:800px){.tl-capability-grid{grid-template-columns:1fr 1fr}.tl-work-contact{align-items:flex-start;flex-direction:column}}
+@media(max-width:580px){.tl-capability-grid{grid-template-columns:1fr;gap:10px}.tl-capability{min-height:0;padding:22px}.tl-capability-num{margin-bottom:20px}.tl-capability h3{font-size:24px}.tl-capability p{margin-bottom:17px}.tl-work-contact{padding:23px;gap:20px}.tl-work-cta{width:100%;min-height:54px}.tl-work-contact h3{font-size:29px}}
+@media(prefers-reduced-motion:reduce){.tl-capability,.tl-work-cta{transition:none!important}}
