@@ -1,2 +1,2 @@
 # TLwebsite
-[toolgool.duckdns.org](https://toolgool.duckdns.org/)
+[Toolgool.site](https://Toolgool.site/)
